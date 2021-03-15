@@ -1,4 +1,4 @@
-import Container from "./Components/Container";
+import Message from "./Components/Message";
 
 import logo from "./logo.svg";
 import "./App.css";
@@ -10,7 +10,7 @@ const App = () => {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
 
-      <Container />
+      <Message />
     </div>
   );
 };
