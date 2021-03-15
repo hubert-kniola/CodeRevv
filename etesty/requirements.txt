@@ -1,0 +1,5 @@
+wheel
+Django
+djongo==1.3.0
+pymongo[srv]
+django-create-react-app
