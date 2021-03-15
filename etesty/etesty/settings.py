@@ -76,10 +76,10 @@ WSGI_APPLICATION = 'etesty.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'myDB',
-        'HOST': f'mongodb+srv://user:prgMLird7buJoLoV@mydb.avxhw.mongodb.net/myDB?retryWrites=true&w=majority',
+        'NAME': 'database-test',
+        'HOST': f'mongodb+srv://user:JITv7xnnAwrOk812@database-test.avxhw.mongodb.net/database-test?retryWrites=true&w=majority',
         'USER': 'user',
-        'PASSWORD': 'prgMLird7buJoLoV',
+        'PASSWORD': 'JITv7xnnAwrOk812',
     }
 }
 
