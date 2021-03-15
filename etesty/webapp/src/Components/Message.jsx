@@ -1,4 +1,4 @@
-import MessageHook from "./MessageHook";
+import MessageHook from "./Hooks/MessageHook";
 
 const Message = () => {
   const [message, changeMessage] = MessageHook();
