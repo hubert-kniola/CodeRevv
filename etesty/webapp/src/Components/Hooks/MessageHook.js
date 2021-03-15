@@ -7,7 +7,7 @@ const MessageHook = () => {
         setMessage(message + "~");
     };
 
-    return [message, changeMessage];
+    return { message, changeMessage };
 }
 
 export default MessageHook;
