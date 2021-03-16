@@ -1,14 +1,15 @@
 from djongo import models
-
 # Create your models here.
 
 
 class Question(models.Model):
     id_question = models.AutoField()
-    contents = models.TextField()
+    question_type = models.BooleanField()
+    content = models.TextField()
+    answer = models.TextField()
 
     def __str__(self):
-        return self.contents
+        return self.content
 
 
 class ReportTeacher(models.Model):
@@ -21,7 +22,7 @@ class ReportTeacher(models.Model):
 
 class ReportStudent(models.Model):
     id_report_student = models.AutoField()
-    score = models.CharField(max_length=100)
+    score = models.FloatField()
 
     def __str__(self):
         return self.score
