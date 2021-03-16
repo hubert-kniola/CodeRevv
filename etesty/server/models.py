@@ -3,7 +3,6 @@ from djongo import models
 
 
 class Question(models.Model):
-    id_question = models.AutoField()
     question_type = models.BooleanField()
     content = models.TextField()
     answer = models.TextField()
@@ -13,7 +12,6 @@ class Question(models.Model):
 
 
 class ReportTeacher(models.Model):
-    id_report_teacher = models.AutoField()
     score = models.CharField(max_length=100)
 
     def __str__(self):
@@ -21,7 +19,6 @@ class ReportTeacher(models.Model):
 
 
 class ReportStudent(models.Model):
-    id_report_student = models.AutoField()
     score = models.FloatField()
 
     def __str__(self):
@@ -29,8 +26,7 @@ class ReportStudent(models.Model):
 
 
 class Student(models.Model):
-    id_student = models.AutoField()
-    first_name = models.CharField(max_lenght=30)
+    first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
     birth_date = models.DateField(max_length=10)
@@ -40,7 +36,6 @@ class Student(models.Model):
 
 
 class StudentGroup(models.Model):
-    id_group = models.AutoField()
     students = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
 
 
@@ -57,8 +52,7 @@ class OnlineTest(models.Model):
 
 
 class Teacher(models.Model):
-    id_teacher = models.AutoField()
-    first_name = models.CharField(max_lenght=30)
+    first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
     birth_date = models.DateField(max_length=10)
