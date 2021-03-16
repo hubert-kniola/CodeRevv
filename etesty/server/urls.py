@@ -1,7 +1,6 @@
 from django.conf.urls import url
-
-from .views import ReactAppView
+from .views import ReactView
 
 urlpatterns = [
-    url(r'^', ReactAppView.as_view()),
+    url(r'^', ReactView.as_view()),
 ]

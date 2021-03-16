@@ -7,10 +7,12 @@ from django.conf import settings
 import os
 
 
-class ReactAppView(View):
+class ReactView(View):
+    REACT_INDEX = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp'), 'build', 'index.html')
+
     def get(self, request):
         try:
-            with open(os.path.join(settings.REACT_APP, 'build', 'index.html')) as file:
+            with open(ReactView.REACT_INDEX) as file:
                 return HttpResponse(file.read())
 
         except:
