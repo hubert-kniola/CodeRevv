@@ -1,11 +1,14 @@
-import { Message, Logo } from "./components";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Home, NotFound } from "./pages";
 
 const App = () => {
   return (
-    <div>
-      <Logo />
-      <Message />
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
   );
 };
 
