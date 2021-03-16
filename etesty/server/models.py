@@ -1,6 +1,6 @@
 from djongo import models
-# Create your models here.
 
+# Create your models here.
 
 class Question(models.Model):
     question_type = models.BooleanField()
@@ -42,10 +42,6 @@ class StudentGroup(models.Model):
 class OnlineTest(models.Model):
     headline = models.CharField(max_length=100)
     pub_date = models.DateField(max_length=10)
-    # report_teacher = models.OneToOneField(ReportTeacher, on_delete=models.CASCADE)
-    # report_student = models.ForeignKey(ReportStudent, on_delete=models.CASCADE)
-    # questions = models.ForeignKey(Question, on_delete=models.CASCADE)
-    # student_groups = models.ForeignKey(StudentGroup, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '%s %s' % (self.headline, self.pub_date)
@@ -56,7 +52,6 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
     birth_date = models.DateField(max_length=10)
-    # created_tests = models.ForeignKey(OnlineTest, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)

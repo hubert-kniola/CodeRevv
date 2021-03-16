@@ -1,18 +1,12 @@
 from django.contrib import admin
-
 from .models import *
 
 # Register your models here.
 
-
-class AuthorAdmin(admin.ModelAdmin):
-    pass
-
-
-# admin.site.register(Question, AuthorAdmin)
-# admin.site.register(ReportTeacher, AuthorAdmin)
-# admin.site.register(ReportTeacher, AuthorAdmin)
-# admin.site.register(Student, AuthorAdmin)
-# admin.site.register(StudentGroup, AuthorAdmin)
-# admin.site.register(OnlineTest, AuthorAdmin)
-# admin.site.register(Teacher, AuthorAdmin)
+admin.site.register(Question)
+admin.site.register(ReportTeacher)
+admin.site.register(ReportStudent)
+admin.site.register(Student)
+admin.site.register(StudentGroup)
+admin.site.register(OnlineTest)
+admin.site.register(Teacher)
