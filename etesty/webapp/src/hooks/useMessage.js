@@ -1,13 +1,11 @@
 import { useState } from 'react';
 
-const MessageHook = () => {
+export const useMessage = () => {
     const [message, setMessage] = useState("XD");
 
     const changeMessage = () => {
         setMessage(message + "~");
     };
 
-    return { message, changeMessage };
-}
-
-export default MessageHook;
+    return [message, changeMessage];
+};
