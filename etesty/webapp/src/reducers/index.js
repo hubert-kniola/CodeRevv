@@ -1,7 +1,15 @@
 const initState = {
-
+    message: "XD"
 }
 
-export const rootReducer = (state = initState, action) => {
-    return state;
+export const messageReducer = (state = initState, action) => {
+    switch (action.type) {
+        case 'CHANGE': {
+            return {
+                ...state,
+                message: `${state.message}~`
+            }
+        }
+        default: { return state }
+    }
 }
