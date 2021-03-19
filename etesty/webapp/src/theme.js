@@ -1,12 +1,10 @@
 const theme = {
     colors: {
-        spaceCadet: '#2B2D42',
-        pumpkin: '#2B2D42',
-        sunglow: '#2B2D42',
-        emerald: '#2B2D42',
-        iceberg: '#2B2D42',
-        bright: '#FFE4FA',
-        dark: ''
+        black: '#201C21',
+        grey: '#474847',
+        orange: '#FE7920',
+        yellow: '#FDD25E',
+        white: '#EBEBEB'
     },
     fontSizes: {
 
