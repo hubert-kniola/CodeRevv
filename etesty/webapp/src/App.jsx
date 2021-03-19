@@ -1,13 +1,18 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Home, NotFound } from "./pages";
+import { Home, Login, NotFound } from "./pages";
+import { Navbar } from "./components";
 
-const App = () => {
+import "./App.css";
+
+const App = (props) => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route component={NotFound} />
-      </Switch>
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route component={NotFound} />
+        </Switch>
     </BrowserRouter>
   );
 };

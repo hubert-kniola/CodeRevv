@@ -6,12 +6,17 @@ import { Provider } from 'react-redux'
 import App from './App';
 import { rootReducer } from './reducers';
 
+import { ThemeProvider } from "styled-components";
+import theme from "./theme";
+
 const store = createStore(rootReducer);
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
