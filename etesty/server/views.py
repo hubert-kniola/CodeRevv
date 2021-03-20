@@ -8,6 +8,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 # Create your views here.
+from django.views.generic import View
+from django.conf import settings
+import os
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -48,3 +51,20 @@ def user_detail(request, pk):
     elif request.method == 'DELETE':
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ReactView(View):
+    REACT_INDEX = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp'), 'build', 'index.html')
+
+    def get(self, request):
+        try:
+            with open(ReactView.REACT_INDEX) as file:
+                return HttpResponse(file.read())
+
+        except:
+            return HttpResponse(
+                """
+                index.html not found ! build your React app !!
+                """,
+                status=501,
+            )
