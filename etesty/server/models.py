@@ -2,68 +2,41 @@ from djongo import models
 # Create your models here.
 
 
+class User(models.Model):
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    email = models.CharField(max_length=30)
+    birth_date = models.DateField(null=True)
+    password = models.CharField(max_length=20, null=True)
+
+
 class Question(models.Model):
-    id_question = models.AutoField()
-    question_type = models.BooleanField()
-    content = models.TextField()
-    answer = models.TextField()
+    question_type = models.CharField(max_length=20)
+    content = models.CharField(max_length=500)
+    answer = models.CharField(max_length=500)
+    max_score = models.FloatField(null=True)
+    image = models.ImageField(null=True)
 
     def __str__(self):
         return self.content
 
 
-class ReportTeacher(models.Model):
-    id_report_teacher = models.AutoField()
-    score = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.score
-
-
-class ReportStudent(models.Model):
-    id_report_student = models.AutoField()
+class UserAnswer(models.Model):
+    question_id = models.IntegerField()
+    answer = models.CharField(max_length=500)
+    user = User
+    comment = models.CharField(max_length=200)
     score = models.FloatField()
-
-    def __str__(self):
-        return self.score
-
-
-class Student(models.Model):
-    id_student = models.AutoField()
-    first_name = models.CharField(max_lenght=30)
-    last_name = models.CharField(max_length=30)
-    email = models.EmailField()
-    birth_date = models.DateField(max_length=10)
-
-    def __str__(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
-
-class StudentGroup(models.Model):
-    id_group = models.AutoField()
-    students = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
 
 
 class OnlineTest(models.Model):
-    headline = models.CharField(max_length=100)
-    pub_date = models.DateField(max_length=10)
-    # report_teacher = models.OneToOneField(ReportTeacher, on_delete=models.CASCADE)
-    # report_student = models.ForeignKey(ReportStudent, on_delete=models.CASCADE)
-    # questions = models.ForeignKey(Question, on_delete=models.CASCADE)
-    # student_groups = models.ForeignKey(StudentGroup, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return '%s %s' % (self.headline, self.pub_date)
+    headline = models.CharField(max_length=50)
+    pub_test = models.DateField(null=True)
+    creator = User
+    users = models.ManyToManyField(User)
+    question = models.ManyToManyField(Question)
+    user_answer = models.ManyToManyField(UserAnswer)
 
 
-class Teacher(models.Model):
-    id_teacher = models.AutoField()
-    first_name = models.CharField(max_lenght=30)
-    last_name = models.CharField(max_length=30)
-    email = models.EmailField()
-    birth_date = models.DateField(max_length=10)
-    # created_tests = models.ForeignKey(OnlineTest, on_delete=models.DO_NOTHING)
 
-    def __str__(self):
-        return '%s %s' % (self.first_name, self.last_name)
 
