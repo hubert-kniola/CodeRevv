@@ -12,7 +12,7 @@ export const Nav = styled.nav`
 export const NavMenu = styled.div`
   display: flex;
   align-items: center;
-  margin-right: -24px;
+margin-right: -24px;
 `;
 
 export const NavBtn = styled.nav`
@@ -33,9 +33,11 @@ export const NavLink = styled(Link)`
     color: ${({ theme }) => theme.colors.yellow};
   }
 
-  ${({ active }) => active && css`
-    color: ${({theme}) => theme.colors.orange};
-  `}
+  ${({ active }) =>
+    active &&
+    css`
+      color: ${({ theme }) => theme.colors.orange};
+    `}
 `;
 
 export const NavBtnLink = styled(Link)`

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import background from "../images/bg.png";
+import styled from 'styled-components';
+import background from '../images/bg.png';
 
 export const PageContainer = styled.div`
   position: fixed;

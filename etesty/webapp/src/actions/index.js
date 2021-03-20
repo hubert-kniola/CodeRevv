@@ -1,3 +1,3 @@
 export const changeMessage = () => ({
-    type: 'CHANGE'
-})
+  type: 'CHANGE',
+});
