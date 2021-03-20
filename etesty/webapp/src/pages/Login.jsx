@@ -1,5 +1,5 @@
 const Login = (props) => {
-  return <>{"login comp"}</>;
+  return <>{'login comp'}</>;
 };
 
 export default Login;

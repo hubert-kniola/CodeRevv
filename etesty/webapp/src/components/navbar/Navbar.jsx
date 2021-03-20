@@ -1,25 +1,37 @@
-import { connect } from "react-redux";
-import { Nav, NavLink, NavMenu, NavBtn, NavBtnLink, Logo } from "./styles";
+import { useState, useEffect } from 'react';
+import { Container, Link, Menu, ButtonMenu, Button, Logo } from './styles';
 
-import logo from "../../images/logo.png";
+import logo from '../../images/logo.png';
 
-const Navbar = () => {
+const Navbar = ({ children, ...restProps }) => {
+  const [scroll, setScroll] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScroll(window.scrollY > 80);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
+
   return (
-    <Nav>
-      <NavLink to="/">
-        <Logo src={logo} alt="logo" />
-      </NavLink>
-      <NavMenu>
-        <NavLink to="/services">Oferta</NavLink>
-        <NavLink to="/contact">Kontakt</NavLink>
-        <NavLink to="/blog">Blog</NavLink>
-        <NavLink to="/signup" active>Zarejestruj się</NavLink>
-      </NavMenu>
-      <NavBtn>
-        <NavBtnLink to="/login">Zaloguj się</NavBtnLink>
-      </NavBtn>
-    </Nav>
+    <Container scroll={scroll} {...restProps}>
+      {children}
+    </Container>
   );
 };
 
 export default Navbar;
+
+Navbar.LogoLink = ({ children, ...restProps }) => (
+  <Link {...restProps}>
+    <Logo src={logo} />
+  </Link>
+);
+
+Navbar.Menu = ({ children, ...restProps }) => <Menu {...restProps}>{children}</Menu>;
+
+Navbar.ItemLink = ({ children, ...restProps }) => <Link {...restProps}>{children}</Link>;
+
+Navbar.ButtonMenu = ({ children, ...restProps }) => <ButtonMenu {...restProps}>{children}</ButtonMenu>;
+
+Navbar.ButtonLink = ({ children, ...restProps }) => <Button {...restProps}>{children}</Button>;

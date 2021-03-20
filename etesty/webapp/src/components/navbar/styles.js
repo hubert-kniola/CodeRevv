@@ -1,27 +1,38 @@
-import { NavLink as Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-export const Nav = styled.nav`
+export const Container = styled.nav`
   height: 80px;
   display: flex;
+  position: sticky;
+  top: 0px;
   justify-content: space-between;
   padding: 0.5rem calc((100vw - 1000px) / 2);
   z-index: 10;
+
+
+  ${({ scroll }) => (scroll && css`
+    background-color: ${({ theme }) => theme.colors.black};
+    transition: all 0.5s ease-in-out;
+  `) || css`
+    background-color: none;
+    transition: all 0.4s ease-in-out;
+  `}
 `;
 
-export const NavMenu = styled.div`
+export const Menu = styled.div`
   display: flex;
   align-items: center;
-margin-right: -24px;
+  margin-right: -24px;
 `;
 
-export const NavBtn = styled.nav`
+export const ButtonMenu = styled.nav`
   display: flex;
   align-items: center;
   margin-right: 24px;
 `;
 
-export const NavLink = styled(Link)`
+export const Link = styled(NavLink)`
   color: ${({ theme }) => theme.colors.white};
   display: flex;
   align-items: center;
@@ -40,7 +51,7 @@ export const NavLink = styled(Link)`
     `}
 `;
 
-export const NavBtnLink = styled(Link)`
+export const Button = styled(NavLink)`
   border-radius: 4px;
   background: ${({ theme }) => theme.colors.orange};
   padding: 10px 22px;
@@ -63,3 +74,5 @@ export const Logo = styled.img`
   height: 5rem;
   pointer-events: none;
 `;
+
+Logo.defaultProps = { alt: 'logo' }

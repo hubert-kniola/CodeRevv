@@ -1,10 +1,14 @@
-import { MainText } from "./styles";
+import { HomeNavContainer, HomeFooterContainer } from '../containers';
+import { Title } from '../components';
 
 const NotFound = ({ history }) => {
   return (
     <>
-      <MainText>404</MainText>
-      <button onClick={history.goBack}>Krok wstecz</button>
+      <HomeNavContainer />
+
+      <Title>Ups, to mi wygląda na 404...</Title>
+
+      <HomeFooterContainer />
     </>
   );
 };
