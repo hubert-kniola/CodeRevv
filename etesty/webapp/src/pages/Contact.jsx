@@ -1,13 +1,13 @@
-import { HomeFooterContainer, HomeNavContainer } from '../containers';
+import { HomeFooter, HomeNav } from '../containers';
 import { Title } from '../components';
 
 const Contact = (props) => (
   <>
-    <HomeNavContainer />
+    <HomeNav />
 
     <Title>Zapraszamy do kontaktu!</Title>
 
-    <HomeFooterContainer />
+    <HomeFooter />
   </>
 );
 

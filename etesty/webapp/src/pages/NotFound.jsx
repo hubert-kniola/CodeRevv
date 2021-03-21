@@ -1,14 +1,14 @@
-import { HomeNavContainer, HomeFooterContainer } from '../containers';
+import { HomeNav, HomeFooter } from '../containers';
 import { Title } from '../components';
 
 const NotFound = ({ history }) => {
   return (
     <>
-      <HomeNavContainer />
+      <HomeNav />
 
       <Title>Ups, to mi wygląda na 404...</Title>
 
-      <HomeFooterContainer />
+      <HomeFooter />
     </>
   );
 };

@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 
-export const Background = styled.div`
+export const FooterPad = styled.div`
+  padding-top:35vh;
+`;
+
+export const Background = styled.footer`
   background-color: ${({ theme }) => theme.colors.black};
   width: 100%;
-  min-height: 40vh;  
+  min-height: 20vh;
 `;
 
 export const Container = styled.div`

@@ -1,9 +1,12 @@
-import { Container, Row, Column, Link, Title, Text, Break, Background } from './styles';
+import { Container, Row, Column, Link, Title, Text, Break, Background, FooterPad } from './styles';
 
 const Footer = ({ children, ...restProps }) => (
-  <Background>
-    <Container {...restProps}>{children}</Container>
-  </Background>
+  <>
+    <FooterPad />
+    <Background>
+      <Container {...restProps}>{children}</Container>
+    </Background>
+  </>
 );
 
 export default Footer;
