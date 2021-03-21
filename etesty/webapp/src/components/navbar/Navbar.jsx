@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Link, Menu, ButtonMenu, Button, Logo } from './styles';
 
-import logo from '../../images/logo.png';
+import logo from 'images/logo.png';
 
 const Navbar = ({ children, ...restProps }) => {
   const [scroll, setScroll] = useState(false);

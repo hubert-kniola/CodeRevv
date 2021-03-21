@@ -1,7 +1,7 @@
 import { useState, useContext, createContext } from 'react';
 import { Container, Frame, Title, Item, Inner, Header, Body } from './styles';
 
-import open from '../../images/open.png';
+import open from 'images/open.png';
 
 const ToggleContext = createContext();
 

@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux';
 
-import { getAll } from '../store/slices/faq';
-import { Accordion } from '../components';
+import { getAll } from 'store/slices/faq';
+import { Accordion } from 'components';
 
 const HomeFaq = () => {
   const faq = useSelector(getAll);
 
-  console.log(faq);
   return (
     <Accordion>
       <Accordion.Title>Masz jakieś pytania?</Accordion.Title>

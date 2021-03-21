@@ -1,7 +1,7 @@
-import { HomeNav, HomeFooter } from '../containers';
-import { Title } from '../components';
+import { HomeNav, HomeFooter } from 'containers';
+import { Title } from 'components';
 
-const NotFound = ({ history }) => {
+const NotFound = () => {
   return (
     <>
       <HomeNav />

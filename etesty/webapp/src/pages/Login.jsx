@@ -1,5 +1,5 @@
-const Login = (props) => {
-  return <>{'login comp'}</>;
+const Login = () => {
+  return <>login comp</>;
 };
 
 export default Login;

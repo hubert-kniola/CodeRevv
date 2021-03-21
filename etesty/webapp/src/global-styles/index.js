@@ -1,5 +1,9 @@
-import { createGlobalStyle } from 'styled-components';
-import background from '../images/bg.png';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { useSelector } from 'react-redux';
+
+import { getTheme } from 'store/slices/theme';
+
+import background from 'images/bg.png';
 
 export const GlobalStyle = createGlobalStyle`
   *, *:before, *:after {
@@ -20,12 +24,8 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 16px;
 }`;
 
-export const darkTheme = {
-  colors: {
-    black: '#201C21',
-    grey: '#474847',
-    orange: '#FE7920',
-    yellow: '#FDD25E',
-    white: '#EBEBEB',
-  }
-};
+export const GlobalThemeProvider = ({ children, ...restProps }) => {
+  const theme = useSelector(getTheme);
+
+  return <ThemeProvider {...restProps} theme={theme}>{children}</ThemeProvider>
+}

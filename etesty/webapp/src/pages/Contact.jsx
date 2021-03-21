@@ -1,7 +1,7 @@
-import { HomeFooter, HomeNav } from '../containers';
-import { Title } from '../components';
+import { HomeFooter, HomeNav } from 'containers';
+import { Title } from 'components';
 
-const Contact = (props) => (
+const Contact = () => (
   <>
     <HomeNav />
 
