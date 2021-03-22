@@ -5,7 +5,7 @@ export const FooterPad = styled.div`
 `;
 
 export const Background = styled.footer`
-  background-color: ${({ theme }) => theme.colors.black};
+  background-color: ${({ theme }) => theme.colors.background};
   width: 100%;
   min-height: 20vh;
 `;
@@ -40,7 +40,7 @@ export const Row = styled.div`
 `;
 
 export const Link = styled.a`
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 20px;
   font-size: 13px;
   text-decoration: none;
@@ -48,13 +48,13 @@ export const Link = styled.a`
 
 export const Title = styled.p`
   font-size: 16px;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 40px;
 `;
 
 export const Text = styled.p`
   font-size: 13px;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 40px;
 `;
 

@@ -1,16 +1,18 @@
 import { Title } from 'components';
 import { HomeFooter, HomeNav, HomeFaq } from 'containers';
 
-const Home = () => (
-  <>
-    <HomeNav />
+const Home = () => {
+  return (
+    <>
+      <HomeNav />
 
-    <Title>Tu powstaje platforma testów online.</Title>
+      <Title>Tu powstaje platforma testów online.</Title>
 
-    <HomeFaq />
+      <HomeFaq />
 
-    <HomeFooter />
-  </>
-);
+      <HomeFooter />
+    </>
+  );
+};
 
 export default Home;

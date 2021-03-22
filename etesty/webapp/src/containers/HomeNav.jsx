@@ -1,4 +1,4 @@
-import { Navbar } from 'components';
+import { Navbar, ThemeSwitch } from 'components';
 
 const HomeNav = () => (
   <Navbar>
@@ -11,6 +11,7 @@ const HomeNav = () => (
     </Navbar.Menu>
 
     <Navbar.ButtonMenu>
+      <ThemeSwitch />
       <Navbar.ButtonLink to="/signin">Zaloguj się</Navbar.ButtonLink>
     </Navbar.ButtonMenu>
   </Navbar>

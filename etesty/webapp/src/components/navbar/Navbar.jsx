@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Container, Link, Menu, ButtonMenu, Button, Logo } from './styles';
 
-import logo from 'images/logo.png';
+import { Container, Link, Menu, ButtonMenu, Button, Logo } from './styles';
 
 const Navbar = ({ children, ...restProps }) => {
   const [scroll, setScroll] = useState(false);
@@ -24,7 +23,7 @@ export default Navbar;
 
 Navbar.LogoLink = ({ children, ...restProps }) => (
   <Link {...restProps}>
-    <Logo src={logo} />
+    <Logo />
   </Link>
 );
 

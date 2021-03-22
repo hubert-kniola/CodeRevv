@@ -3,7 +3,11 @@ import { useSelector } from 'react-redux';
 
 import { getTheme } from 'store/slices/theme';
 
-import background from 'images/bg.png';
+export const GlobalThemeProvider = ({ children, ...restProps }) => {
+  const theme = useSelector(getTheme);
+
+  return <ThemeProvider {...restProps} theme={theme}>{children}</ThemeProvider>
+}
 
 export const GlobalStyle = createGlobalStyle`
   *, *:before, *:after {
@@ -15,17 +19,12 @@ export const GlobalStyle = createGlobalStyle`
     font-family: Roboto, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image: url(${background});
+    background-image: url(${({ theme }) => theme.background});
+    
+    transition: all 0.2s ease-in-out;
     background-position: center;
     background-position-y: -80%;
     background-size: cover;
     background-repeat: auto;
-    color: #000;
     font-size: 16px;
 }`;
-
-export const GlobalThemeProvider = ({ children, ...restProps }) => {
-  const theme = useSelector(getTheme);
-
-  return <ThemeProvider {...restProps} theme={theme}>{children}</ThemeProvider>
-}

@@ -19,7 +19,7 @@ export const Container = styled.div`
 `;
 
 export const Text = styled.a`
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 5vw;
 
   display: inline-block;

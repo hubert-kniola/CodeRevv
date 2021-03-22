@@ -21,7 +21,7 @@ export const Title = styled.h1`
   line-height: 0.9;
   margin-top: 0;
   margin-bottom: 10px;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
 
   @media (max-width: 600px) {
@@ -30,7 +30,7 @@ export const Title = styled.h1`
 `;
 
 export const Item = styled.div`
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   margin: auto;
   margin-bottom: 10px;
   max-width: 1200px;
@@ -42,6 +42,7 @@ export const Item = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
+
 `;
 
 export const Header = styled.div`
@@ -51,7 +52,7 @@ export const Header = styled.div`
   margin-bottom: 1px;
   font-size: 26px;
   font-weight: normal;
-  background: ${({ theme }) => theme.colors.grey};
+  background: ${({ theme }) => theme.colors.setting};
   padding: 0.8em 1.2em 0.8em 1.2em;
   user-select: none;
   align-items: center;
@@ -84,7 +85,7 @@ export const Body = styled.div`
   font-size: 26px;
   font-weight: normal;
   line-height: normal;
-  background: ${({ theme }) => theme.colors.grey};
+  background: ${({ theme }) => theme.colors.setting};
   white-space: pre-wrap;
   user-select: none;
   overflow: hidden;

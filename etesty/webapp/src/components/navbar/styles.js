@@ -1,6 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
+import logo from 'images/logo.png';
+
 export const Container = styled.nav`
   height: 80px;
   display: flex;
@@ -12,7 +14,7 @@ export const Container = styled.nav`
 
 
   ${({ scroll }) => (scroll && css`
-    background-color: ${({ theme }) => theme.colors.black};
+    background-color: ${({ theme }) => theme.colors.background};
     transition: all 0.5s ease-in-out;
   `) || css`
     background-color: none;
@@ -33,7 +35,7 @@ export const ButtonMenu = styled.nav`
 `;
 
 export const Link = styled(NavLink)`
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -41,21 +43,21 @@ export const Link = styled(NavLink)`
   height: 100%;
   cursor: pointer;
   &.active {
-    color: ${({ theme }) => theme.colors.yellow};
+    color: ${({ theme }) => theme.colors.secondary};
   }
 
   ${({ active }) =>
     active &&
     css`
-      color: ${({ theme }) => theme.colors.orange};
+      color: ${({ theme }) => theme.colors.primary};
     `}
 `;
 
 export const Button = styled(NavLink)`
   border-radius: 4px;
-  background: ${({ theme }) => theme.colors.orange};
+  background: ${({ theme }) => theme.colors.primary};
   padding: 10px 22px;
-  color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
   outline: none;
   border: none;
   cursor: pointer;
@@ -65,14 +67,20 @@ export const Button = styled(NavLink)`
   margin-left: 24px;
   &:hover {
     transition: all 0.2s ease-in-out;
-    background: ${({ theme }) => theme.colors.white};
-    color: ${({ theme }) => theme.colors.grey};
+    background: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.setting};
   }
 `;
 
 export const Logo = styled.img`
   height: 5rem;
   pointer-events: none;
+
+  ${({theme}) => theme.name === 'light' && css`
+    filter: invert(1);
+  `}
+
+  transition: all 0.2s ease-in-out;
 `;
 
-Logo.defaultProps = { alt: 'logo' }
+Logo.defaultProps = { src: logo, alt: 'logo' }

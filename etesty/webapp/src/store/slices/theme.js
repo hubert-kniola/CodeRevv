@@ -1,30 +1,37 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import bg_dark from 'images/bg.png';
+import bg_light from 'images/bg_light.png';
+
 const darkTheme = {
+    name: 'dark',
     colors: {
-        black: '#201C21',
-        grey: '#474847',
-        orange: '#FE7920',
-        yellow: '#FDD25E',
-        white: '#EBEBEB',
-    }
+        background: '#201C21',
+        setting: '#474847CC',
+        primary: '#FE7920',
+        secondary: '#FDD25E',
+        text: '#EBEBEB',
+    },
+    background: bg_dark
 };
 
 const lightTheme = {
+    name: 'light',
     colors: {
-        black: '#fff',
-        grey: '#fff',
-        orange: '#fff',
-        yellow: '#fff',
-        white: '#fff',
-    }
+        background: '#fff',
+        setting: '#fff',
+        primary: '#fff',
+        secondary: '#fff',
+        text: '#fff',
+    },
+    background: bg_light
 };
 
 const theme = createSlice({
     name: 'theme',
     initialState: darkTheme,
     reducers: {
-        switch: (state) => state === darkTheme ? lightTheme : darkTheme
+        switch: ({ name }) => name === 'dark' ? lightTheme : darkTheme
     }
 });
 
