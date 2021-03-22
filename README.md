@@ -4,11 +4,11 @@
 * VS Code + wtyczki
 * `nodejs`
 * `npm`
-* Google Chrome + wtyczka `React Dev Tools`
+* Google Chrome + wtyczki `React Dev Tools` & `Redux Dev Tools`
 
 ### Narzędzia do `server`
 * PyCharm
 * `python`
 * `mongodb`
 * `virtualenv`
-* proponuje Postmana sprawdzić do API
+* Postman do API
