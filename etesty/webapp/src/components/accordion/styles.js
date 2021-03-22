@@ -56,6 +56,7 @@ export const Header = styled.div`
   padding: 0.8em 1.2em 0.8em 1.2em;
   user-select: none;
   align-items: center;
+  border-radius: 15px;
 
   img {
     margin-left: 10px;
@@ -74,6 +75,10 @@ export const Header = styled.div`
     -o-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     `}
+
+    ${({ theme }) => theme.name === 'light' && css`
+      filter: invert(0);
+    `}
   }
 
   @media (max-width: 600px) {
@@ -89,6 +94,7 @@ export const Body = styled.div`
   white-space: pre-wrap;
   user-select: none;
   overflow: hidden;
+  border-radius: 15px;
 
   ${({ toggleShow }) => (toggleShow && css`
     max-height: 0;

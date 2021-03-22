@@ -19,11 +19,11 @@ const darkTheme = {
 const lightTheme = {
     name: 'light',
     colors: {
-        background: '#fff',
-        setting: '#fff',
-        primary: '#fff',
+        background: '#EBEBEB',
+        setting: '#FDD25E',
+        primary: '#FE7920',
         secondary: '#fff',
-        text: '#fff',
+        text: '#201C21',
     },
     background: bg_light
 };
@@ -58,3 +58,5 @@ const theme = createSlice({
 export default theme;
 
 export const getTheme = (state) => state.theme;
+
+export const getName = (state) => state.theme.name;

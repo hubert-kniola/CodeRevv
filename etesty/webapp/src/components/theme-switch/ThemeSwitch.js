@@ -1,15 +1,17 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Button } from './styles';
-import themeSlice from 'store/slices/theme';
+import { Container, CheckBox, Label } from './styles';
+import themeSlice, { getName } from 'store/slices/theme';
 
 const ThemeSwitch = () => {
     const dispatch = useDispatch();
+    const themeName = useSelector(getName);
 
     return (
-        <Button onClick={() => dispatch(themeSlice.actions.switch())}>
-            Motyw
-        </Button>
+        <Container>
+            <CheckBox checked={themeName === 'light'} onClick={() => dispatch(themeSlice.actions.switch())} />
+            <Label />
+        </Container>
     )
 };
 

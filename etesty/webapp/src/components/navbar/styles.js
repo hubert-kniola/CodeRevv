@@ -54,15 +54,13 @@ export const Link = styled(NavLink)`
 `;
 
 export const Button = styled(NavLink)`
-  border-radius: 4px;
-  background: ${({ theme }) => theme.colors.primary};
   padding: 10px 22px;
-  color: ${({ theme }) => theme.colors.text};
-  outline: none;
-  border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
+  border-radius: 15px;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.primary};
 
   margin-left: 24px;
   &:hover {
