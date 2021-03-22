@@ -6,7 +6,7 @@ import themeSlice from './slices/theme'
 const store = configureStore({
     reducer: {
         faq: faqSlice.reducer,
-        theme: themeSlice.reducer
+        theme: themeSlice.reducer,
     }
 });
 

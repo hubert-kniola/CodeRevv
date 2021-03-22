@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Barn from 'barn';
 
 import bg_dark from 'images/bg.png';
 import bg_light from 'images/bg_light.png';
@@ -27,11 +28,30 @@ const lightTheme = {
     background: bg_light
 };
 
+const key = 'theme';
+
+const retrieveTheme = () => {
+    let barn = new Barn(localStorage);
+    const theme = barn.get(key);
+
+    return ['light', 'dark'].includes(theme) ? theme : null;
+}
+
+const saveTheme = (name) => {
+    let barn = new Barn(localStorage);
+    barn.set(key, name);
+    barn.condense();
+}
+
 const theme = createSlice({
     name: 'theme',
-    initialState: darkTheme,
+    initialState: retrieveTheme() === 'light' ? lightTheme : darkTheme,
     reducers: {
-        switch: ({ name }) => name === 'dark' ? lightTheme : darkTheme
+        switch: ({ name }) => {
+            const theme = name === 'light' ? darkTheme : lightTheme;
+            saveTheme(theme.name);
+            return theme;
+        }
     }
 });
 
