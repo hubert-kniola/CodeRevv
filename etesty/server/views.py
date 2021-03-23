@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import *
-from .models import User
-from .serializers import UserSerializer
+from .models import User, OnlineTest
+from .serializers import UserSerializer, TestSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
@@ -51,6 +51,22 @@ def user_detail(request, pk):
     elif request.method == 'DELETE':
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def test_list(request):
+    if request.method == 'GET':
+        tests = OnlineTest.objects.all()
+        serializer = TestSerializer(tests, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = TestSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReactView(View):

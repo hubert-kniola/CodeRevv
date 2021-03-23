@@ -9,6 +9,9 @@ class User(models.Model):
     birth_date = models.DateField(null=True)
     password = models.CharField(max_length=20, null=True)
 
+    def __str__(self):
+        return self.first_name, ' ', self.last_name
+
 
 class Question(models.Model):
     question_type = models.CharField(max_length=20)
@@ -18,24 +21,36 @@ class Question(models.Model):
     image = models.ImageField(null=True)
 
     def __str__(self):
-        return self.content
+        return f'{self.question_type} {self.content} {self.answer} {self.max_score}'
+
+    class Meta:
+        abstract = True
 
 
 class UserAnswer(models.Model):
     question_id = models.IntegerField()
     answer = models.CharField(max_length=500)
-    user = User
+    user = models.IntegerField()
     comment = models.CharField(max_length=200)
     score = models.FloatField()
+
+    def __str__(self):
+        return self.answer
+
+    class Meta:
+        abstract = True
 
 
 class OnlineTest(models.Model):
     headline = models.CharField(max_length=50)
     pub_test = models.DateField(null=True)
-    creator = User
+    creator = models.IntegerField(null=True)
     users = models.ManyToManyField(User)
-    question = models.ManyToManyField(Question)
-    user_answer = models.ManyToManyField(UserAnswer)
+    question = models.EmbeddedField(Question)
+    user_answer = models.EmbeddedField(UserAnswer)
+
+    def __str__(self):
+        return self.headline
 
 
 
