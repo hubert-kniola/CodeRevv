@@ -75,12 +75,7 @@ class ReactView(View):
     def get(self, request):
         try:
             with open(ReactView.REACT_INDEX) as file:
-                return HttpResponse(file.read())
+                return HttpResponse(file.read(), status=status.HTTP_201_CREATED)
 
         except:
-            return HttpResponse(
-                """
-                index.html not found ! build your React app !!
-                """,
-                status=501,
-            )
+            return Response(data="""index.html not found ! build your React app !!""", status=status.HTTP_501_NOT_IMPLEMENTED,)
