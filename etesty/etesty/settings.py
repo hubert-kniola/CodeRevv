@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # my_apps
     'server',
     'rest_framework',
+    #'rest_framework.authtoken',
     # auth_required
     'django.contrib.sites',
     'allauth',
@@ -52,6 +53,8 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_FORMS = {'signup': 'server.forms.CustomSignupForm'}
+
+LOGIN_REDIRECT_URL = '/main'
 
 # ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_REQUIRED = True
