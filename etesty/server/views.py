@@ -1,3 +1,5 @@
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 from django.http import *
 from .models import *
@@ -12,6 +14,8 @@ from django.views.generic import View
 from django.conf import settings
 import os
 
+
+@login_required()
 @api_view(['GET', 'POST'])
 def user_list(request):
     if request.method == 'GET':
@@ -28,14 +32,14 @@ def user_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
+@login_required()
 @api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request, pk):
     try:
         user = AuthUser.objects.get(pk=pk)
 
     except AuthUser.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = UserSerializer(user)
@@ -53,6 +57,7 @@ def user_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@login_required()
 @api_view(['GET', 'POST'])
 def test_list(request):
     if request.method == 'GET':

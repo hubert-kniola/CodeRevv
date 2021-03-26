@@ -51,6 +51,8 @@ SITE_ID = 1
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+ACCOUNT_FORMS = {'signup': 'server.forms.CustomSignupForm'}
+
 # ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
