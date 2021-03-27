@@ -38,15 +38,16 @@ INSTALLED_APPS = [
     # my_apps
     'server',
     # auth
-     'rest_framework',
-     'rest_framework.authtoken',
-    # 'rest_auth',
-    # 'rest_auth.registration',
-     'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'rest_auth.registration',
+    # social_auth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google'
 
 ]
 
