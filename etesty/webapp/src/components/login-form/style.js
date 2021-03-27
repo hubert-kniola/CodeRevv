@@ -53,7 +53,6 @@ export const Input = styled.input`
    width: 100%;
    padding: 10px 15px;
    background-color: #f8f8f8;
-
    border-radius: 20px;
    transition: 0.4s;
 
@@ -73,7 +72,11 @@ export const Button = styled.input`
 `;
 
 export const Error = styled.h3`
+   margin-top: -1px;
+   margin-left: 20px;
+   font-size: 13px;
    color:red;
+   text-align: left;
 `
 
 
