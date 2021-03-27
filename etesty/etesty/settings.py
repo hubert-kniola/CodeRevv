@@ -37,15 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my_apps
     'server',
-    'rest_framework',
-    #'rest_framework.authtoken',
-    # auth_required
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
-    # rest_auth
+    # auth
+     'rest_framework',
+     'rest_framework.authtoken',
+    # 'rest_auth',
+    # 'rest_auth.registration',
+     'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google'
+
 ]
 
 SITE_ID = 1
