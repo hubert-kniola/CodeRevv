@@ -12,6 +12,7 @@ const darkTheme = {
         primary: '#FE7920',
         secondary: '#FDD25E',
         text: '#EBEBEB',
+        error: '#eb2f2f'
     },
     background: bg_dark
 };
@@ -24,6 +25,7 @@ const lightTheme = {
         primary: '#FE7920',
         secondary: '#fff',
         text: '#201C21',
+        error: '#eb2f2f'
     },
     background: bg_light
 };

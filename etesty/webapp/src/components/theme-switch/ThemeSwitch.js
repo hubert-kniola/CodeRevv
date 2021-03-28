@@ -9,7 +9,7 @@ const ThemeSwitch = () => {
 
     return (
         <Container>
-            <CheckBox checked={themeName === 'light'} onClick={() => dispatch(themeSlice.actions.switch())} />
+            <CheckBox checked={themeName === 'light'} onChange = {()=>{} } onClick={() => dispatch(themeSlice.actions.switch())} />
             <Label />
         </Container>
     )
