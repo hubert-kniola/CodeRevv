@@ -6,8 +6,8 @@ const App = () => (
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/contact" component={Contact} />
-      <Route exact path="/signup" component={NotFound} />
-      <Route component={Login} />
+      <Route exact path="/signin" component={Login} />
+      <Route component={NotFound} />
     </Switch>
   </BrowserRouter>
 );

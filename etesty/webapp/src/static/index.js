@@ -1,4 +1,4 @@
-const loginContent = {
+export const loginContent = {
     inputs: [
         {
             label: 'email',
@@ -14,5 +14,3 @@ const loginContent = {
         },
     ],
 };
-
-export default loginContent;

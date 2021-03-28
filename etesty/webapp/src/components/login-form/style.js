@@ -6,21 +6,18 @@ export const Container = styled.div`
    flex-direction: column;
    align-items: center;
    justify-content: center;
-`
+`;
 
 export const Form = styled.form`
    display: block;
    position: relative;
-   border: 4px solid #FE7920;
 
   @media (max-width: 1000px) {
     margin: 0 30px;
   }
-
-
 `;
 
-export const FormInner= styled.div`
+export const FormInner = styled.div`
    position: relative;
    display: block;
   
@@ -29,15 +26,15 @@ export const FormInner= styled.div`
    text-align: center;
 
    h2 {
-      color: #EBEBEB;
+      color: ${({ theme }) => theme.colors.text};
       font-size: 28px;
       font-weight: 600;
       margin-bottom: 30px;
    }
 
-   hr{
+   hr {
        margin-bottom: 30px;
-       color: #474847;
+       color: ${({ theme }) => theme.colors.setting};
        width: 100%;
    }
 
@@ -45,39 +42,73 @@ export const FormInner= styled.div`
 
 export const FormGroup = styled.div`
    display: block;
-   width: 300px;
+   width: 500px;
    margin-bottom: 15px;
-`
+   transition: 0.4s;
+
+   input::placeholder {
+    color: ${({ theme }) => theme.colors.text};
+   }
+
+   input, select, textarea{
+    color: ${({ theme }) => theme.colors.text};
+   }
+
+   textarea:focus, input:focus {
+      color: ${({ theme }) => theme.colors.text};
+   }
+
+   input:-webkit-autofill,
+   input:-webkit-autofill:hover, 
+   input:-webkit-autofill:focus,
+   textarea:-webkit-autofill,
+   textarea:-webkit-autofill:hover,
+   textarea:-webkit-autofill:focus,
+   select:-webkit-autofill,
+   select:-webkit-autofill:hover,
+   select:-webkit-autofill:focus {
+      -webkit-text-fill-color: ${({ theme }) => theme.colors.text};
+      background-color: ${({ theme }) => theme.colors.setting};
+      transition: background-color 5000s ease-in-out 0s;
+   }
+`;
 
 export const Input = styled.input`
    width: 100%;
-   padding: 10px 15px;
-   background-color: #f8f8f8;
-   border-radius: 20px;
-   transition: 0.4s;
-
-`
-
-export const Button = styled.input`
-   display: block;
-   width: 100%;
-   padding: 10px 15px;
+   padding: 15px 15px;
    border: 0px solid transparent;
-   border-radius: 20px;;
-   text-align: center;
-   background-color:  #FE7920;
-   color: #f8f8f8;
-   font-size: 20px;
-   cursor: pointer;
+   background-color: ${({ theme }) => theme.colors.setting};
+
+   border-radius: 15px;
 `;
 
+export const Button = styled.button`
+   display: block;
+   width: 100%;
+   margin-top:30px;
+   margin-bottom: 15px;
+   padding: 10px 15px;
+   border: 0px solid transparent;
+   border-radius: 15px;
+   text-align: center;
+   background-color: ${({ theme }) => theme.colors.primary};
+   color: ${({ theme }) => theme.colors.text};
+   font-size: 20px;
+   cursor: pointer;
+
+   &:hover {
+    transition: all 0.2s ease-in-out;
+    background: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.setting};
+   }
+`;
+
+Button.defaultProps = { type: 'submit' }
+
 export const Error = styled.h3`
-   margin-top: -1px;
+   margin-top: 5px;
    margin-left: 20px;
    font-size: 13px;
-   color:red;
+   color: ${({ theme }) => theme.colors.error};
    text-align: left;
-`
-
-
-
+`;
