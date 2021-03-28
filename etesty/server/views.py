@@ -75,10 +75,10 @@ def test_list(request):
 
 
 @api_view(['GET', 'POST'])
-def user_login(request, email, password):
-    if request.method == 'GET':
-        user = AuthUser.objects.get(email=email)
-        if user.password == password:
+def user_login(request):
+    if request.method == 'POST':
+        user = AuthUser.objects.get(email=request.POST['email'])
+        if user.password == request.POST['password']:
             serializer = UserSerializer(user)
             return Response(serializer.data)
         else:
@@ -102,7 +102,7 @@ class ReactView(View):
     def get(self, request):
         try:
             with open(ReactView.REACT_INDEX) as file:
-                return HttpResponse(file.read(), status=status.HTTP_201_CREATED)
+                return HttpResponse(file.read(), status=status.HTTP_200_OK)
 
         except:
             return Response(data="""index.html not found ! build your React app !!""", status=status.HTTP_501_NOT_IMPLEMENTED,)
