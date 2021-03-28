@@ -1,12 +1,11 @@
-import { HomeFooter, HomeNav } from 'containers';
-import {LoginForm} from 'components';
+import { HomeFooter, HomeNav, LoginForm } from 'containers';
 
-const Login = () => {
+const Login = ({history}) => {
   return (
     <>
       <HomeNav />
 
-      <LoginForm />
+      <LoginForm history={history}/>
 
       <HomeFooter />
     </>

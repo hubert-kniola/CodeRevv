@@ -8,7 +8,7 @@ export const Container = styled.div`
    justify-content: center;
 `;
 
-export const Form = styled.form`
+export const FormContainer = styled.form`
    display: block;
    position: relative;
 
