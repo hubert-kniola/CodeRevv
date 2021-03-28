@@ -14,10 +14,6 @@ from django.conf import settings
 import os
 
 
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
-
-
 @api_view(['GET', 'POST'])
 def user_list(request):
     if request.method == 'GET':
