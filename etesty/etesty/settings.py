@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google'
-
+    # cross-origin
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -62,6 +63,8 @@ LOGIN_REDIRECT_URL = '/main'
 # ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 SOCIALACCOUNT_PROVIDERS = \
     {
@@ -80,6 +83,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # cross-origin
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'etesty.urls'
