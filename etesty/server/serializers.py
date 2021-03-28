@@ -4,5 +4,17 @@ from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = AuthUser
+        fields = '__all__'
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ['email', 'password']
+
+
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OnlineTest
         fields = '__all__'
