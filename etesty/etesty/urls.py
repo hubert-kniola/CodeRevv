@@ -5,7 +5,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 
 from django.contrib import admin
 from django.urls import path, include
-from server.views import GoogleLogin
+#from server.views import GoogleLogin
 
 urlpatterns = [
     path('9odgDCK35Iur8YDs3wBj/', admin.site.urls),
