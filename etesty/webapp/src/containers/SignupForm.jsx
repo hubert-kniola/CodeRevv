@@ -51,7 +51,7 @@ const inputs = [
 
 const Url = 'http://httpbin.org/post'; //'http://localhost:8000/login/';
 
-const RegisterForm = ({ history }) => {
+const SignupForm = ({ history }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
@@ -100,4 +100,4 @@ const RegisterForm = ({ history }) => {
   );
 };
 
-export default RegisterForm;
+export default SignupForm;
