@@ -2,14 +2,13 @@ import { useContext } from 'react';
 
 import { AuthContext } from 'context';
 import { HomeNav, SignupForm, HomeFooter } from 'containers';
-import { apiAxios } from 'util';
 
 const Signup = () => {
   const authContext = useContext(AuthContext);
 
   const onSubmit = async (credentials) => {
     try {
-      const { data } = await apiAxios.post('/signup', credentials);
+      const { data } = await authContext.axios.post('/signup', credentials);
       authContext.updateAuthState(data);
       
     } catch (err) {

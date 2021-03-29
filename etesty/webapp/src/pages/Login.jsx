@@ -2,14 +2,13 @@ import { useContext } from 'react';
 
 import { AuthContext } from 'context';
 import { HomeFooter, HomeNav, LoginForm } from 'containers';
-import { apiAxios } from 'util';
 
 const Login = () => {
   const authContext = useContext(AuthContext);
 
   const onSubmit = async (credentials) => {
     try {
-      const { data } = await apiAxios.post('/login', credentials);
+      const { data } = await authContext.axios.post('/login', credentials);
       authContext.updateAuthState(data);
 
     } catch (err) {
