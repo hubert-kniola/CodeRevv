@@ -23,12 +23,14 @@ class TestSerializer(serializers.ModelSerializer):
 
 class TokenPairSerializer(TokenObtainPairSerializer):
 
-    @classmethod
-    def get_token(cls, user):
-        token = super(TokenPairSerializer, cls).get_token(user)
+    def validate(self, attrs):
+        data = super().validate(attrs)
 
-        # Add custom claims
-        token['email'] = user.email
-        print(token['access'])
-        return token
+        refresh = self.get_token(self.user)
+        refresh['email'] = self.user.email
+
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        return data
 

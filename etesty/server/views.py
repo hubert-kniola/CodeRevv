@@ -82,7 +82,7 @@ def user_login(request):
         user = authenticate(username=user_data['email'], password=user_data['password'])
 
         if user is not None:
-            serializer = TokenObtainPairSerializer()
+            serializer = TokenPairSerializer()
             attr = {
                 'email': user.email,
                 'password': user_data['password']
