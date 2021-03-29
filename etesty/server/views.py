@@ -73,8 +73,9 @@ def test_list(request):
 @api_view(['GET', 'POST'])
 def user_login(request):
     if request.method == 'POST':
-        user = AuthUser.objects.get(email=request.POST['email'])
-        if user.password == request.POST['password']:
+        user_data = request.data
+        user = AuthUser.objects.get(email=user_data["email"])
+        if user.password == user_data['password']:
             serializer = UserSerializer(user)
             return Response(serializer.data)
         else:
