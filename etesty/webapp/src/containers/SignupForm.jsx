@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { apiAxios } from 'util';
 import { GoogleButton, Form } from 'components';
 
 const Regex = String.raw`^[A-Z][a-z]+$`;
@@ -49,23 +48,12 @@ const inputs = [
   },
 ];
 
-const SignupForm = () => {
+const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [state, setState] = useState({ email: '', name: '', surname: '', password: '', password2: '' });
-
-  const responseGoogle = (response) => {
-    console.log(response);
-    console.log(response.profileObj);
-  };
-
-  const onSubmit = async (data) => {
-    console.log(data);
-
-    apiAxios.post('/signup', data).then(console.log).catch(console.log);
-  };
 
   const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
 
@@ -90,7 +78,7 @@ const SignupForm = () => {
       ))}
 
       <Form.Button>Zarejestruj się</Form.Button>
-      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={responseGoogle} onFailure={responseGoogle} />
+      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={onSuccessGoogle} onFailure={onFailureGoogle} />
     </Form>
   );
 };

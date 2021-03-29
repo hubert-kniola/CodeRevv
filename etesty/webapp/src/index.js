@@ -3,15 +3,17 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 import { GlobalStyle, GlobalThemeProvider } from 'global-styles';
-import { ThemeProvider } from 'context';
+import { ThemeProvider, AuthProvider } from 'context';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
-        <GlobalThemeProvider>
-          <GlobalStyle />
+      <GlobalThemeProvider>
+        <GlobalStyle />
+        <AuthProvider>
           <App />
-        </GlobalThemeProvider>
+        </AuthProvider>
+      </GlobalThemeProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

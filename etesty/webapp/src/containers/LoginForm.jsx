@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { apiAxios } from 'util';
 import { GoogleButton, Form } from 'components';
 
 const schema = yup.object().shape({
@@ -26,23 +25,12 @@ const inputs = [
   },
 ];
 
-const LoginForm = () => {
+const LoginForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [state, setState] = useState({ email: '', password: '' });
-
-  const responseGoogle = (response) => {
-    console.log(response);
-    console.log(response.profileObj);
-  };
-
-  const onSubmit = async (data) => {
-    console.log(data);
-
-    apiAxios.post('/login', data).then(console.log).catch(console.log);
-  };
 
   const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
 
@@ -67,7 +55,7 @@ const LoginForm = () => {
       ))}
 
       <Form.Button>Zaloguj się</Form.Button>
-      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={responseGoogle} onFailure={responseGoogle} />
+      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={onSuccessGoogle} onFailure={onFailureGoogle} />
     </Form>
   );
 };

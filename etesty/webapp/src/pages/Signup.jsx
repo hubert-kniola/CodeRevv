@@ -1,13 +1,35 @@
+import { useContext } from 'react';
+
+import { AuthContext } from 'context';
 import { HomeNav, SignupForm, HomeFooter } from 'containers';
+import { apiAxios } from 'util';
 
-const Signup = () => (
-  <>
-    <HomeNav />
+const Signup = () => {
+  const authContext = useContext(AuthContext);
 
-    <SignupForm/>
+  const onSubmit = async (credentials) => {
+    try {
+      const { data } = await apiAxios.post('/signup', credentials);
+      authContext.updateAuthState(data);
+      
+    } catch (err) {
+      window.alert(err);
+    }
+  };
 
-    <HomeFooter />
-  </>
-);
+  const responseGoogle = (response) => {
+    console.log(response);
+  };
+
+  return (
+    <>
+      <HomeNav />
+
+      <SignupForm onSubmit={onSubmit} onSuccessGoogle={responseGoogle} onFailureGoogle={responseGoogle} />
+
+      <HomeFooter />
+    </>
+  );
+};
 
 export default Signup;
