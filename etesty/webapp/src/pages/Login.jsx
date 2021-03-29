@@ -1,15 +1,13 @@
 import { HomeFooter, HomeNav, LoginForm } from 'containers';
 
-const Login = ({history}) => {
-  return (
-    <>
-      <HomeNav />
+const Login = () => (
+  <>
+    <HomeNav />
 
-      <LoginForm history={history}/>
+    <LoginForm />
 
-      <HomeFooter />
-    </>
-  );
-};
+    <HomeFooter />
+  </>
+);
 
 export default Login;

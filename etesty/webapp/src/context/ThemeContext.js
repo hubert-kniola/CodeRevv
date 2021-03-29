@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createContext, useState } from 'react';
 import Barn from 'barn';
 
 import bg_dark from 'images/bg.png';
@@ -30,35 +30,38 @@ const lightTheme = {
     background: bg_light
 };
 
-const key = 'theme';
+const storageKey = 'theme';
 
 const retrieveTheme = () => {
     let barn = new Barn(localStorage);
-    const theme = barn.get(key);
+    const theme = barn.get(storageKey);
 
     return ['light', 'dark'].includes(theme) ? theme : null;
 }
 
 const saveTheme = (name) => {
     let barn = new Barn(localStorage);
-    barn.set(key, name);
+    barn.set(storageKey, name);
     barn.condense();
 }
 
-const theme = createSlice({
-    name: 'theme',
-    initialState: retrieveTheme() === 'light' ? lightTheme : darkTheme,
-    reducers: {
-        switch: ({ name }) => {
-            const theme = name === 'light' ? darkTheme : lightTheme;
-            saveTheme(theme.name);
-            return theme;
-        }
-    }
-});
+const ThemeContext = createContext();
+const { Provider } = ThemeContext;
 
-export default theme;
+const ThemeProvider = ({ children }) => {
+    const [theme, setTheme] = useState(retrieveTheme() === 'light' ? lightTheme : darkTheme);
 
-export const getTheme = (state) => state.theme;
+    return (
+        <Provider value={{
+            theme,
+            switchTheme: () => {
+                setTheme(theme.name === 'light' ? darkTheme : lightTheme);
+                saveTheme(theme.name);
+            }
+        }}>
+            {children}
+        </Provider>
+    )
+};
 
-export const getName = (state) => state.theme.name;
+export { ThemeContext, ThemeProvider };

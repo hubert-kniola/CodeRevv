@@ -1,10 +1,10 @@
 import { HomeNav, SignupForm, HomeFooter } from 'containers';
 
-const Signup = ({ history }) => (
+const Signup = () => (
   <>
     <HomeNav />
 
-    <SignupForm history={history} />
+    <SignupForm/>
 
     <HomeFooter />
   </>

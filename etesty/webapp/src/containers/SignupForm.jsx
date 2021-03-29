@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import axios from 'axios';
 
+import { apiAxios } from 'util';
 import { GoogleButton, Form } from 'components';
 
 const Regex = String.raw`^[A-Z][a-z]+$`;
@@ -49,9 +49,7 @@ const inputs = [
   },
 ];
 
-const Url = 'http://httpbin.org/post'; //'http://localhost:8000/login/';
-
-const SignupForm = ({ history }) => {
+const SignupForm = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
@@ -61,15 +59,12 @@ const SignupForm = ({ history }) => {
   const responseGoogle = (response) => {
     console.log(response);
     console.log(response.profileObj);
-    history.push({ pathname: '/dashboard' });
   };
 
   const onSubmit = async (data) => {
     console.log(data);
 
-    axios.post(Url, data).then(console.log).catch(console.log);
-
-    //history.push({ pathname: '/dashboard' });
+    apiAxios.post('/signup', data).then(console.log).catch(console.log);
   };
 
   const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
