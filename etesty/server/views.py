@@ -1,3 +1,4 @@
+from django.contrib.auth.backends import AllowAllUsersModelBackend
 from django.http import *
 from rest_framework.permissions import AllowAny
 
@@ -9,6 +10,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 # Create your views here.
 from django.views.generic import View
+from django.utils import timezone
 import os
 
 
@@ -80,8 +82,10 @@ def user_login(request):
     if request.method == 'POST':
         user_data = request.data
         user = authenticate(username=user_data['email'], password=user_data['password'])
-
         if user is not None:
+            user.is_active = True
+            user.last_login = timezone.now()
+            user.save()
             serializer = TokenPairSerializer()
             attr = {
                 'email': user.email,
@@ -93,15 +97,18 @@ def user_login(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
 def user_register(request):
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
-
+        print(serializer.initial_data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            user = serializer.save()
+            print('.....')
+            if user:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class ReactView(View):
     REACT_INDEX = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp'), 'build', 'index.html')

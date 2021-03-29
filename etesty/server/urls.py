@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/v1/user/<int:pk>/', user_detail),
     path('api/v1/tests/', test_list),
     path('login/', user_login),
+    path('register/', user_register),
     #url(r'^', ReactView.as_view()),
     path('token/obtain/', TokenPairView.as_view(), name='token_create'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),

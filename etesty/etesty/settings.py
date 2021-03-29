@@ -150,7 +150,7 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
