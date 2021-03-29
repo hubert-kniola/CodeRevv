@@ -29,4 +29,6 @@ class TokenPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['email'] = user.email
+        print(token['access'])
         return token
+

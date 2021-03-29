@@ -1,10 +1,12 @@
 from django.http import *
+from rest_framework.permissions import AllowAny
+
 from .serializers import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from django.contrib.auth import authenticate
 # Create your views here.
 from django.views.generic import View
 import os
@@ -72,14 +74,20 @@ class TokenPairView(TokenObtainPairView):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
 def user_login(request):
-    #permission_classes = (permissions.IsAuthenticated,)
     if request.method == 'POST':
         user_data = request.data
-        user = AuthUser.objects.get(email=user_data["email"])
-        if user.password == user_data['password']:
-            serializer = TokenPairView(user)
-            return Response(serializer.data)
+        user = authenticate(username=user_data['email'], password=user_data['password'])
+
+        if user is not None:
+            serializer = TokenObtainPairSerializer()
+            attr = {
+                'email': user.email,
+                'password': user_data['password']
+            }
+            return Response(serializer.validate(attr), status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
