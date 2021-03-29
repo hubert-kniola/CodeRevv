@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import *
 from django.conf.urls import url
+from rest_framework_simplejwt import views as jwt_views
 
 urlpatterns = [
     path('api/v1/users/', user_list),
@@ -8,6 +9,6 @@ urlpatterns = [
     path('api/v1/tests/', test_list),
     path('login/', user_login),
     #url(r'^', ReactView.as_view()),
-    url(r'^rest-auth/', include('rest_auth.urls')),
-    url(r'^rest-auth/registration/', include('rest_auth.registration.urls'))
+    path('token/obtain/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),
+    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]

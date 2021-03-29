@@ -1,8 +1,9 @@
 from djongo import models
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class AuthUser(models.Model):
+class AuthUser(AbstractUser):
     date_joined = models.DateTimeField()
     email = models.CharField(max_length=50)
     first_name = models.CharField(max_length=50)
@@ -14,6 +15,9 @@ class AuthUser(models.Model):
     last_name = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
     username = models.CharField(unique=True, max_length=50)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['user_name']
 
     class Meta:
         managed = False

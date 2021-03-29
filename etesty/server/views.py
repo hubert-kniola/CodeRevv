@@ -1,16 +1,12 @@
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import *
 from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from rest_auth.registration.views import SocialLoginView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Create your views here.
 from django.views.generic import View
-from django.conf import settings
 import os
 
 
@@ -70,13 +66,19 @@ def test_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class TokenPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = TokenPairSerializer
+
+
 @api_view(['GET', 'POST'])
 def user_login(request):
+    #permission_classes = (permissions.IsAuthenticated,)
     if request.method == 'POST':
         user_data = request.data
         user = AuthUser.objects.get(email=user_data["email"])
         if user.password == user_data['password']:
-            serializer = UserSerializer(user)
+            serializer = TokenPairView(user)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
