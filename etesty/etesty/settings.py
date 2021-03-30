@@ -55,9 +55,9 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    #'DEFAULT_PERMISSION_CLASSES': [
+    #    'rest_framework.permissions.IsAuthenticated',
+    #],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -105,14 +105,13 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
 )
 
-SOCIALACCOUNT_PROVIDERS = \
-    {
-        'google': {
-            'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile',
-                      'https://www.googleapis.com/auth/userinfo.email'],
-            'AUTH_PARAMS': {'access_type': 'online'}
-        }
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile',
+                  'https://www.googleapis.com/auth/userinfo.email'],
+        'AUTH_PARAMS': {'access_type': 'online'}
     }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django import http
 
 from django.contrib.auth.backends import AllowAllUsersModelBackend
 from django.http import *
@@ -15,6 +16,10 @@ from django.utils import timezone
 
 @api_view(['GET', 'POST'])
 def user_list(request):
+    token1 = request.COOKIES['access']
+    token2 = request.COOKIES['refresh']
+    print(token1, token2)
+
     if request.method == 'GET':
         users = AuthUser.objects.all()
         serializer = UserSerializer(users, many=True)
@@ -80,27 +85,37 @@ class TokenPairView(TokenObtainPairView):
 def user_login(request):
     if request.method == 'POST':
         user_data = request.data
-        user = authenticate(username=user_data['email'], password=user_data['password'])
+
+        user = authenticate(
+            username=user_data['email'], password=user_data['password'])
+
         if user is not None:
             user.is_active = True
             user.last_login = timezone.now()
             user.save()
+
             serializer = TokenPairSerializer()
-            user_info_serializer = UserInfoSerializer(user)
             attr = {
                 'email': user.email,
                 'password': user_data['password']
             }
+
             tokens = serializer.validate(attr)
-            exp = tokens['exp']
-            print(user_info_serializer.data)
-            tokens.pop('exp')
+            exp = tokens.pop('exp')
+
             ret = {
-                'tokens': tokens,
                 'expiresAt': exp,
-                'userInfo': user_info_serializer.data
+                'userInfo': {
+                    "name": user.first_name,
+                    "surname": user.last_name,
+                    "role": user.role,
+                }
             }
-            return Response(ret, status=status.HTTP_200_OK)
+            response = Response(ret, status=status.HTTP_200_OK)
+            response.set_cookie('access', tokens['access'], httponly=True)
+            response.set_cookie('refresh', tokens['refresh'], httponly=True)
+            return response
+
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -114,7 +129,8 @@ def user_register(request):
         print(serializer.initial_data)
         if serializer.is_valid():
             user = serializer.save()
-            print('.....')
+
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
