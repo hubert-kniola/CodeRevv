@@ -25,13 +25,13 @@ const inputs = [
   },
   {
     label: 'imie',
-    name: 'name',
+    name: 'first_name',
     type: 'text',
     placeholder: 'Imię..',
   },
   {
     label: 'nazwisko',
-    name: 'surname',
+    name: 'last_name',
     type: 'text',
     placeholder: 'Nazwisko..',
   },
@@ -43,13 +43,13 @@ const inputs = [
   },
   {
     label: 'haslo2',
-    name: 'password2',
+    name: 'username',
     type: 'password',
     placeholder: 'Powtórz hasło..',
   },
 ];
 
-const Url = 'http://httpbin.org/post'; //'http://localhost:8000/login/';
+const Url = 'http://localhost:8000/register/';
 
 const SignupForm = ({ history }) => {
   const { register, handleSubmit, errors } = useForm({

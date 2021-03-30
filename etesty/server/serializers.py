@@ -10,7 +10,7 @@ import random
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser
-        fields = ('email', 'username', 'password', 'first_name', 'last_name')
+        fields = ('email', 'password', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, data):
@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.set_password(data['password'])
         instance.last_login = timezone.now()
         instance.is_superuser = False
-        instance.username = data['username']
+        instance.username = ''
         instance.first_name = data['first_name']
         instance.last_name = data['last_name']
         instance.email = data['email']
@@ -29,6 +29,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ('email', 'first_name', 'last_name', 'is_staff')
 
 
 class UserLoginSerializer(serializers.ModelSerializer):

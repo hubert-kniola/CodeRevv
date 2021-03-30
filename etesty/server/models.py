@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class AuthUser(AbstractUser):
     date_joined = models.DateTimeField()
-    email = models.CharField(max_length=50)
+    email = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=50)
     id = models.IntegerField(primary_key=True)  # AutoField?
     is_active = models.BooleanField()

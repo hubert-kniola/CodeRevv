@@ -26,7 +26,7 @@ const inputs = [
   },
 ];
 
-const Url = 'http://httpbin.org/post'; //'http://localhost:8000/login/';
+const Url = 'http://localhost:8000/login/';
 
 const LoginForm = ({ history }) => {
   const { register, handleSubmit, errors } = useForm({

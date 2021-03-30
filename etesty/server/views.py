@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.backends import AllowAllUsersModelBackend
 from django.http import *
 from rest_framework.permissions import AllowAny
@@ -87,9 +89,16 @@ def user_login(request):
             user.last_login = timezone.now()
             user.save()
             serializer = TokenPairSerializer()
+            user_info_serializer = UserInfoSerializer()
             attr = {
                 'email': user.email,
                 'password': user_data['password']
+            }
+            tokens = serializer.validate(attr)
+            ret = {
+                'tokens': serializer.validate(attr),
+                'expiresAt': timedelta(minutes=5),
+                'userInfo': user_info_serializer.data()
             }
             return Response(serializer.validate(attr), status=status.HTTP_200_OK)
         else:
