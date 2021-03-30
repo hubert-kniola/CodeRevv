@@ -34,7 +34,6 @@ const storageKey = 'theme';
 
 const retrieveTheme = () => {
   const barn = new Barn(localStorage);
-
   return barn.get(storageKey) === 'light' ? lightTheme : darkTheme;
 };
 

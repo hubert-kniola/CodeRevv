@@ -22,7 +22,7 @@ const ProtectedRoute = ({ For, fallbackPath, requiredRole, ...restProps }) => {
           isAuthorized = requiredRoleIndex <= userRoleIndex;
         }
 
-        console.log(isAuthorized, authContext.isAuthenticated())
+        console.log(isAuthorized, authContext.isAuthenticated(), authContext.authState);
 
         return isAuthorized && authContext.isAuthenticated() ? <For /> : <Redirect to={fallbackPath} />;
       }}

@@ -14,7 +14,6 @@ const Login = () => {
       const { data } = await apiAxios.post('/login/', credentials);
       authContext.updateAuthState(data);
 
-      window.alert('logged in');
       history.push('/dashboard');
     } catch (err) {
       window.alert(err);

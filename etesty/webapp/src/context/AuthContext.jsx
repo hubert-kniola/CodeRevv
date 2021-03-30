@@ -6,19 +6,34 @@ const emptyState = {
   userInfo: { name: null, surname: null, role: null },
 };
 
+const storageKey = 'authState';
+
+const saveState = (state) => {
+  const barn = new Barn(localStorage);
+  barn.set(storageKey, state);
+};
+
+const loadState = () => {
+  const barn = new Barn(localStorage);
+  return barn.get(storageKey) || emptyState;
+};
+
+const clearState = () => {
+  const barn = new Barn(localStorage);
+  barn.del(storageKey);
+};
+
 const AuthContext = createContext();
 const { Provider } = AuthContext;
 
-const barn = new Barn(localStorage);
-const storageKey = 'authState';
-
 const AuthProvider = ({ children }) => {
-  const storedState = barn.get(storageKey);
-  const [authState, setAuthState] = useState(storedState ? storedState : emptyState);
+  const [authState, setAuthState] = useState(loadState());
 
-  const updateAuthState = (state) => {
-    barn.set(storageKey, state);
-    setAuthState(state);
+  const updateAuthState = ({ ...newState }) => {
+    const updatedState = { ...authState, ...newState };
+
+    saveState(updatedState);
+    setAuthState(updatedState);
   };
 
   const isAuthenticated = () => {
@@ -27,7 +42,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    barn.del(storageKey);
+    clearState();
     setAuthState(emptyState);
   };
 

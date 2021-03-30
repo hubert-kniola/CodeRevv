@@ -5,6 +5,8 @@ import { AuthContext } from 'context';
 import { HomeNav, SignupForm, HomeFooter } from 'containers';
 import { apiAxios } from 'util';
 
+//TODO
+
 const Signup = () => {
   const authContext = useContext(AuthContext);
   const history = useHistory();
@@ -14,7 +16,6 @@ const Signup = () => {
       const { data } = await apiAxios.post('/register/', { first_name: name, last_name: surname, email, password });
       authContext.updateAuthState(data);
 
-      window.alert('success on register');
       history.push('/dashboard');
     } catch (err) {
       window.alert(err);

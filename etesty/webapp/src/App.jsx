@@ -14,7 +14,7 @@ const App = () => (
         <Route exact path="/contact" component={Contact} />
         <Route exact path="/signin" component={Login} />
         <Route exact path="/signup" component={Signup} />
-        <ProtectedRoute exact path="/dashboard" For={Dashboard} fallbackPath="/signin" />
+        <ProtectedRoute exact path="/dashboard" For={Dashboard} fallbackPath="/signin"/>
         <Route component={NotFound} />
       </Switch>
     </Suspense>
