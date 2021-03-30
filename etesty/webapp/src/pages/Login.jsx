@@ -8,8 +8,10 @@ const Login = () => {
 
   const onSubmit = async (credentials) => {
     try {
-      const { data } = await authContext.axios.post('/login', credentials);
+      const { data } = await authContext.apiAxios.post('/login/', credentials);
       authContext.updateAuthState(data);
+
+      window.alert('logged in');
 
     } catch (err) {
       window.alert(err);

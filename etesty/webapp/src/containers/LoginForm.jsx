@@ -7,7 +7,7 @@ import { GoogleButton, Form } from 'components';
 
 const schema = yup.object().shape({
   email: yup.string().required('Adres email jest wymagany').email('Wprowadź poprawny adres email'),
-  password: yup.string().required('Hasło jest wymagane').min(8, 'Minimalna długość hasła: 8 znaków'),
+  password: yup.string().required('Hasło jest wymagane'),
 });
 
 const inputs = [
