@@ -9,8 +9,8 @@ const Regex = String.raw`^[A-Z][a-z]+$`;
 
 const schema = yup.object().shape({
   email: yup.string().required('Adres email jest wymagany').email('Wprowadź poprawny adres email'),
-  name: yup.string().required('Imię jest wymagane').matches(Regex, 'Wprowadź poprawne imię'),
-  surname: yup.string().required('Nazwisko jest wymagane').matches(Regex, 'Wprowadź poprawne nazwisko'),
+  first_name: yup.string().required('Imię jest wymagane').matches(Regex, 'Wprowadź poprawne imię'),
+  last_name: yup.string().required('Nazwisko jest wymagane').matches(Regex, 'Wprowadź poprawne nazwisko'),
   password: yup.string().required('Hasło jest wymagane').min(8, 'Minimalna długość hasła: 8 znaków'),
   password2: yup.string().oneOf([yup.ref('password'), null], 'Hasła muszą się zgadzać'),
 });
@@ -42,7 +42,7 @@ const inputs = [
   },
   {
     label: 'haslo2',
-    name: 'username',
+    name: 'password2',
     type: 'password',
     placeholder: 'Powtórz hasło..',
   },
@@ -53,7 +53,7 @@ const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
     resolver: yupResolver(schema),
   });
 
-  const [state, setState] = useState({ email: '', name: '', surname: '', password: '', password2: '' });
+  const [state, setState] = useState({ email: '', first_name: '', last_name: '', password: '', password2: '' });
 
   const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
 
