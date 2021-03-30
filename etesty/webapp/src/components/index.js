@@ -5,3 +5,4 @@ export { default as Footer } from './footer/Footer';
 export { default as ThemeSwitch } from './theme-switch/ThemeSwitch';
 export { default as Form } from './form/Form';
 export { default as GoogleButton } from './google-button/GoogleLoginButton';
+export { default as ProtectedRoute } from './ProtectedRoute';
