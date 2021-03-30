@@ -5,7 +5,8 @@ import { HomeNav } from 'containers';
 import { AuthContext } from 'context';
 
 const Dashboard = () => {
-  const { userInfo } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const { userInfo } = authContext.authState;
 
   return (
     <>

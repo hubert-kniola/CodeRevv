@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import Barn from 'barn';
 
 const emptyState = {
@@ -13,15 +13,8 @@ const barn = new Barn(localStorage);
 const storageKey = 'authState';
 
 const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState(emptyState);
-
-  useEffect(() => {
-    const storedState = barn.get(storageKey);
-
-    if (storedState) {
-      setAuthState(storedState);
-    }
-  }, []);
+  const storedState = barn.get(storageKey);
+  const [authState, setAuthState] = useState(storedState ? storedState : emptyState);
 
   const updateAuthState = (state) => {
     barn.set(storageKey, state);
@@ -33,14 +26,12 @@ const AuthProvider = ({ children }) => {
     return userInfo && expiresAt && new Date().getTime() / 1000 < expiresAt;
   };
 
-  const getRole = () => authState.userInfo.role;
-
   const logout = () => {
     barn.del(storageKey);
     setAuthState(emptyState);
   };
 
-  return <Provider value={{ authState, updateAuthState, isAuthenticated, logout, getRole }}>{children}</Provider>;
+  return <Provider value={{ authState, updateAuthState, isAuthenticated, logout }}>{children}</Provider>;
 };
 
 export { AuthContext, AuthProvider };

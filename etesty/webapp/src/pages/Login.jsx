@@ -1,4 +1,5 @@
-import { useContext, useHistory } from 'react';
+import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from 'context';
 import { HomeFooter, HomeNav, LoginForm } from 'containers';
@@ -10,7 +11,6 @@ const Login = () => {
 
   const onSubmit = async (credentials) => {
     try {
-      console.log(apiAxios);
       const { data } = await apiAxios.post('/login/', credentials);
       authContext.updateAuthState(data);
 
