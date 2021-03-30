@@ -86,18 +86,21 @@ def user_login(request):
             user.last_login = timezone.now()
             user.save()
             serializer = TokenPairSerializer()
-            user_info_serializer = UserInfoSerializer()
+            user_info_serializer = UserInfoSerializer(user)
             attr = {
                 'email': user.email,
                 'password': user_data['password']
             }
             tokens = serializer.validate(attr)
+            exp = tokens['exp']
+            print(user_info_serializer.data)
+            tokens.pop('exp')
             ret = {
-                'tokens': serializer.validate(attr),
-                'expiresAt': timedelta(minutes=5),
-                'userInfo': user_info_serializer.data()
+                'tokens': tokens,
+                'expiresAt': exp,
+                'userInfo': user_info_serializer.data
             }
-            return Response(serializer.validate(attr), status=status.HTTP_200_OK)
+            return Response(ret, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -107,7 +110,7 @@ def user_login(request):
 @authentication_classes([])
 def user_register(request):
     if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         print(serializer.initial_data)
         if serializer.is_valid():
             user = serializer.save()
