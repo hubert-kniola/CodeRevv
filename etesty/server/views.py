@@ -1,8 +1,10 @@
+<<<<<<< HEAD
 from datetime import timedelta
 
 from django.contrib.auth.backends import AllowAllUsersModelBackend
+=======
+>>>>>>> 502687fd871298f01d5fe31943bd62a51b9751ed
 from django.http import *
-from rest_framework.permissions import AllowAny
 
 from .serializers import *
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -11,9 +13,7 @@ from rest_framework import status, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 # Create your views here.
-from django.views.generic import View
 from django.utils import timezone
-import os
 
 
 @api_view(['GET', 'POST'])
@@ -118,14 +118,3 @@ def user_register(request):
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-class ReactView(View):
-    REACT_INDEX = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp'), 'build', 'index.html')
-
-    def get(self, request):
-        try:
-            with open(ReactView.REACT_INDEX) as file:
-                return HttpResponse(file.read(), status=status.HTTP_200_OK)
-
-        except:
-            return Response(data="""index.html not found ! build your React app !!""", status=status.HTTP_501_NOT_IMPLEMENTED,)

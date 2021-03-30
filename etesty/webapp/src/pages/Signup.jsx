@@ -6,11 +6,13 @@ import { HomeNav, SignupForm, HomeFooter } from 'containers';
 const Signup = () => {
   const authContext = useContext(AuthContext);
 
-  const onSubmit = async (credentials) => {
+  const onSubmit = async ({name, surname, email, password}) => {
     try {
-      const { data } = await authContext.axios.post('/signup', credentials);
+      const { data } = await authContext.apiAxios.post('/register/', {name, surname, email, password});
       authContext.updateAuthState(data);
-      
+
+      window.alert('success on register');
+
     } catch (err) {
       window.alert(err);
     }

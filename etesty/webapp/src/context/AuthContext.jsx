@@ -3,9 +3,9 @@ import Barn from 'barn';
 import axios from 'axios';
 
 const emptyState = {
-  token: null,
+  tokens: { access: null, refresh: null },
   expiresAt: null,
-  userInfo: {},
+  userInfo: { name: null, surname: null, role: null },
 };
 
 const AuthContext = createContext();
@@ -22,7 +22,11 @@ const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState(emptyState);
 
   useEffect(() => {
-    setAuthState(barn.get(storageKey));
+    const storedAuth = barn.get(storageKey);
+
+    if (storedAuth) {
+      setAuthState(storedAuth);
+    }
   }, []);
 
   const updateAuthState = (state) => {
@@ -31,8 +35,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => {
-    const { token, expiresAt } = authState;
-    return token && expiresAt && new Date().getTime() / 1000 < expiresAt;
+    const { tokens, expiresAt } = authState;
+    return tokens.access && expiresAt && new Date().getTime() / 1000 < expiresAt;
   };
 
   const isAdmin = () => authState.userInfo.role === 'admin';
@@ -44,7 +48,8 @@ const AuthProvider = ({ children }) => {
 
   apiAxios.interceptors.request.use(
     (config) => {
-      config.headers.Authorization = `Bearer ${authState.token}`;
+      const { tokens } = authState;
+      config.headers.Authorization = `Bearer ${tokens.access}`;
       return config;
     },
     (error) => Promise.reject(error)
