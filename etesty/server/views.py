@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 from datetime import timedelta
 
 from django.contrib.auth.backends import AllowAllUsersModelBackend
-=======
->>>>>>> 502687fd871298f01d5fe31943bd62a51b9751ed
 from django.http import *
 
 from .serializers import *
