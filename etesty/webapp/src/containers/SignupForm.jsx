@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import axios from 'axios';
 
 import { GoogleButton, Form } from 'components';
 
@@ -49,28 +48,18 @@ const inputs = [
   },
 ];
 
+<<<<<<< HEAD
 const Url = 'http://localhost:8000/register/';
 
 const SignupForm = ({ history }) => {
+=======
+const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
+>>>>>>> 9ae0ae1c0378d1de45384a60788c65c9f7655481
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [state, setState] = useState({ email: '', name: '', surname: '', password: '', password2: '' });
-
-  const responseGoogle = (response) => {
-    console.log(response);
-    console.log(response.profileObj);
-    history.push({ pathname: '/dashboard' });
-  };
-
-  const onSubmit = async (data) => {
-    console.log(data);
-
-    axios.post(Url, data).then(console.log).catch(console.log);
-
-    //history.push({ pathname: '/dashboard' });
-  };
 
   const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
 
@@ -95,7 +84,7 @@ const SignupForm = ({ history }) => {
       ))}
 
       <Form.Button>Zarejestruj się</Form.Button>
-      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={responseGoogle} onFailure={responseGoogle} />
+      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={onSuccessGoogle} onFailure={onFailureGoogle} />
     </Form>
   );
 };

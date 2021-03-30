@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useContext } from 'react';
 
 import { Container, CheckBox, Label } from './styles';
-import themeSlice, { getName } from 'store/slices/theme';
+import { ThemeContext } from 'context';
 
 const ThemeSwitch = () => {
-    const dispatch = useDispatch();
-    const themeName = useSelector(getName);
+    const themeContext = useContext(ThemeContext);
 
     return (
         <Container>
-            <CheckBox checked={themeName === 'light'} onChange = {()=>{} } onClick={() => dispatch(themeSlice.actions.switch())} />
+            <CheckBox checked={themeContext.theme.name === 'light'} onChange={() => { }} onClick={themeContext.switchTheme} />
             <Label />
         </Container>
     )

@@ -1,12 +1,12 @@
+import { useContext } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { useSelector } from 'react-redux';
 
-import { getTheme } from 'store/slices/theme';
+import { ThemeContext } from 'context';
 
 export const GlobalThemeProvider = ({ children, ...restProps }) => {
-  const theme = useSelector(getTheme);
+  const themeContext = useContext(ThemeContext);
 
-  return <ThemeProvider {...restProps} theme={theme}>{children}</ThemeProvider>
+  return <ThemeProvider {...restProps} theme={themeContext.theme}>{children}</ThemeProvider>
 }
 
 export const GlobalStyle = createGlobalStyle`
