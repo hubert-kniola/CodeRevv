@@ -25,13 +25,7 @@ const inputs = [
   },
 ];
 
-<<<<<<< HEAD
-const Url = 'http://localhost:8000/login/';
-
-const LoginForm = ({ history }) => {
-=======
 const LoginForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
->>>>>>> 9ae0ae1c0378d1de45384a60788c65c9f7655481
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });

@@ -48,13 +48,7 @@ const inputs = [
   },
 ];
 
-<<<<<<< HEAD
-const Url = 'http://localhost:8000/register/';
-
-const SignupForm = ({ history }) => {
-=======
 const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
->>>>>>> 9ae0ae1c0378d1de45384a60788c65c9f7655481
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
