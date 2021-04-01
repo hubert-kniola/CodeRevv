@@ -23,7 +23,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         instance.username = data['first_name'] + data['last_name'] + f'{random.randint(0, 1000)}'
         instance.email = data['email']
         instance.role = 'user'
-        instance.is_active = True
+        instance.is_active = False
         instance.date_joined = timezone.now()
 
         instance.save()

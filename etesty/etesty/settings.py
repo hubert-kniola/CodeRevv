@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -82,7 +83,17 @@ AUTH_USER_MODEL = "server.AuthUser"
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'jdainamokurwaten'
+EMAIL_HOST_USER = 'codecatchertesting'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 ACCOUNT_FORMS = {'signup': 'server.forms.CustomSignupForm'}
 
@@ -127,10 +138,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'etesty.urls'
 
+BASE_DIR1 = Path(__file__).resolve().parent.parent
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR1 / 'server'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -181,6 +194,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

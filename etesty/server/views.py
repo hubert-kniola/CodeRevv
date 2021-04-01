@@ -2,7 +2,11 @@ from datetime import timedelta
 from django import http
 
 from django.contrib.auth.backends import AllowAllUsersModelBackend
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
 from django.http import *
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .serializers import *
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -14,6 +18,8 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 import jwt
 from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
 
 
 def check_token(request):
@@ -145,8 +151,32 @@ def user_register(request):
         print(serializer.initial_data)
         if serializer.is_valid():
             user = serializer.save()
-
+            user_email = user.email
             if user:
+                current_site = get_current_site(request)
+                message = render_to_string('acc_active_email.html', {
+                    'user': user,
+                    'domain': 'http://127.0.0.1:8000', # ZMIENIC
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                })
+                email = EmailMessage('Aktywacja maila', message, to=[user_email])
+                print(email)
+                email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = AuthUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, UserWarning):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return Response('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return Response('Activation link is invalid!')
