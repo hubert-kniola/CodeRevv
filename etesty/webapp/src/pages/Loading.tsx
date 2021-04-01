@@ -1,7 +1,9 @@
+import { FunctionComponent } from 'react';
+
 import { HomeFooter, HomeNav } from 'containers';
 import { Title } from 'components';
 
-const Loading = () => (
+export const Loading: FunctionComponent = () => (
   <>
     <HomeNav />
 
@@ -10,5 +12,3 @@ const Loading = () => (
     <HomeFooter />
   </>
 );
-
-export default Loading;

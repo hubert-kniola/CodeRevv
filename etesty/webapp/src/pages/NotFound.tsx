@@ -1,7 +1,9 @@
+import { FunctionComponent } from 'react';
+
 import { HomeNav, HomeFooter } from 'containers';
 import { Title } from 'components';
 
-const NotFound = () => (
+export const NotFound: FunctionComponent = () => (
   <>
     <HomeNav />
 
@@ -10,5 +12,3 @@ const NotFound = () => (
     <HomeFooter />
   </>
 );
-
-export default NotFound;

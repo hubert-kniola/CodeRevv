@@ -36,6 +36,7 @@ interface IAuthContext {
   updateAuthState: (state: AuthState) => void;
   isAuthenticated: () => boolean;
   logout: () => void;
+  hasRequiredRole: (role?: string) => boolean;
 }
 
 export const AuthContext = createContext({} as IAuthContext);
@@ -60,8 +61,25 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     setAuthState(emptyState);
   };
 
+  const hasRequiredRole = (role?: string): boolean => {
+    const roles = ['user', 'premium', 'admin'];
+    if (role == null) role = 'user';
+    let isAuthorized = false;
+
+    const { userInfo } = authState;
+
+    if (roles.includes(role) && userInfo != null && roles.includes(userInfo.role)) {
+      const userRoleIndex = roles.indexOf(userInfo.role);
+      const requiredRoleIndex = roles.indexOf(role);
+
+      isAuthorized = requiredRoleIndex <= userRoleIndex;
+    }
+
+    return isAuthorized && isAuthenticated();
+  };
+
   return (
-    <AuthContext.Provider value={{ authState, updateAuthState, isAuthenticated, logout }}>
+    <AuthContext.Provider value={{ authState, updateAuthState, isAuthenticated, logout, hasRequiredRole }}>
       {children}
     </AuthContext.Provider>
   );

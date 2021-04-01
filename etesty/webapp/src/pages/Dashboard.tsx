@@ -1,10 +1,10 @@
-import { useContext } from 'react';
+import { FunctionComponent, useContext } from 'react';
 
 import { Title } from 'components';
 import { HomeNav } from 'containers';
 import { AuthContext } from 'context';
 
-const Dashboard = () => {
+const Dashboard: FunctionComponent = () => {
   const authContext = useContext(AuthContext);
   const { userInfo } = authContext.authState;
 
@@ -12,7 +12,7 @@ const Dashboard = () => {
     <>
       <HomeNav />
 
-      <Title>Witaj, {userInfo.name}!</Title>
+      <Title>Witaj, {userInfo?.name}!</Title>
     </>
   );
 };

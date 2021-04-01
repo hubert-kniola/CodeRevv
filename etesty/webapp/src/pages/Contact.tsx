@@ -1,7 +1,9 @@
+import { FunctionComponent } from 'react';
+
 import { HomeFooter, HomeNav } from 'containers';
 import { Title } from 'components';
 
-const Contact = () => (
+export const Contact: FunctionComponent = () => (
   <>
     <HomeNav />
 
@@ -10,5 +12,3 @@ const Contact = () => (
     <HomeFooter />
   </>
 );
-
-export default Contact;

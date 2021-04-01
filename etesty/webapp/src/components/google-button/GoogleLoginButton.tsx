@@ -4,15 +4,14 @@ import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-lo
 import { Button } from './styles';
 
 type Props = {
-  buttonText?: string;
   onSuccess?: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   onFailure?: (error: any) => void;
 };
 
-export const GoogleLoginButton: FunctionComponent<Props> = ({ buttonText, onSuccess, onFailure }) => (
+export const GoogleLoginButton: FunctionComponent<Props> = ({ onSuccess, onFailure }) => (
   <Button
     clientId="60927032667-n1p23ni28cu5ub543u751ggr0crmcnle.apps.googleusercontent.com"
-    buttonText={buttonText}
+    buttonText="Zaloguj się przez konto Google"
     onSuccess={onSuccess}
     onFailure={onFailure}
     cookiePolicy={'single_host_origin'}
