@@ -1,10 +1,11 @@
-import { createContext, useState } from 'react';
-import Barn from 'barn';
+import { createContext, ReactNode, useState, FunctionComponent } from 'react';
+
+import { DefaultTheme } from 'styled-components';
 
 import bg_dark from 'images/bg.png';
 import bg_light from 'images/bg_light.png';
 
-const darkTheme = {
+const darkTheme: DefaultTheme = {
   name: 'dark',
   colors: {
     background: '#201C21',
@@ -17,7 +18,7 @@ const darkTheme = {
   background: bg_dark,
 };
 
-const lightTheme = {
+const lightTheme: DefaultTheme = {
   name: 'light',
   colors: {
     background: '#EBEBEB',
@@ -32,25 +33,32 @@ const lightTheme = {
 
 const storageKey = 'theme';
 
-const retrieveTheme = () => {
-  const barn = new Barn(localStorage);
-  return barn.get(storageKey) === 'light' ? lightTheme : darkTheme;
+const retrieveTheme = (): DefaultTheme => {
+  const name = localStorage.getItem(storageKey);
+
+  return name != null && name === 'light' ? lightTheme : darkTheme;
 };
 
-const saveTheme = ({ name }) => {
-  const barn = new Barn(localStorage);
-  barn.set(storageKey, name);
-  barn.condense();
+const saveTheme = ({ name }: DefaultTheme): void => {
+  localStorage.setItem(storageKey, name);
 };
 
-const ThemeContext = createContext();
-const { Provider } = ThemeContext;
+interface IThemeContext {
+  theme: DefaultTheme;
+  switchTheme: () => void;
+}
 
-const ThemeProvider = ({ children }) => {
+const ThemeContext = createContext({} as IThemeContext);
+
+type Props = {
+  children: ReactNode;
+};
+
+const ThemeProvider: FunctionComponent<Props> = ({ children }) => {
   const [theme, setTheme] = useState(retrieveTheme());
 
   return (
-    <Provider
+    <ThemeContext.Provider
       value={{
         theme,
         switchTheme: () => {
@@ -61,7 +69,7 @@ const ThemeProvider = ({ children }) => {
       }}
     >
       {children}
-    </Provider>
+    </ThemeContext.Provider>
   );
 };
 

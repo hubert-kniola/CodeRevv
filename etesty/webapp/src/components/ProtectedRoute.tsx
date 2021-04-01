@@ -1,9 +1,17 @@
-import { useContext } from 'react';
+import { LazyExoticComponent, useContext, FunctionComponent } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 import { AuthContext } from 'context';
 
-const ProtectedRoute = ({ For, fallbackPath, requiredRole, ...restProps }) => {
+type Props = {
+  exact: boolean;
+  path: string;
+  For: LazyExoticComponent<() => JSX.Element>;
+  fallbackPath: string;
+  requiredRole?: string;
+};
+
+const ProtectedRoute: FunctionComponent<Props> = ({ For, fallbackPath, requiredRole, ...restProps }) => {
   const authContext = useContext(AuthContext);
 
   return (
@@ -15,7 +23,7 @@ const ProtectedRoute = ({ For, fallbackPath, requiredRole, ...restProps }) => {
 
         const { userInfo } = authContext.authState;
 
-        if (roles.includes(requiredRole) && roles.includes(userInfo.role)) {
+        if (roles.includes(requiredRole) && userInfo != null && roles.includes(userInfo.role)) {
           const userRoleIndex = roles.indexOf(userInfo.role);
           const requiredRoleIndex = roles.indexOf(requiredRole);
 

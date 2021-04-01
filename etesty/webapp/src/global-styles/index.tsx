@@ -1,15 +1,19 @@
-import { useContext } from 'react';
+import { useContext, ReactNode, FunctionComponent } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import { ThemeContext } from 'context';
 
-export const GlobalThemeProvider = ({ children, ...restProps }) => {
-  const themeContext = useContext(ThemeContext);
+type Props = {
+  children: ReactNode;
+};
 
-  return <ThemeProvider {...restProps} theme={themeContext.theme}>{children}</ThemeProvider>
-}
+const GlobalThemeProvider: FunctionComponent<Props> = ({ children }) => {
+  const { theme } = useContext(ThemeContext);
 
-export const GlobalStyle = createGlobalStyle`
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};
+
+const GlobalStyle = createGlobalStyle`
   *, *:before, *:after {
     box-sizing: border-box;
   }
@@ -28,3 +32,5 @@ export const GlobalStyle = createGlobalStyle`
     background-repeat: auto;
     font-size: 16px;
 }`;
+
+export { GlobalThemeProvider, GlobalStyle };
