@@ -42,10 +42,9 @@ export const Item = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
-
 `;
 
-export const Header = styled.div`
+export const Header = styled.div<{ show: boolean }>`
   display: flex;
   justify-content: space-between;
   cursor: pointer;
@@ -69,16 +68,20 @@ export const Header = styled.div`
       width: 16px;
     }
 
-    ${({ toggleShow }) => !toggleShow && css`
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    `}
+    ${({ show }) =>
+      !show &&
+      css`
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+      `}
 
-    ${({ theme }) => theme.name === 'light' && css`
-      filter: invert(0);
-    `}
+    ${({ theme }) =>
+      theme.name === 'light' &&
+      css`
+        filter: invert(0);
+      `}
   }
 
   @media (max-width: 600px) {
@@ -86,7 +89,7 @@ export const Header = styled.div`
   }
 `;
 
-export const Body = styled.div`
+export const Body = styled.div<{ show: boolean }>`
   font-size: 26px;
   font-weight: normal;
   line-height: normal;
@@ -96,14 +99,18 @@ export const Body = styled.div`
   overflow: hidden;
   border-radius: 15px;
 
-  ${({ toggleShow }) => (toggleShow && css`
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.1s cubic-bezier(0.5, 0, 0.1, 1);
-  `) || (!toggleShow && css`
-    max-height: 1200px;
-    transition: max-height 1s cubic-bezier(0.5, 0, 0.1, 1);
-  `)}
+  ${({ show }) =>
+    (show &&
+      css`
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.1s cubic-bezier(0.5, 0, 0.1, 1);
+      `) ||
+    (!show &&
+      css`
+        max-height: 1200px;
+        transition: max-height 1s cubic-bezier(0.5, 0, 0.1, 1);
+      `)}
 
   span {
     display: block;

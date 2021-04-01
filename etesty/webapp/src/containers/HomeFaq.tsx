@@ -1,6 +1,7 @@
+import { FunctionComponent } from 'react';
 import { nanoid } from 'nanoid';
 
-import { Accordion } from 'components';
+import { Accordion, AccordionBody, AccordionFrame, AccordionHeader, AccordionItem, AccordionTitle } from 'components';
 
 const faqs = [
   {
@@ -23,18 +24,16 @@ const faqs = [
   },
 ];
 
-const HomeFaq = () => (
+export const HomeFaq: FunctionComponent = () => (
   <Accordion>
-    <Accordion.Title>Masz jakieś pytania?</Accordion.Title>
-    <Accordion.Frame>
+    <AccordionTitle>Masz jakieś pytania?</AccordionTitle>
+    <AccordionFrame>
       {faqs.map((e) => (
-        <Accordion.Item key={e.key}>
-          <Accordion.Header>{e.title}</Accordion.Header>
-          <Accordion.Body>{e.body}</Accordion.Body>
-        </Accordion.Item>
+        <AccordionItem key={e.key}>
+          <AccordionHeader>{e.title}</AccordionHeader>
+          <AccordionBody>{e.body}</AccordionBody>
+        </AccordionItem>
       ))}
-    </Accordion.Frame>
+    </AccordionFrame>
   </Accordion>
 );
-
-export default HomeFaq;

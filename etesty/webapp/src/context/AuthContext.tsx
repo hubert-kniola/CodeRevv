@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, FunctionComponent } from 'react';
+import { createContext, useState, FunctionComponent } from 'react';
 
 type UserInfo = {
   name: string;
@@ -33,18 +33,14 @@ const clearState = (): void => {
 
 interface IAuthContext {
   authState: AuthState;
-  updateAuthState: (s: AuthState) => void;
+  updateAuthState: (state: AuthState) => void;
   isAuthenticated: () => boolean;
   logout: () => void;
 }
 
-const AuthContext = createContext({} as IAuthContext);
+export const AuthContext = createContext({} as IAuthContext);
 
-type Props = {
-  children: ReactNode;
-};
-
-const AuthProvider: FunctionComponent<Props> = ({ children }) => {
+export const AuthProvider: FunctionComponent = ({ children }) => {
   const [authState, setAuthState] = useState(loadState());
 
   const updateAuthState = ({ ...newState }: AuthState): void => {
@@ -70,5 +66,3 @@ const AuthProvider: FunctionComponent<Props> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export { AuthContext, AuthProvider };

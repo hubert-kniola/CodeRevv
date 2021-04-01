@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FooterPad = styled.div`
-  padding-top:35vh;
+  padding-top: 35vh;
 `;
 
 export const Background = styled.footer`
@@ -16,7 +16,6 @@ export const Container = styled.div`
   margin: auto;
   max-width: 1200px;
   flex-direction: column;
-  
 
   @media (max-width: 1000px) {
     padding: 70px 30px;

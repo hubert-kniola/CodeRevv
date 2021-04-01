@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { FormEventHandler, FunctionComponent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { GoogleButton, Form } from 'components';
+import { GoogleLoginButton, Form, FormButton, FormInputWithErrors, FormGroup } from 'components';
+import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 
-const Regex = String.raw`^[A-Z][a-z]+$`;
+const Regex = RegExp(String.raw`^[A-Z][a-z]+$`);
 
 const schema = yup.object().shape({
   email: yup.string().required('Adres email jest wymagany').email('Wprowadź poprawny adres email'),
@@ -48,14 +49,20 @@ const inputs = [
   },
 ];
 
-const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
+type Props = {
+  onSubmit: FormEventHandler<HTMLFormElement>;
+  onSuccessGoogle: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
+  onFailureGoogle: (error: any) => void;
+};
+
+export const SignupForm: FunctionComponent<Props> = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const [state, setState] = useState({ email: '', name: '', surname: '', password: '', password2: '' });
 
-  const changeValue = (name, targetValue) => setState({ ...state, [name]: targetValue });
+  const changeValue = (name: string, targetValue: string): void => setState({ ...state, [name]: targetValue });
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -64,23 +71,25 @@ const SignupForm = ({ onSubmit, onSuccessGoogle, onFailureGoogle }) => {
       <hr />
 
       {inputs.map((input, key) => (
-        <Form.Group key={key}>
-          <Form.InputWithErrors
+        <FormGroup key={key}>
+          <FormInputWithErrors
             name={input.name}
             type={input.type}
             placeholder={input.placeholder}
             ref={register}
-            onChange={(e) => changeValue(input, e.target.value)}
+            onChange={(e) => changeValue(input.name, e.target.value)}
           >
             {errors[input.name]?.message}
-          </Form.InputWithErrors>
-        </Form.Group>
+          </FormInputWithErrors>
+        </FormGroup>
       ))}
 
-      <Form.Button>Zarejestruj się</Form.Button>
-      <GoogleButton buttonText="Zaloguj się przez konto Google" onSuccess={onSuccessGoogle} onFailure={onFailureGoogle} />
+      <FormButton>Zarejestruj się</FormButton>
+      <GoogleLoginButton
+        buttonText="Zaloguj się przez konto Google"
+        onSuccess={onSuccessGoogle}
+        onFailure={onFailureGoogle}
+      />
     </Form>
   );
 };
-
-export default SignupForm;

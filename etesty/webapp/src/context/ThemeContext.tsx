@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useState, FunctionComponent } from 'react';
-
+import { createContext, useState, FunctionComponent } from 'react';
 import { DefaultTheme } from 'styled-components';
 
 import bg_dark from 'images/bg.png';
@@ -48,13 +47,9 @@ interface IThemeContext {
   switchTheme: () => void;
 }
 
-const ThemeContext = createContext({} as IThemeContext);
+export const ThemeContext = createContext({} as IThemeContext);
 
-type Props = {
-  children: ReactNode;
-};
-
-const ThemeProvider: FunctionComponent<Props> = ({ children }) => {
+export const ThemeProvider: FunctionComponent = ({ children }) => {
   const [theme, setTheme] = useState(retrieveTheme());
 
   return (
@@ -72,5 +67,3 @@ const ThemeProvider: FunctionComponent<Props> = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
-
-export { ThemeContext, ThemeProvider };

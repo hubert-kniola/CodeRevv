@@ -11,7 +11,7 @@ type Props = {
   requiredRole?: string;
 };
 
-const ProtectedRoute: FunctionComponent<Props> = ({ For, fallbackPath, requiredRole, ...restProps }) => {
+export const ProtectedRoute: FunctionComponent<Props> = ({ For, fallbackPath, requiredRole, ...restProps }) => {
   const authContext = useContext(AuthContext);
 
   return (
@@ -38,5 +38,3 @@ const ProtectedRoute: FunctionComponent<Props> = ({ For, fallbackPath, requiredR
     />
   );
 };
-
-export default ProtectedRoute;

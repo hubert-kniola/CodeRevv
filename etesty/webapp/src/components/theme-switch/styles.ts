@@ -12,22 +12,22 @@ export const Label = styled.label`
   width: 42px;
   height: 26px;
   border-radius: 15px;
-  background: ${({theme}) => theme.colors.setting};
+  background: ${({ theme }) => theme.colors.setting};
   cursor: pointer;
-  
+
   &::after {
-    content: "";
+    content: '';
     display: block;
     border-radius: 50%;
     width: 20px;
     height: 20px;
     margin: 3px;
-    background: ${({theme}) => theme.colors.background};
+    background: ${({ theme }) => theme.colors.background};
     transition: 0.3s;
   }
 `;
 
-Label.defaultProps = { htmlFor: 'checkbox' }
+Label.defaultProps = { htmlFor: 'checkbox' };
 
 export const CheckBox = styled.input`
   opacity: 0;
@@ -37,18 +37,18 @@ export const CheckBox = styled.input`
   border-radius: 15px;
 
   &:checked + ${Label} {
-    background: ${({theme}) => theme.colors.setting};
+    background: ${({ theme }) => theme.colors.setting};
     &::after {
-      content: "";
+      content: '';
       display: block;
       border-radius: 50%;
       width: 20px;
       height: 20px;
       margin-left: 19px;
       transition: 0.3s;
-      background: ${({theme}) => theme.colors.background};
+      background: ${({ theme }) => theme.colors.background};
     }
   }
 `;
 
-CheckBox.defaultProps = { id: 'checkbox', type: 'checkbox' }
+CheckBox.defaultProps = { id: 'checkbox', type: 'checkbox' };

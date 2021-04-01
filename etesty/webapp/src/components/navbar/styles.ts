@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 import logo from 'images/logo.png';
 
-export const Container = styled.nav`
+export const Container = styled.nav<{ scroll: boolean }>`
   height: 80px;
   display: flex;
   position: sticky;
@@ -12,14 +12,16 @@ export const Container = styled.nav`
   padding: 0.5rem calc((100vw - 1000px) / 2);
   z-index: 10;
 
-
-  ${({ scroll }) => (scroll && css`
-    background-color: ${({ theme }) => theme.colors.background};
-    transition: all 0.5s ease-in-out;
-  `) || css`
-    background-color: none;
-    transition: all 0.4s ease-in-out;
-  `}
+  ${({ scroll }) =>
+    (scroll &&
+      css`
+        background-color: ${({ theme }) => theme.colors.background};
+        transition: all 0.5s ease-in-out;
+      `) ||
+    css`
+      background-color: none;
+      transition: all 0.4s ease-in-out;
+    `}
 `;
 
 export const Menu = styled.div`
@@ -34,7 +36,7 @@ export const ButtonMenu = styled.nav`
   margin-right: 24px;
 `;
 
-export const Link = styled(NavLink)`
+export const Link = styled(NavLink)<{ active: boolean }>`
   color: ${({ theme }) => theme.colors.text};
   display: flex;
   align-items: center;
@@ -74,11 +76,13 @@ export const Logo = styled.img`
   height: 5rem;
   pointer-events: none;
 
-  ${({theme}) => theme.name === 'light' && css`
-    filter: invert(1);
-  `}
+  ${({ theme }) =>
+    theme.name === 'light' &&
+    css`
+      filter: invert(1);
+    `}
 
   transition: all 0.2s ease-in-out;
 `;
 
-Logo.defaultProps = { src: logo, alt: 'logo' }
+Logo.defaultProps = { src: logo, alt: 'logo' };
