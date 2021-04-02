@@ -3,6 +3,7 @@ import 'styled-components';
 
 type Colors = {
   background: string;
+  alphabg: string;
   setting: string;
   primary: string;
   secondary: string;

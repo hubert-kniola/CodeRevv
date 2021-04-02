@@ -6,3 +6,4 @@ export * from './title/Title';
 export * from './ProtectedRoute';
 export * from './footer/Footer';
 export * from './form/Form';
+export * from './loading-overlay/LoadingOverlay';
