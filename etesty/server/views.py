@@ -156,11 +156,12 @@ def user_register(request):
                 current_site = get_current_site(request)
                 message = render_to_string('acc_active_email.html', {
                     'user': user,
-                    'domain': 'http://127.0.0.1:8000', # ZMIENIC
+                    'domain': 'http://127.0.0.1:3000', # ZMIENIC
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
                 })
                 email = EmailMessage('Aktywacja maila', message, to=[user_email])
+                email.content_subtype = 'html'
                 print(email)
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
