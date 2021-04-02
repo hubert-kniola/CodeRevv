@@ -56,6 +56,8 @@ export const registerFormData: FormData = {
   ],
 };
 
+export type RegisterSchema = yup.InferType<typeof registerFormData.schema>;
+
 export const loginFormData: FormData = {
   schema: yup.object().shape({
     email: yup.string().required('Adres email jest wymagany').email('Wprowadź poprawny adres email'),
@@ -76,3 +78,5 @@ export const loginFormData: FormData = {
     },
   ],
 };
+
+export type LoginSchema = yup.InferType<typeof loginFormData.schema>;

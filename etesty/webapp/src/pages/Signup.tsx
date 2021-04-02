@@ -4,15 +4,17 @@ import { useHistory } from 'react-router-dom';
 import { LoadingOverlay } from 'components';
 import { AuthContext } from 'context';
 import { HomeNav, AutoForm, HomeFooter } from 'containers';
-import { apiAxios } from 'utility';
+import { apiAxios, responseGoogle } from 'utility';
 import { registerFormData } from 'const';
+
+import type { RegisterSchema } from 'const';
 
 export const Signup: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const authContext = useContext(AuthContext);
   const history = useHistory();
 
-  const onSubmit = async ({ name, surname, email, password }: any) => {
+  const onSubmit = async ({ name, surname, email, password }: RegisterSchema) => {
     setLoading(true);
 
     try {
@@ -25,10 +27,6 @@ export const Signup: FunctionComponent = () => {
     }
 
     setLoading(false);
-  };
-
-  const responseGoogle = (response: any) => {
-    console.log(response);
   };
 
   return (

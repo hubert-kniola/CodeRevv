@@ -4,15 +4,17 @@ import { useHistory } from 'react-router-dom';
 import { AuthContext } from 'context';
 import { LoadingOverlay } from 'components';
 import { AutoForm, HomeFooter, HomeNav } from 'containers';
-import { apiAxios } from 'utility';
+import { apiAxios, responseGoogle } from 'utility';
 import { loginFormData } from 'const';
+
+import type { LoginSchema } from 'const';
 
 export const Login: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const authContext = useContext(AuthContext);
   const history = useHistory();
 
-  const onSubmit = async (credentials: any) => {
+  const onSubmit = async (credentials: LoginSchema) => {
     setLoading(true);
 
     try {
@@ -25,10 +27,6 @@ export const Login: FunctionComponent = () => {
     }
 
     setLoading(false);
-  };
-
-  const responseGoogle = (response: any) => {
-    console.log(response);
   };
 
   return (
