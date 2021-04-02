@@ -1,4 +1,4 @@
-# Internetowa platforma do przeprowadzania testów na wszystkich poziomach edukacji 
+# Internetowa platforma służąca do automatycznego sprawdzania wiedzy z zakresu programowania 
 
 ### Narzędzia do `etesty-web`
 * VS Code + wtyczki
