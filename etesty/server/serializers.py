@@ -42,6 +42,17 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ['email', 'first_name', 'last_name', 'is_staff']
 
 
+class UserResetEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ['email']
+
+
+class UserResetPasswordSerializer(serializers.ModelSerializer):
+    oldpassword = models.CharField(max_length=50)
+    newpassword = models.CharField(max_length=50)
+
+
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser

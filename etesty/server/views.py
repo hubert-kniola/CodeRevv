@@ -153,10 +153,10 @@ def user_register(request):
             user = serializer.save()
             user_email = user.email
             if user:
-                current_site = get_current_site(request)
+                # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
                 message = render_to_string('acc_active_email.html', {
                     'user': user,
-                    'domain': 'http://127.0.0.1:3000', # ZMIENIC
+                    'domain': 'http://127.0.0.1:8000', # ZMIENIC
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
                 })
@@ -181,3 +181,36 @@ def activate(request, uidb64, token):
         return Response('Thank you for your email confirmation. Now you can login your account.')
     else:
         return Response('Activation link is invalid!')
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
+def password_reset(request):
+    if request.method == 'POST':
+        serializer = UserResetEmailSerializer(data=request.data)
+        print(serializer.initial_data)
+        if serializer.is_valid():
+            user = serializer.save()
+            user_email = user.email
+            user_active = user.is_active
+            print(user_email, user_active)
+            if user_active:
+                #current_site = get_current_site(request) # PO UZYSKANIU DOMENY
+                message = render_to_string('pwd_reset_email.html', {
+                    'user': user,
+                    'domain': 'http://127.0.0.1:8000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                })
+                email = EmailMessage('Resetowanie hasła', message, to=[user_email])
+                email.content_subtype = 'html'
+                print(email)
+                email.send()
+                return Response('User Authenticated', status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# @api_view(['GET', 'POST'])
+# def password_change(request):
