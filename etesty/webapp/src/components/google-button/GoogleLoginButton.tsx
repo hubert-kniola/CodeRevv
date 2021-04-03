@@ -8,12 +8,20 @@ type Props = {
   onFailure?: (error: any) => void;
 };
 
-export const GoogleLoginButton: FunctionComponent<Props> = ({ onSuccess, onFailure }) => (
-  <Button
-    clientId="60927032667-n1p23ni28cu5ub543u751ggr0crmcnle.apps.googleusercontent.com"
-    buttonText="Zaloguj się przez konto Google"
-    onSuccess={onSuccess}
-    onFailure={onFailure}
-    cookiePolicy={'single_host_origin'}
-  />
-);
+export const GoogleLoginButton: FunctionComponent<Props> = ({ onSuccess, onFailure }) => {
+  const clientId = process.env.REACT_APP_GLOGIN_CLIENT_ID;
+
+  if (clientId == null) {
+    throw new Error('Google ClientId could not be read');
+  }
+
+  return (
+    <Button
+      clientId={clientId}
+      buttonText="Zaloguj się przez konto Google"
+      onSuccess={onSuccess}
+      onFailure={onFailure}
+      cookiePolicy={'single_host_origin'}
+    />
+  );
+};

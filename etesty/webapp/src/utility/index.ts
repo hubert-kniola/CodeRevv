@@ -8,3 +8,9 @@ export const apiAxios = axios.create({
 export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
   console.log(response);
 };
+
+export const captchaValidateHuman = async (token: string) => {
+  //WORK
+  console.log(token);
+  return false;
+};
