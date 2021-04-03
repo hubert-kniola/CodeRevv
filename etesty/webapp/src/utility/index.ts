@@ -9,7 +9,7 @@ export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginRespon
   console.log(response);
 };
 
-export const captchaValidateHuman = async (token: string) => {
+export const captchaValidateHuman = async (token: string | null | undefined) => {
   //WORK
   console.log(token);
   return false;

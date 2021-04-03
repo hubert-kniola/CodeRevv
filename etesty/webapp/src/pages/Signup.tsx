@@ -22,7 +22,7 @@ export const Signup: FunctionComponent = () => {
     try {
       const token = await reCaptchaRef.current?.executeAsync();
 
-      if (!token || !captchaValidateHuman(token)) {
+      if (!await captchaValidateHuman(token)) {
         console.log('jakis blad albo brak czlowieka');
       }
 
