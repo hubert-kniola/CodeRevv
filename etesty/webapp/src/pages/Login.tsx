@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from 'context';
-import { LoadingOverlay } from 'components';
+import { LoadingOverlay, CenteredLink } from 'components';
 import { AutoForm, HomeFooter, HomeNav } from 'containers';
 import { apiAxios, responseGoogle } from 'utility';
 import { loginFormData } from 'const';
@@ -43,6 +43,8 @@ export const Login: FunctionComponent = () => {
           buttonText="Zaloguj się"
         />
       </LoadingOverlay>
+
+      <CenteredLink to="/recover">Zapomniałeś hasła?</CenteredLink>
 
       <HomeFooter />
     </>

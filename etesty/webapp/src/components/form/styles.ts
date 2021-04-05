@@ -2,15 +2,13 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   margin-top: 10vh;
-  display: flex;
+  display: grid;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  place-items: center;
 `;
 
 export const FormContainer = styled.form`
-  display: block;
-  position: relative;
+  display: grid;
 
   @media (max-width: 1000px) {
     margin: 0 30px;
@@ -18,11 +16,8 @@ export const FormContainer = styled.form`
 `;
 
 export const FormInner = styled.div`
-  position: relative;
-  display: block;
-
   padding: 30px;
-  z-index: 2;
+  width: 100%;
   text-align: center;
 
   h2 {
@@ -35,13 +30,11 @@ export const FormInner = styled.div`
   hr {
     margin-bottom: 30px;
     color: ${({ theme }) => theme.colors.setting};
-    width: 100%;
+    width: 500px;
   }
 `;
 
 export const FormGroupContainer = styled.div`
-  display: block;
-  width: 500px;
   margin-bottom: 15px;
   transition: 0.4s;
 

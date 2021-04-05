@@ -80,3 +80,43 @@ export const loginFormData: FormData = {
 };
 
 export type LoginSchema = yup.InferType<typeof loginFormData.schema>;
+
+export const changePasswordFormData: FormData = {
+  schema: yup.object().shape({
+    password: yup.string().required('Nowe hasło jest wymagane').min(8, 'Minimalna długość hasła: 8 znaków'),
+    password2: yup.string().oneOf([yup.ref('password'), null], 'Hasła muszą się zgadzać'),
+  }),
+  inputs: [
+    {
+      label: 'haslo',
+      name: 'password',
+      type: 'password',
+      placeholder: 'Nowe hasło...',
+    },
+    {
+      label: 'haslo2',
+      name: 'password2',
+      type: 'password',
+      placeholder: 'Powtórz hasło...',
+    },
+  ],
+};
+
+export type ChangePasswordSchema = yup.InferType<typeof changePasswordFormData.schema>;
+
+
+export const recoverFormData: FormData = {
+  schema: yup.object().shape({
+    email: yup.string().required('Adres email jest wymagany').email('Wprowadź poprawny adres email'),
+  }),
+  inputs: [
+    {
+      label: 'email',
+      name: 'email',
+      type: 'text',
+      placeholder: 'Email...',
+    },
+  ],
+};
+
+export type RecoverSchema = yup.InferType<typeof recoverFormData.schema>;
