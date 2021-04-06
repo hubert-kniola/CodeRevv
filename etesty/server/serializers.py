@@ -1,6 +1,9 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import *
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from datetime import datetime
 from django.utils import timezone
 import random
@@ -42,14 +45,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ['email', 'first_name', 'last_name', 'is_staff']
 
 
-class UserResetEmailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AuthUser
-        fields = ['email']
-
-
-class UserResetPasswordSerializer(serializers.ModelSerializer):
-    oldpassword = models.CharField(max_length=50)
+class RecoverPasswordSerializer(serializers.ModelSerializer):
     newpassword = models.CharField(max_length=50)
 
 
@@ -79,3 +75,11 @@ class TokenPairSerializer(TokenObtainPairSerializer):
 
         return data
 
+
+class RefreshTokenSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+
+        refresh = RefreshToken(attrs['refresh'])
+        data = {'access': str(refresh.access_token), 'exp': refresh['exp'], 'refresh': str(refresh)}
+
+        return data

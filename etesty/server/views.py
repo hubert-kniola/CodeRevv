@@ -7,6 +7,7 @@ from django.core.mail import EmailMessage
 from django.http import *
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import *
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -101,6 +102,11 @@ class TokenPairView(TokenObtainPairView):
     serializer_class = TokenPairSerializer
 
 
+class RefreshTokenPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = RefreshTokenSerializer
+
+
 @api_view(['GET', 'POST'])
 @permission_classes([])
 @authentication_classes([])
@@ -162,7 +168,6 @@ def user_register(request):
                 })
                 email = EmailMessage('Aktywacja maila', message, to=[user_email])
                 email.content_subtype = 'html'
-                print(email)
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -178,7 +183,7 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return Response('Thank you for your email confirmation. Now you can login your account.')
+        return Response('Thank you for your email confirmation. Now you can login to account.')
     else:
         return Response('Activation link is invalid!')
 
@@ -188,29 +193,38 @@ def activate(request, uidb64, token):
 @authentication_classes([])
 def password_reset(request):
     if request.method == 'POST':
-        serializer = UserResetEmailSerializer(data=request.data)
-        print(serializer.initial_data)
-        if serializer.is_valid():
-            user = serializer.save()
-            user_email = user.email
-            user_active = user.is_active
-            print(user_email, user_active)
-            if user_active:
-                #current_site = get_current_site(request) # PO UZYSKANIU DOMENY
-                message = render_to_string('pwd_reset_email.html', {
-                    'user': user,
-                    'domain': 'http://127.0.0.1:8000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': default_token_generator.make_token(user),
-                })
-                email = EmailMessage('Resetowanie hasła', message, to=[user_email])
-                email.content_subtype = 'html'
-                print(email)
-                email.send()
-                return Response('User Authenticated', status=status.HTTP_200_OK)
-
+        user = AuthUser.objects.get(email=request.data['email'])
+        user_email = user.email
+        user_active = user.is_active
+        if user_active:
+            #current_site = get_current_site(request) # PO UZYSKANIU DOMENY
+            message = render_to_string('pwd_reset_email.html', {
+                'user': user,
+                'domain': 'http://127.0.0.1:8000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            email = EmailMessage('Resetowanie hasła', message, to=[user_email])
+            email.content_subtype = 'html'
+            email.send()
+            return Response('User Authenticated', status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST'])
+@csrf_exempt
+def recover_password(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = AuthUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, UserWarning):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.set_password(request.data['password'])
+        user.save()
+        return Response('Successful recovery. Now you can login to account.')
+    else:
+        return Response('Recovery link is invalid!')
 
 # @api_view(['GET', 'POST'])
 # def password_change(request):
