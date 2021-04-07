@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/v1/token/refresh/', refresh_token, name='token_refresh'),
     path('api/v1/activate/<uidb64>/<token>/', activate, name='activate'),
     path('api/v1/recover/<uidb64>/<token>/', recover_password, name='recover'),
+    path('api/v1/logout/', user_logout, name='logout'),
 ]

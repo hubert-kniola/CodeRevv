@@ -14,7 +14,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 # Create your views here.
 from django.utils import timezone
 import jwt
@@ -103,8 +103,6 @@ class TokenPairView(TokenObtainPairView):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([])
-@authentication_classes([])
 def refresh_token(request):
     serializer = RefreshTokenSerializer()
     attr = {
@@ -236,5 +234,11 @@ def recover_password(request, uidb64, token):
     else:
         return Response('Recovery link is invalid!')
 
-# @api_view(['GET', 'POST'])
-# def password_change(request):
+
+@api_view(['POST'])
+def user_logout(request):
+    logout(request)
+    response = Response(status=status.HTTP_200_OK)
+    response.delete_cookie('access')
+    response.delete_cookie('refresh')
+    return response
