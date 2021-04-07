@@ -20,7 +20,11 @@ export const Container = styled.div`
 
 export const Text = styled.a`
   color: ${({ theme }) => theme.colors.text};
-  font-size: 5vw;
+  font-size: 70px;
+
+  @media (max-width: 600px) {
+    font-size: 55px;
+  }
 
   display: inline-block;
   vertical-align: middle;

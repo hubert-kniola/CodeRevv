@@ -73,7 +73,7 @@ export const Button = styled(NavLink)`
 `;
 
 export const Logo = styled.img`
-  height: 5rem;
+  height: 4rem;
   pointer-events: none;
 
   ${({ theme }) =>
