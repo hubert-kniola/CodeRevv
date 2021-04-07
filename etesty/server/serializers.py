@@ -80,6 +80,6 @@ class RefreshTokenSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
 
         refresh = RefreshToken(attrs['refresh'])
-        data = {'access': str(refresh.access_token), 'exp': refresh['exp'], 'refresh': str(refresh)}
+        data = {'access': str(refresh.access_token), 'exp': refresh['exp']}
 
         return data

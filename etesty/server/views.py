@@ -102,9 +102,19 @@ class TokenPairView(TokenObtainPairView):
     serializer_class = TokenPairSerializer
 
 
-class RefreshTokenPairView(TokenObtainPairView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = RefreshTokenSerializer
+@api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
+def refresh_token(request):
+    serializer = RefreshTokenSerializer()
+    attr = {
+        'refresh': request.data['refresh']
+    }
+    token = serializer.validate(attr)
+
+    response = Response(status=status.HTTP_200_OK)
+    response.set_cookie('access', token['access'], httponly=True)
+    return response
 
 
 @api_view(['GET', 'POST'])
