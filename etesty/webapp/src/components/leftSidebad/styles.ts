@@ -1,25 +1,42 @@
-import styled from 'styled-components';
+import styled,{ css } from 'styled-components';
 
-export const Board = styled.div`
+export const Board = styled.div<{open: boolean}>`
   display:grid;
   grid-template-columns: minmax(150px, 15%) 1fr;
   height: 1000px;
+
+  ${({open}) => open && css`
+      grid-template-columns: minmax(50px, 5%) 1fr;
+    `}
+
+  ${({open}) => !open && css`
+        grid-template-columns: minmax(150px, 15%) 1fr;
+      `}
 `
 
-export const LeftBar = styled.div`
+export const LeftBar = styled.div<{open: boolean}>`
     position: fixed;
-    width: 15%;
-    max-width: 15%;
-    min-width: 150px;
-    height: 100%;
     grid-column: 1/2;
     color: #fff;
     background-color: ${({ theme }) => theme.colors.background};;
+    height: 100%;
+
+
+    ${({open}) => !open && css`
+      width: 15%;
+      max-width: 15%;
+      min-width: 150px;
+    `}
+
+    ${({open}) => open && css`
+      width: 5%;
+      max-width: 5%;
+      min-width: 50px;
+    `}
+
 `
 
-export const MainBoard = styled.div`
-    grid-column: 2/3;
-`
+
 
 export const MenuHeader = styled.div`
   width: 100%;
@@ -57,6 +74,7 @@ export const Row  = styled.li`
   }
 `
 
+
 export const Icon = styled.div`
   margin: 0;
   flex: 25%;
@@ -67,4 +85,8 @@ export const Icon = styled.div`
 export const TitleRow = styled.div`
   flex: 75%;
   margin: 0;
+`
+
+export const MainBoard = styled.div`
+    grid-column: 2/3;
 `
