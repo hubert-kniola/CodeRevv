@@ -21,11 +21,12 @@ import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
+from django.conf import settings
 
 
 def check_token(request):
     token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, '(+!5l=de&_#wtjtg58nt8*r7*z-xh^8ah)*#k!hnm4!rz59y!r', 'HS256')
+    payload = jwt.decode(token1, settings.SECRET_KEY, 'HS256')
     try:
         user = AuthUser.objects.get(pk=payload['user_id'])
     except UserWarning:
@@ -241,4 +242,21 @@ def user_logout(request):
     response = Response(status=status.HTTP_200_OK)
     response.delete_cookie('access')
     response.delete_cookie('refresh')
+    return response
+
+
+@api_view(['POST'])
+def recaptcha_verify(request):
+    response = {}
+    data = request.data
+    captcha = data.get('g-recaptcha-response')
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    params = {
+        'secret': settings.RECAPTCHA_PRIVATE_KEY,
+        'response': captcha
+    }
+    verify = request.get(url, params=params, verify=True)
+    verify = verify.json()
+    response['status'] = verify.get('success', False)
+    response['message'] = verify.get('error-codes', None)
     return response

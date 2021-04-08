@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # cross-origin
     'corsheaders',
+    # captcha
+    'captcha'
 ]
 
 REST_FRAMEWORK = {
@@ -63,6 +65,9 @@ REST_FRAMEWORK = {
     #     'rest_framework_simplejwt.authentication.JWTAuthentication',
     # ),
 }
+
+RECAPTCHA_PUBLIC_KEY = '6LeDOZgaAAAAAHENsJiTveAofKYGGmnr7wRyT8zh'
+RECAPTCHA_PRIVATE_KEY = '6LeDOZgaAAAAAD39chh-dRiE9cCexCf_MlOZpJA0'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
