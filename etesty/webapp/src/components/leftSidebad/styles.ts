@@ -26,6 +26,7 @@ export const MenuHeader = styled.div`
   height: 4em;
   display: grid;
   place-items: center;
+  
 `
 
 
@@ -37,7 +38,7 @@ export const SidebarList = styled.ul`
   margin : 0;
 `
 
-export const Row = styled.li`
+export const Row  = styled.li`
   width:100%;
   height: 50px;
   list-style-type:none;
@@ -47,7 +48,7 @@ export const Row = styled.li`
   color: ${({ theme }) => theme.colors.text};
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  font-size: 15px;
   padding: 0;
 
   :hover{
@@ -58,12 +59,12 @@ export const Row = styled.li`
 
 export const Icon = styled.div`
   margin: 0;
-  flex: 20%;
+  flex: 25%;
   display: grid;
   place-items: center;
 `
 
 export const TitleRow = styled.div`
-  flex: 80%;
+  flex: 75%;
   margin: 0;
 `

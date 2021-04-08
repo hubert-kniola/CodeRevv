@@ -1,14 +1,19 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Board, LeftBar, MainBoard, MenuHeader,Row, SidebarList,Icon, TitleRow } from './styles'
 import { SidebarData } from './SidebarData'
 
-export const LeftSidebar: FunctionComponent = () =>(
+export const LeftSidebar: FunctionComponent = () =>{
+    const [open, setOpen] = useState(true);
+
+    return(
     <Board>
         <LeftBar>
-            <MenuHeader>
+            <MenuHeader onClick = {()=>setOpen(!open)}>
                 MENU
             </MenuHeader>
-            <SidebarList>
+            {
+                open ? 
+                <SidebarList>
                 {
                     SidebarData.map((val: any, key: any) =>{
                         return(
@@ -19,8 +24,22 @@ export const LeftSidebar: FunctionComponent = () =>(
                         )
                     })
                 }
-            </SidebarList>
+            </SidebarList> 
+            :
+            <SidebarList>
+            {
+                SidebarData.map((val: any, key: any) =>{
+                    return(
+                        <Row key = {key} >
+                            <Icon>{val.icon}</Icon>
+                        </Row>
+                    )
+                })
+            }
+        </SidebarList>
+            }
         </LeftBar>
         <MainBoard>MainBoard</MainBoard>
     </Board>
-);
+    );
+};
