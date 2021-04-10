@@ -22,6 +22,8 @@ export const Signup: FunctionComponent = () => {
     try {
       const token = await reCaptchaRef.current?.executeAsync();
 
+      if (token == null) throw new Error('recaptcha failed');
+
       if (!await captchaValidateHuman(token)) {
         console.log('jakis blad albo brak czlowieka');
       }
