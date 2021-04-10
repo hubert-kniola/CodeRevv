@@ -22,6 +22,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.conf import settings
+import requests
 
 
 def check_token(request):
@@ -171,7 +172,7 @@ def user_register(request):
                 # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
                 message = render_to_string('acc_active_email.html', {
                     'user': user,
-                    'domain': 'http://127.0.0.1:8000', # ZMIENIC
+                    'domain': 'http://127.0.0.1:3000', # ZMIENIC
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
                 })
@@ -255,8 +256,8 @@ def recaptcha_verify(request):
         'secret': settings.RECAPTCHA_PRIVATE_KEY,
         'response': captcha
     }
-    verify = request.get(url, params=params, verify=True)
+    verify = requests.get(url, params=params, verify=True)
     verify = verify.json()
     response['status'] = verify.get('success', False)
     response['message'] = verify.get('error-codes', None)
-    return response
+    return Response(response)
