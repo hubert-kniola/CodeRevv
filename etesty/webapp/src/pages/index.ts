@@ -5,3 +5,4 @@ export * from './Contact';
 export * from './Signup';
 export * from './Loading';
 export * from './PasswordRecover';
+export * from './AccountActivate';
