@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/v1/activate/<uidb64>/<token>/', activate, name='activate'),
     path('api/v1/recover/<uidb64>/<token>/', recover_password, name='recover'),
     path('api/v1/logout/', user_logout, name='logout'),
+    path('api/v1/recaptcha/', recaptcha_verify),
 ]
