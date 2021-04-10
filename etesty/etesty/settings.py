@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -52,16 +53,21 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # cross-origin
     'corsheaders',
+    # captcha
+    'captcha'
 ]
 
 REST_FRAMEWORK = {
     #'DEFAULT_PERMISSION_CLASSES': [
     #    'rest_framework.permissions.IsAuthenticated',
     #],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
 }
+
+RECAPTCHA_PUBLIC_KEY = '6LeDOZgaAAAAAHENsJiTveAofKYGGmnr7wRyT8zh'
+RECAPTCHA_PRIVATE_KEY = '6LeDOZgaAAAAAD39chh-dRiE9cCexCf_MlOZpJA0'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -82,11 +88,22 @@ AUTH_USER_MODEL = "server.AuthUser"
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'jdainamokurwaten'
+EMAIL_HOST_USER = 'codecatchertesting'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 ACCOUNT_FORMS = {'signup': 'server.forms.CustomSignupForm'}
 
 LOGIN_REDIRECT_URL = '/main'
+LOGOUT_REDIRECT_URL = '/main'
 
 # ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_REQUIRED = True
@@ -127,10 +144,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'etesty.urls'
 
+BASE_DIR1 = Path(__file__).resolve().parent.parent
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR1 / 'server'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -181,6 +200,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
