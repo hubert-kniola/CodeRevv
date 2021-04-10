@@ -11,21 +11,23 @@ type Props = {
 
 export const AccountActivate: FunctionComponent<Props> = ({ uid, token }) => {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('Dziękujemy za założenie konta. Możesz się teraz zalogować.');
-  
+  const [message, setMessage] = useState<string | null>(null);
+
   useEffect(() => {
     setLoading(true);
 
     const notifyApi = async () => {
       const { data } = await apiAxios.post('/activate/', { uid, token });
-      if (data.success === false) {
-        setMessage('Link aktywacji konta jest niepoprawny.');
-      }
+      setMessage(
+        data.success === false
+          ? 'Link aktywacji konta jest niepoprawny.'
+          : 'Dziękujemy za założenie konta. Możesz się teraz zalogować.'
+      );
       setLoading(false);
     };
 
     notifyApi();
-  }, []);
+  }, [uid, token]);
 
   return (
     <>
