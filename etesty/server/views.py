@@ -27,7 +27,7 @@ import requests
 
 def check_token(request):
     token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, settings.SECRET_KEY, 'HS256')
+    payload = jwt.decode(token1, settings.SECRET_KEY, settings.SIMPLE_JWT['ALGORITHM'])
     try:
         user = AuthUser.objects.get(pk=payload['user_id'])
     except UserWarning:
@@ -52,7 +52,7 @@ def user_list(request):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -77,8 +77,8 @@ def user_detail(request, pk):
 
         elif request.method == 'DELETE':
             user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response('User deleted', status=status.HTTP_204_NO_CONTENT)
+    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'POST'])
@@ -96,7 +96,7 @@ def test_list(request):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
 
 
 class TokenPairView(TokenObtainPairView):
@@ -128,34 +128,34 @@ def user_login(request):
             username=user_data['email'], password=user_data['password'])
 
         if user is not None:
-            user.is_active = True
-            user.last_login = timezone.now()
-            user.save()
+            if user.is_active:
+                user.last_login = timezone.now()
+                user.save()
 
-            serializer = TokenPairSerializer()
-            attr = {
-                'email': user.email,
-                'password': user_data['password']
-            }
-
-            tokens = serializer.validate(attr)
-            exp = tokens.pop('exp')
-
-            ret = {
-                'expiresAt': exp,
-                'userInfo': {
-                    "name": user.first_name,
-                    "surname": user.last_name,
-                    "role": user.role,
+                serializer = TokenPairSerializer()
+                attr = {
+                    'email': user.email,
+                    'password': user_data['password']
                 }
-            }
-            response = Response(ret, status=status.HTTP_200_OK)
-            response.set_cookie('access', tokens['access'], httponly=True)
-            response.set_cookie('refresh', tokens['refresh'], httponly=True)
-            return response
 
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+                tokens = serializer.validate(attr)
+                exp = tokens.pop('exp')
+
+                ret = {
+                    'expiresAt': exp,
+                    'userInfo': {
+                        "name": user.first_name,
+                        "surname": user.last_name,
+                        "role": user.role,
+                    }
+                }
+                response = Response(ret, status=status.HTTP_200_OK)
+                response.set_cookie('access', tokens['access'], httponly=True)
+                response.set_cookie('refresh', tokens['refresh'], httponly=True)
+                return response
+            return Response('User is not active', status=status.HTTP_403_FORBIDDEN)
+        return Response('User does not exist', status=status.HTTP_404_NOT_FOUND)
+    return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -177,26 +177,31 @@ def user_register(request):
                     'token': default_token_generator.make_token(user),
                 })
                 email = EmailMessage(
-                    'Aktywacja maila', message, to=[user_email])
+                    '[CodeRevv] Account activation', message, to=[user_email])
                 email.content_subtype = 'html'
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
 
 
-def activate(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = AuthUser.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, UserWarning):
-        user = None
-    if user is not None and default_token_generator.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return Response('Thank you for your email confirmation. Now you can login to account.')
-    else:
-        return Response('Activation link is invalid!')
+@api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
+def activate(request):
+    if request.method == 'POST':
+        data = request.data
+        print(data)
+        try:
+            uid = urlsafe_base64_decode(data['uid']).decode()
+            user = AuthUser.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, UserWarning):
+            user = None
+        if user is not None and default_token_generator.check_token(user, data['token']):
+            user.is_active = True
+            user.save()
+            return Response('User activated', status=status.HTTP_200_OK)
+        return Response('Activation link is invalid!', status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['GET', 'POST'])
@@ -215,11 +220,11 @@ def password_reset(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            email = EmailMessage('Resetowanie hasła', message, to=[user_email])
+            email = EmailMessage('[CodeRevv] Password recovery', message, to=[user_email])
             email.content_subtype = 'html'
             email.send()
             return Response('User Authenticated', status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response('User is not active. Password recovery unavailable', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

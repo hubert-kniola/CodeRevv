@@ -98,6 +98,7 @@ EMAIL_HOST_USER = 'codecatchertesting'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1
 
 
 ACCOUNT_FORMS = {'signup': 'server.forms.CustomSignupForm'}
