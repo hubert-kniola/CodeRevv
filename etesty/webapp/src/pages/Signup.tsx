@@ -1,9 +1,8 @@
-import { FunctionComponent, useContext, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import { LoadingOverlay, ReCaptcha } from 'components';
-import { AuthContext } from 'context';
+import { LoadingOverlay, ReCaptcha, Title } from 'components';
 import { HomeNav, AutoForm, HomeFooter } from 'containers';
 import { apiAxios, responseGoogle, captchaValidateHuman } from 'utility';
 import { registerFormData } from 'const';
@@ -12,7 +11,7 @@ import type { RegisterSchema } from 'const';
 
 export const Signup: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
-  const authContext = useContext(AuthContext);
+  const [error, setError] = useState<string | null>(null);
   const history = useHistory();
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -22,18 +21,16 @@ export const Signup: FunctionComponent = () => {
     try {
       const token = await reCaptchaRef.current?.executeAsync();
 
-      if (token == null) throw new Error('recaptcha failed');
-
-      if (!await captchaValidateHuman(token)) {
-        console.log('jakis blad albo brak czlowieka');
-      }
+      if (token == null) throw new Error('Błąd uwierzytelniania ReCAPTCHA. Spróbuj odświeżyć stronę.');
+      if (!(await captchaValidateHuman(token))) throw new Error('Nie mogliśmy zweryfikować czy jesteś człowiekiem.');
 
       const { data } = await apiAxios.post('/register/', { first_name: name, last_name: surname, email, password });
-      authContext.updateAuthState(data);
+      console.log({ post_register: data });
 
-      history.push('/dashboard');
+      window.alert('dostales maila')
+      history.push('/login');
     } catch (err) {
-      window.alert(err);
+      setError(err.message);
     }
 
     setLoading(false);
@@ -42,6 +39,8 @@ export const Signup: FunctionComponent = () => {
   return (
     <>
       <HomeNav />
+
+      {error != null && <Title>{error}</Title>}
 
       <LoadingOverlay active={loading} text="Zakładamy twoje konto...">
         <AutoForm

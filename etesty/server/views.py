@@ -172,11 +172,12 @@ def user_register(request):
                 # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
                 message = render_to_string('acc_active_email.html', {
                     'user': user,
-                    'domain': 'http://127.0.0.1:3000', # ZMIENIC
+                    'domain': 'http://127.0.0.1:3000',  # ZMIENIC
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
                 })
-                email = EmailMessage('Aktywacja maila', message, to=[user_email])
+                email = EmailMessage(
+                    'Aktywacja maila', message, to=[user_email])
                 email.content_subtype = 'html'
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -207,7 +208,7 @@ def password_reset(request):
         user_email = user.email
         user_active = user.is_active
         if user_active:
-            #current_site = get_current_site(request) # PO UZYSKANIU DOMENY
+            # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
             message = render_to_string('pwd_reset_email.html', {
                 'user': user,
                 'domain': 'http://127.0.0.1:8000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
@@ -248,16 +249,13 @@ def user_logout(request):
 
 @api_view(['POST'])
 def recaptcha_verify(request):
-    response = {}
-    data = request.data
-    captcha = data.get('g-recaptcha-response')
+    captcha = request.data.get('token')
     url = 'https://www.google.com/recaptcha/api/siteverify'
     params = {
         'secret': settings.RECAPTCHA_PRIVATE_KEY,
         'response': captcha
     }
-    verify = requests.get(url, params=params, verify=True)
+    verify = requests.post(url, params=params, verify=True)
     verify = verify.json()
-    response['status'] = verify.get('success', False)
-    response['message'] = verify.get('error-codes', None)
-    return Response(response)
+    return Response({'status': verify.get('success', False),
+                     'message': verify.get('error-codes', None)})
