@@ -9,8 +9,14 @@ export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginRespon
   console.log(response);
 };
 
-export const captchaValidateHuman = async (token: string | null | undefined) => {
-  //WORK
-  console.log(token);
+export const captchaValidateHuman = async (token: string) => {
+  try {
+    const response = await apiAxios.post('/recaptcha/', { token });
+    
+
+  } catch (err) {
+
+  }
+
   return false;
 };
