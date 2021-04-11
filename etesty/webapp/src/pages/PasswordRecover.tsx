@@ -19,12 +19,12 @@ export const PasswordRecover: FunctionComponent = () => {
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const { id } = useParams<RouteParams>();
 
-  const onEmailSubmit = async (recover: RecoverSchema) => {
+  const onEmailSubmit = async ({password}: RecoverSchema) => {
     setLoading(true);
 
     try {
       //TODO endpoint
-      const { data } = await apiAxios.post('/recover/', { recover });
+      const { data } = await apiAxios.post('/recover/', { password });
       window.alert(data);
     } catch (err) {
       window.alert(err);

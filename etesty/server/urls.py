@@ -13,7 +13,7 @@ urlpatterns = [
     path('api/v1/token/obtain/', TokenPairView.as_view(), name='token_create'),
     path('api/v1/token/refresh/', refresh_token, name='token_refresh'),
     path('api/v1/activate/', activate, name='activate'),
-    path('api/v1/recover/<uidb64>/<token>/', recover_password, name='recover'),
+    path('api/v1/recover/', recover_password, name='recover'),
     path('api/v1/logout/', user_logout, name='logout'),
     path('api/v1/recaptcha/', recaptcha_verify),
 ]

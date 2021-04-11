@@ -177,7 +177,7 @@ def user_register(request):
                     'token': default_token_generator.make_token(user),
                 })
                 email = EmailMessage(
-                    '[CodeRevv] Account activation', message, to=[user_email])
+                    '[CodeRevv] Aktywacja konta', message, to=[user_email])
                 email.content_subtype = 'html'
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -216,11 +216,11 @@ def password_reset(request):
             # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
             message = render_to_string('pwd_reset_email.html', {
                 'user': user,
-                'domain': 'http://127.0.0.1:8000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
+                'domain': 'http://127.0.0.1:3000',  # ZMIENIC / STRZELAMY DO APKI WEBOWEJ
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            email = EmailMessage('[CodeRevv] Password recovery', message, to=[user_email])
+            email = EmailMessage('[CodeRevv] Reset hasła', message, to=[user_email])
             email.content_subtype = 'html'
             email.send()
             return Response('User Authenticated', status=status.HTTP_200_OK)
@@ -229,14 +229,15 @@ def password_reset(request):
 
 @api_view(['POST'])
 @csrf_exempt
-def recover_password(request, uidb64, token):
+def recover_password(request):
+    data = request.data
     try:
-        uid = urlsafe_base64_decode(uidb64).decode()
+        uid = urlsafe_base64_decode(data['uid']).decode()
         user = AuthUser.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, UserWarning):
         user = None
-    if user is not None and default_token_generator.check_token(user, token):
-        user.set_password(request.data['password'])
+    if user is not None and default_token_generator.check_token(user, data['token']):
+        user.set_password(data['password'])
         user.save()
         return Response('Successful recovery. Now you can login to account.')
     else:
