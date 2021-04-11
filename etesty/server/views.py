@@ -239,9 +239,9 @@ def recover_password(request):
     if user is not None and default_token_generator.check_token(user, data['token']):
         user.set_password(data['password'])
         user.save()
-        return Response('Successful recovery. Now you can login to account.')
+        return Response({'status': True}, status=status.HTTP_200_OK)
     else:
-        return Response('Recovery link is invalid!')
+        return Response({'status': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
