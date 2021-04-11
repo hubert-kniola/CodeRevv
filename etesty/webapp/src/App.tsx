@@ -14,7 +14,7 @@ const App = () => (
         <Route exact path="/contact" component={Contact} />
         <Route exact path="/signin" component={Login} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/recover/:id?" component={PasswordRecover} />
+        <Route exact path="/recover/:uid?/:token?" component={PasswordRecover} />
         <Route exact path="/activate/:uid/:token" component={AccountActivate} />
         <ProtectedRoute exact path="/dashboard" For={Dashboard} fallbackPath="/signin" />
         <Route component={NotFound} />

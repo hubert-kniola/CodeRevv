@@ -9,7 +9,8 @@ import { apiAxios } from 'utility';
 import type { ChangePasswordSchema, RecoverSchema } from 'const';
 
 type RouteParams = {
-  id?: string;
+  uid?: string;
+  token?: string;
 };
 
 export const PasswordRecover: FunctionComponent = () => {
@@ -17,15 +18,14 @@ export const PasswordRecover: FunctionComponent = () => {
   const [error, setError] = useState(false);
 
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
-  const { id } = useParams<RouteParams>();
+  const { uid, token } = useParams<RouteParams>();
 
-  const onEmailSubmit = async ({password}: RecoverSchema) => {
+  const onEmailSubmit = async ({ email }: RecoverSchema) => {
     setLoading(true);
 
     try {
-      //TODO endpoint
-      const { data } = await apiAxios.post('/recover/', { password });
-      window.alert(data);
+      const { data } = await apiAxios.post('/reset/', { email });
+      setError(data.status === false);
     } catch (err) {
       window.alert(err);
       setError(err);
@@ -34,15 +34,18 @@ export const PasswordRecover: FunctionComponent = () => {
     setLoading(false);
   };
 
-  const onPasswordSubmit = async (changePwd: ChangePasswordSchema) => {
+  const onPasswordSubmit = async ({ password }: ChangePasswordSchema) => {
     setLoading(true);
 
     try {
-      //TODO endpoint
-      const { data } = await apiAxios.post('/recover/pwd', { changePwd });
-      window.alert(data);
+      if (uid == null || token == null) {
+        setError(true);
+        return;
+      }
+
+      const { data } = await apiAxios.post('/recover/', { password, uid, token });
+      setError(data.status === false);
     } catch (err) {
-      window.alert(err);
       setError(err);
     }
 
@@ -55,7 +58,7 @@ export const PasswordRecover: FunctionComponent = () => {
 
       <LoadingOverlay active={loading} text="Chwilka...">
         <Recover
-          hasId={id != null}
+          hasId={uid != null && token != null}
           error={error}
           onEmailSubmit={onEmailSubmit}
           onPasswordSubmit={onPasswordSubmit}
