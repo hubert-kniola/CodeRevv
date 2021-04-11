@@ -1,25 +1,16 @@
-from datetime import timedelta
-from django import http
-
-from django.contrib.auth.backends import AllowAllUsersModelBackend
+import jwt
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-from django.http import *
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_exempt
-
-from .serializers import *
+from rest_framework.exceptions import AuthenticationFailed
+from ..serializers import *
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import status
 from django.contrib.auth import authenticate, logout
-# Create your views here.
 from django.utils import timezone
-import jwt
-from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.conf import settings
 import requests
@@ -37,71 +28,18 @@ def check_token(request):
     return False
 
 
-@api_view(['GET', 'POST'])
-def user_list(request):
-    if check_token(request):
-        if request.method == 'GET':
-            users = AuthUser.objects.all()
-            serializer = UserSerializer(users, many=True)
-            return Response(serializer.data)
-
-        elif request.method == 'POST':
-            serializer = UserSerializer(data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def user_detail(request, pk):
-    if check_token(request):
-        try:
-            user = AuthUser.objects.get(pk=pk)
-
-        except AuthUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        if request.method == 'GET':
-            serializer = UserSerializer(user)
-            return Response(serializer.data)
-
-        elif request.method == 'PUT':
-            serializer = UserSerializer(user, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        elif request.method == 'DELETE':
-            user.delete()
-            return Response('User deleted', status=status.HTTP_204_NO_CONTENT)
-    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET', 'POST'])
-def test_list(request):
-    if check_token(request):
-        if request.method == 'GET':
-            tests = OnlineTest.objects.all()
-            serializer = TestSerializer(tests, many=True)
-            return Response(serializer.data)
-
-        elif request.method == 'POST':
-            serializer = TestSerializer(data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response('Invalid token', status=status.HTTP_404_NOT_FOUND)
-
-
-class TokenPairView(TokenObtainPairView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = TokenPairSerializer
+@api_view(['POST'])
+def recaptcha_verify(request):
+    captcha = request.data.get('token')
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    params = {
+        'secret': settings.RECAPTCHA_PRIVATE_KEY,
+        'response': captcha
+    }
+    verify = requests.post(url, params=params, verify=True)
+    verify = verify.json()
+    return Response({'success': verify.get('success', False),
+                     'message': verify.get('error-codes', None)})
 
 
 @api_view(['GET', 'POST'])
@@ -153,9 +91,9 @@ def user_login(request):
                 response.set_cookie('access', tokens['access'], httponly=True)
                 response.set_cookie('refresh', tokens['refresh'], httponly=True)
                 return response
-            return Response('User is not active', status=status.HTTP_403_FORBIDDEN)
-        return Response('User does not exist', status=status.HTTP_404_NOT_FOUND)
-    return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
+    return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -182,7 +120,7 @@ def user_register(request):
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -200,8 +138,8 @@ def activate(request):
         if user is not None and default_token_generator.check_token(user, data['token']):
             user.is_active = True
             user.save()
-            return Response('User activated', status=status.HTTP_200_OK)
-        return Response('Activation link is invalid!', status=status.HTTP_409_CONFLICT)
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['GET', 'POST'])
@@ -223,8 +161,8 @@ def password_reset(request):
             email = EmailMessage('[CodeRevv] Reset hasła', message, to=[user_email])
             email.content_subtype = 'html'
             email.send()
-            return Response('User Authenticated', status=status.HTTP_200_OK)
-        return Response('User is not active. Password recovery unavailable', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -239,9 +177,9 @@ def recover_password(request):
     if user is not None and default_token_generator.check_token(user, data['token']):
         user.set_password(data['password'])
         user.save()
-        return Response({'status': True}, status=status.HTTP_200_OK)
+        return Response({'success': True}, status=status.HTTP_200_OK)
     else:
-        return Response({'status': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -251,17 +189,3 @@ def user_logout(request):
     response.delete_cookie('access')
     response.delete_cookie('refresh')
     return response
-
-
-@api_view(['POST'])
-def recaptcha_verify(request):
-    captcha = request.data.get('token')
-    url = 'https://www.google.com/recaptcha/api/siteverify'
-    params = {
-        'secret': settings.RECAPTCHA_PRIVATE_KEY,
-        'response': captcha
-    }
-    verify = requests.post(url, params=params, verify=True)
-    verify = verify.json()
-    return Response({'status': verify.get('success', False),
-                     'message': verify.get('error-codes', None)})

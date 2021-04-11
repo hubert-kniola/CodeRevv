@@ -150,7 +150,7 @@ BASE_DIR1 = Path(__file__).resolve().parent.parent
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR1 / 'server'],
+        'DIRS': [BASE_DIR1 / 'server/emailtemplates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

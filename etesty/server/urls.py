@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import *
-from django.conf.urls import url
-from rest_framework_simplejwt import views as jwt_views
+from .views.views import *
+from .views.authviews import *
+from .views.dashboardviews import *
 
 urlpatterns = [
     path('api/v1/users/', user_list),
