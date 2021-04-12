@@ -1,16 +1,17 @@
 import { FunctionComponent } from 'react';
 
-import { Title } from 'components';
+import { MessageOverlay, Title } from 'components';
 import { HomeFooter, HomeNav, HomeFaq } from 'containers';
 
 export const Home: FunctionComponent = () => (
   <>
     <HomeNav />
 
-    <Title>Tu powstaje platforma testów online.</Title>
+    <MessageOverlay active={true} title='Gratulacje!' text="Sprawdź skrzynkę mailową">
+      <Title>Tu powstaje platforma testów online.</Title>
 
-    <HomeFaq />
-
+      <HomeFaq />
+    </MessageOverlay>
     <HomeFooter />
   </>
 );

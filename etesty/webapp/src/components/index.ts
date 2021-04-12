@@ -9,3 +9,4 @@ export * from './form/Form';
 export * from './loading-overlay/LoadingOverlay';
 export * from './re-captcha/ReCaptcha';
 export * from './misc/Misc';
+export * from './message-overlay/MessageOverlay';
