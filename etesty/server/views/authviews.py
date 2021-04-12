@@ -81,11 +81,14 @@ def user_login(request):
                 exp = tokens.pop('exp')
 
                 ret = {
-                    'expiresAt': exp,
-                    'userInfo': {
-                        "name": user.first_name,
-                        "surname": user.last_name,
-                        "role": user.role,
+                    'success': True,
+                    'state': {
+                        'expiresAt': exp,
+                        'userInfo': {
+                            "name": user.first_name,
+                            "surname": user.last_name,
+                            "role": user.role,
+                        }
                     }
                 }
                 response = Response(ret, status=status.HTTP_200_OK)
