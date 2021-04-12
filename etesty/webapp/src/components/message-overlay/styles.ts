@@ -3,6 +3,11 @@ import LoadingOverlay from 'react-loading-overlay-ts';
 
 import logo from 'images/logo.png';
 
+export const DummyContainer = styled.div`
+  display: grid;
+  height: 100px;
+`;
+
 export const Overlay = styled(LoadingOverlay)`
   ._loading_overlay_overlay {
     background-color: ${({ theme }) => theme.colors.alphabg};
@@ -29,6 +34,7 @@ export const Body = styled.p`
   font-weight: normal;
   line-height: normal;
   color: ${({ theme }) => theme.colors.text};
+  max-width: 800px;
 
   @media (max-width: 600px) {
     font-size: 16px;

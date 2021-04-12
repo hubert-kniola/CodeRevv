@@ -10,7 +10,7 @@ export const Container = styled.nav<{ scroll: boolean }>`
   top: 0px;
   justify-content: space-between;
   padding: 0.5rem calc((100vw - 1000px) / 2);
-  z-index: 10;
+  z-index: 9999;
 
   ${({ scroll }) =>
     (scroll &&

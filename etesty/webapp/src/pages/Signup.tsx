@@ -1,7 +1,7 @@
 import { FunctionComponent, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import { LoadingOverlay, ReCaptcha, Title } from 'components';
+import { LoadingOverlay, MessageOverlay, ReCaptcha } from 'components';
 import { HomeNav, AutoForm, HomeFooter } from 'containers';
 import { apiAxios, responseGoogle, captchaValidateHuman } from 'utility';
 import { registerFormData } from 'const';
@@ -19,18 +19,36 @@ export const Signup: FunctionComponent = () => {
 
     try {
       const token = await reCaptchaRef.current?.executeAsync();
+      if (token == null) {
+        setError('Błąd uwierzytelniania ReCAPTCHA. Spróbuj odświeżyć stronę.');
+        return;
+      }
 
-      if (token == null) throw new Error('Błąd uwierzytelniania ReCAPTCHA. Spróbuj odświeżyć stronę.');
-      if (!(await captchaValidateHuman(token))) throw new Error('Nie mogliśmy zweryfikować czy jesteś człowiekiem.');
+      if (!(await captchaValidateHuman(token))) {
+        setError('Nie mogliśmy zweryfikować czy jesteś człowiekiem. Możesz spróbować ponownie po odświeżeniu strony.');
+        return;
+      }
 
-      const { data } = await apiAxios.post('/register/', { first_name: name, last_name: surname, email, password });
-      if (data == null) setError('Nie udało się otrzymać odpowiedzi od serwera.');
+      const { data } = await apiAxios.post('/register/', {
+        first_name: name,
+        last_name: surname,
+        email,
+        password,
+      });
 
       setMessage(
-        `Na adres ${data.email} został wysłany mail z potwierdzeniem założenia konta. Kliknij w jego link aby aktywować swoje konto.`
+        `Na adres ${data.email} został wysłany e-mail z potwierdzeniem założenia konta. Kliknij w otrzymany link aby aktywować swoje konto.`
       );
     } catch (err) {
-      setError(err.message);
+      if (err.response) {
+        if (err.response.status === 409) {
+          setError('W naszej bazie istnieje już użytkownik o podanym adresie e-mail.');
+        } else if (err.response.status !== 201) {
+          setError('Nie udało się założyć konta. Proszę spróbować ponownie po odświeżeniu strony.');
+        }
+      } else {
+        setError('Nasz serwer nie odpowiada. Jeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+      }
     }
 
     setLoading(false);
@@ -40,10 +58,8 @@ export const Signup: FunctionComponent = () => {
     <>
       <HomeNav />
 
-      {message == null ? (
-        <>
-          {error != null && <Title>{error}</Title>}
-
+      <MessageOverlay active={message != null} title="Gratulacje!" text={message!}>
+        <MessageOverlay active={error != null} title="Wystąpił błąd." text={error!}>
           <LoadingOverlay active={loading} text="Zakładamy twoje konto...">
             <AutoForm
               headerText="Stwórz konto"
@@ -55,11 +71,8 @@ export const Signup: FunctionComponent = () => {
             />
             <ReCaptcha ref={reCaptchaRef} />
           </LoadingOverlay>
-        </>
-      ) : (
-        <Title>{message}</Title>
-      )}
-
+        </MessageOverlay>
+      </MessageOverlay>
       <HomeFooter />
     </>
   );

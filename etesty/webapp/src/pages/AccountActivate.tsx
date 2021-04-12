@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import { HomeNav, HomeFooter } from 'containers';
-import { LoadingOverlay, Title } from 'components';
+import { LoadingOverlay, MessageOverlay, Title } from 'components';
 import { apiAxios } from 'utility';
 import { useParams } from 'react-router-dom';
 
@@ -23,8 +23,8 @@ export const AccountActivate: FunctionComponent = () => {
         const { data } = await apiAxios.post('/activate/', { uid, token });
         setMessage(
           data.success === true
-            ? 'Dziękujemy za założenie konta. Możesz się teraz zalogować.'
-            : 'Link aktywacji konta jest niepoprawny.'
+            ? 'Dziękujemy za aktywację konta. Możesz się teraz zalogować.'
+            : 'Link aktywacji konta jest niepoprawny. Spróbuj ponownie.'
         );
       } catch (err) {
         setMessage('Wystąpił problem z połączeniem. Spróbuj odświeżyć przeglądarkę.');
@@ -41,7 +41,7 @@ export const AccountActivate: FunctionComponent = () => {
       <HomeNav />
 
       <LoadingOverlay active={loading} text="Czekamy na odpowiedź serwera...">
-        <Title>{message}</Title>
+        <MessageOverlay active={!loading} text={message!}/>
       </LoadingOverlay>
 
       <HomeFooter />

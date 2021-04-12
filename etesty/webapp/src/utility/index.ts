@@ -11,11 +11,9 @@ export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginRespon
 
 export const captchaValidateHuman = async (token: string) => {
   try {
-    const response = await apiAxios.post('/recaptcha/', { token });
-    console.log({ recaptcha_response: response });
-    const { data } = response;
+    const { data, status } = await apiAxios.post('/recaptcha/', { token });
+    return status === 200 && data.success === true;
 
-    return data.status === true;
   } catch (err) {
     throw new Error('Nie mogliśmy nawiązać połączenia z Google.');
   }
