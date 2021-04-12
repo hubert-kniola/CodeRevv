@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import AuthenticationFailed
-from ..serializers import *
+from .serializers import *
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,10 +17,10 @@ import requests
 
 
 def check_token(request):
-    token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, settings.SECRET_KEY,
-                         settings.SIMPLE_JWT['ALGORITHM'])
     try:
+        token1 = request.COOKIES['access']
+        payload = jwt.decode(token1, settings.SECRET_KEY,
+                         settings.SIMPLE_JWT['ALGORITHM'])
         user = AuthUser.objects.get(pk=payload['user_id'])
     except UserWarning:
         raise AuthenticationFailed
@@ -46,12 +46,14 @@ def recaptcha_verify(request):
 @api_view(['GET', 'POST'])
 def refresh_token(request):
     serializer = RefreshTokenSerializer()
-    attr = {
-        'refresh': request.data['refresh']
-    }
-    token = serializer.validate(attr)
-
-    response = Response(status=status.HTTP_200_OK)
+    try:
+        attr = {
+            'refresh': request.data['refresh']
+        }
+        token = serializer.validate(attr)
+    except ValueError:
+        return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
+    response = Response({'success': True}, status=status.HTTP_200_OK)
     response.set_cookie('access', token['access'], httponly=True)
     return response
 
@@ -124,8 +126,9 @@ def user_register(request):
                 email.content_subtype = 'html'
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+            return Response({'success': False}, status=status.HTTP_409_CONFLICT)
         return Response({'success': False}, status=status.HTTP_409_CONFLICT)
+    return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -145,6 +148,7 @@ def activate(request):
             user.save()
             return Response({'success': True}, status=status.HTTP_200_OK)
         return Response({'success': False}, status=status.HTTP_409_CONFLICT)
+    return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -169,6 +173,7 @@ def password_reset(request):
             email.send()
             return Response({'success': True}, status=status.HTTP_200_OK)
         return Response({'success': False}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+    return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -184,13 +189,15 @@ def recover_password(request):
         user.set_password(data['password'])
         user.save()
         return Response({'success': True}, status=status.HTTP_200_OK)
-    else:
-        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
+    return Response({'success': False}, status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['POST'])
 def user_logout(request):
-    logout(request)
+    try:
+        logout(request)
+    except UserWarning:
+        return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
     response = Response(status=status.HTTP_200_OK)
     response.delete_cookie('access')
     response.delete_cookie('refresh')
