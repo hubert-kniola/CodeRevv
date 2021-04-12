@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import { HomeNav, HomeFooter } from 'containers';
-import { LoadingOverlay, MessageOverlay, Title } from 'components';
+import { LoadingOverlay, MessageOverlay } from 'components';
 import { apiAxios } from 'utility';
 import { useParams } from 'react-router-dom';
 

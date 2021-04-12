@@ -2,11 +2,12 @@ import { FunctionComponent, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { ReCAPTCHA } from 'react-google-recaptcha';
 
-import { HomeNav, HomeFooter, Recover } from 'containers';
-import { LoadingOverlay } from 'components';
+import { HomeNav, HomeFooter, AutoForm } from 'containers';
+import { LoadingOverlay, MessageOverlay, ReCaptcha } from 'components';
 import { apiAxios } from 'utility';
 
-import type { ChangePasswordSchema, RecoverSchema } from 'const';
+import { changePasswordFormData, ChangePasswordSchema, recoverFormData, RecoverSchema } from 'const';
+import { useHistory } from 'react-router-dom';
 
 type RouteParams = {
   uid?: string;
@@ -15,20 +16,23 @@ type RouteParams = {
 
 export const PasswordRecover: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const { uid, token } = useParams<RouteParams>();
+  const history = useHistory();
+  
+  const isStageTwo = () => uid != null && token != null;
 
   const onEmailSubmit = async ({ email }: RecoverSchema) => {
     setLoading(true);
 
     try {
-      const { data } = await apiAxios.post('/reset/', { email });
-      setError(data.status === false);
+      await apiAxios.post('/reset/', { email });
+      setMessage('Na podany adres e-mail został wysłany link. Otwórz go aby zresetować hasło.');
     } catch (err) {
-      window.alert(err);
-      setError(err);
+      setError('Nie możemy połączyć się z serwerem, spróbuj jeszcze raz.');
     }
 
     setLoading(false);
@@ -37,33 +41,56 @@ export const PasswordRecover: FunctionComponent = () => {
   const onPasswordSubmit = async ({ password }: ChangePasswordSchema) => {
     setLoading(true);
 
-    try {
-      if (uid == null || token == null) {
-        setError(true);
-        return;
-      }
+    if (!isStageTwo()) {
+      history.push('/recover');
+      return;
+    }
 
+    try {
       const { data } = await apiAxios.post('/recover/', { password, uid, token });
-      setError(data.status === false);
+      if (data.success === true) {
+        setMessage('Hasło zostało poprawnie zresetowane. Możesz się teraz zalogować.');
+      } else {
+        setError('Wprowadzone dane są nieprawidłowe.');
+      }
     } catch (err) {
-      setError(err);
+      setError('Nie możemy połączyć się z serwerem, spróbuj jeszcze raz.');
     }
 
     setLoading(false);
   };
+
 
   return (
     <>
       <HomeNav />
 
       <LoadingOverlay active={loading} text="Chwilka...">
-        <Recover
-          hasId={uid != null && token != null}
-          error={error}
-          onEmailSubmit={onEmailSubmit}
-          onPasswordSubmit={onPasswordSubmit}
-          ref={reCaptchaRef}
-        />
+        <MessageOverlay active={error != null} title="Wystąpił błąd." text={error!}>
+          <MessageOverlay active={message != null} text={message!}>
+            {isStageTwo() ? (
+              <>
+                <AutoForm
+                  headerText="Wprowadź nowe hasło do konta"
+                  formData={changePasswordFormData}
+                  onSubmit={onPasswordSubmit}
+                  buttonText="Zmień hasło"
+                />
+                <ReCaptcha ref={reCaptchaRef} />
+              </>
+            ) : (
+              <>
+                <AutoForm
+                  headerText="Wprowadź adres e-mail przypisany do konta aby zresetować hasło"
+                  formData={recoverFormData}
+                  onSubmit={onEmailSubmit}
+                  buttonText="Zresetuj hasło"
+                />
+                <ReCaptcha ref={reCaptchaRef} />
+              </>
+            )}
+          </MessageOverlay>
+        </MessageOverlay>
       </LoadingOverlay>
 
       <HomeFooter />

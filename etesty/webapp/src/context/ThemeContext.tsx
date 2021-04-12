@@ -8,7 +8,7 @@ const darkTheme: DefaultTheme = {
   name: 'dark',
   colors: {
     background: '#201c21',
-    alphabg: 'hsla(288, 8.196721311475414%, 11.96078431372549%, 0.801)',
+    alphabg: 'hsla(288, 8.196721311475414%, 11.96078431372549%, 0.89)',
     setting: '#474847CC',
     primary: '#FE7920',
     secondary: '#FDD25E',

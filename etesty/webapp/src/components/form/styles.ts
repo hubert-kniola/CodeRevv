@@ -25,6 +25,7 @@ export const FormInner = styled.div`
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 30px;
+    max-width: 500px;
   }
 
   hr {
