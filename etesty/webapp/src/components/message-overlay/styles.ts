@@ -8,6 +8,11 @@ export const DummyContainer = styled.div`
   height: 100px;
 `;
 
+export const InnerContainer = styled.div`
+  display: grid;
+  height: 200px;
+`;
+
 export const Overlay = styled(LoadingOverlay)`
   ._loading_overlay_overlay {
     background-color: ${({ theme }) => theme.colors.alphabg};

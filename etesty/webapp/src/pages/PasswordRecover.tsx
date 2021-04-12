@@ -1,13 +1,12 @@
 import { FunctionComponent, useRef, useState } from 'react';
 import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { ReCAPTCHA } from 'react-google-recaptcha';
 
 import { HomeNav, HomeFooter, AutoForm } from 'containers';
 import { LoadingOverlay, MessageOverlay, ReCaptcha } from 'components';
 import { apiAxios } from 'utility';
-
 import { changePasswordFormData, ChangePasswordSchema, recoverFormData, RecoverSchema } from 'const';
-import { useHistory } from 'react-router-dom';
 
 type RouteParams = {
   uid?: string;
@@ -18,11 +17,11 @@ export const PasswordRecover: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  
+
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const { uid, token } = useParams<RouteParams>();
   const history = useHistory();
-  
+
   const isStageTwo = () => uid != null && token != null;
 
   const onEmailSubmit = async ({ email }: RecoverSchema) => {
@@ -30,7 +29,10 @@ export const PasswordRecover: FunctionComponent = () => {
 
     try {
       await apiAxios.post('/reset/', { email });
-      setMessage('Na podany adres e-mail został wysłany link. Otwórz go aby zresetować hasło.');
+      setMessage(
+        `Jeśli dla podanego adresu e-mail istnieje konto w serwisie to został wysłany link. Otwórz go aby zresetować hasło. 
+        Jeśli w ciągu 5 minut nie otrzymasz żadnego maila - odśwież stronę i spróbuj ponownie.`
+      );
     } catch (err) {
       setError('Nie możemy połączyć się z serwerem, spróbuj jeszcze raz.');
     }
@@ -48,6 +50,7 @@ export const PasswordRecover: FunctionComponent = () => {
 
     try {
       const { data } = await apiAxios.post('/recover/', { password, uid, token });
+
       if (data.success === true) {
         setMessage('Hasło zostało poprawnie zresetowane. Możesz się teraz zalogować.');
       } else {
@@ -59,7 +62,6 @@ export const PasswordRecover: FunctionComponent = () => {
 
     setLoading(false);
   };
-
 
   return (
     <>

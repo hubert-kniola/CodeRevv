@@ -1,12 +1,12 @@
 import { createContext, useState, FunctionComponent } from 'react';
 
-type UserInfo = {
+export type UserInfo = {
   name: string;
   surname: string;
   role: string;
 };
 
-type AuthState = {
+export type AuthState = {
   expiresAt?: number;
   userInfo?: UserInfo;
 };
