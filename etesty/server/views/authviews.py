@@ -18,7 +18,8 @@ import requests
 
 def check_token(request):
     token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, settings.SECRET_KEY, settings.SIMPLE_JWT['ALGORITHM'])
+    payload = jwt.decode(token1, settings.SECRET_KEY,
+                         settings.SIMPLE_JWT['ALGORITHM'])
     try:
         user = AuthUser.objects.get(pk=payload['user_id'])
     except UserWarning:
@@ -89,7 +90,8 @@ def user_login(request):
                 }
                 response = Response(ret, status=status.HTTP_200_OK)
                 response.set_cookie('access', tokens['access'], httponly=True)
-                response.set_cookie('refresh', tokens['refresh'], httponly=True)
+                response.set_cookie(
+                    'refresh', tokens['refresh'], httponly=True)
                 return response
             return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
@@ -120,7 +122,7 @@ def user_register(request):
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False}, status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['GET', 'POST'])
@@ -158,11 +160,12 @@ def password_reset(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            email = EmailMessage('[CodeRevv] Reset hasła', message, to=[user_email])
+            email = EmailMessage('[CodeRevv] Reset hasła',
+                                 message, to=[user_email])
             email.content_subtype = 'html'
             email.send()
             return Response({'success': True}, status=status.HTTP_200_OK)
-        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @api_view(['POST'])
@@ -179,7 +182,7 @@ def recover_password(request):
         user.save()
         return Response({'success': True}, status=status.HTTP_200_OK)
     else:
-        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
