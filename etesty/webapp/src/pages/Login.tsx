@@ -9,7 +9,7 @@ import { loginFormData } from 'const';
 
 import type { LoginSchema } from 'const';
 
-export const Login: FunctionComponent = () => {
+const Login: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,3 +65,5 @@ export const Login: FunctionComponent = () => {
     </>
   );
 };
+
+export default Login;

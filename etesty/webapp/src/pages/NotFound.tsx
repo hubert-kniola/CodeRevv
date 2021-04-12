@@ -1,13 +1,13 @@
 import { FunctionComponent } from 'react';
 
 import { HomeNav, HomeFooter } from 'containers';
-import { Title } from 'components';
+import { MessageOverlay } from 'components';
 
 export const NotFound: FunctionComponent = () => (
   <>
     <HomeNav />
 
-    <Title>Ups, to mi wygląda na 404...</Title>
+    <MessageOverlay active={true} title="Ooops..." text="Chyba nie obsługujemy takiego adresu :(" />
 
     <HomeFooter />
   </>

@@ -8,7 +8,7 @@ import { registerFormData } from 'const';
 
 import type { RegisterSchema } from 'const';
 
-export const Signup: FunctionComponent = () => {
+const Signup: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -86,3 +86,5 @@ export const Signup: FunctionComponent = () => {
     </>
   );
 };
+
+export default Signup;

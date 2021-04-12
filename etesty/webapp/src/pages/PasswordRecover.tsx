@@ -13,7 +13,7 @@ type RouteParams = {
   token?: string;
 };
 
-export const PasswordRecover: FunctionComponent = () => {
+const PasswordRecover: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -99,3 +99,5 @@ export const PasswordRecover: FunctionComponent = () => {
     </>
   );
 };
+
+export default PasswordRecover;

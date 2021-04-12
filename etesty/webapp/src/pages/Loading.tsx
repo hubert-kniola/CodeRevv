@@ -1,13 +1,15 @@
 import { FunctionComponent } from 'react';
 
 import { HomeFooter, HomeNav } from 'containers';
-import { Title } from 'components';
+import { LoadingOverlay } from 'components';
 
 export const Loading: FunctionComponent = () => (
   <>
     <HomeNav />
 
-    <Title>Chwilunia...</Title>
+    <LoadingOverlay active={true} text="Jeszcze moment...">
+      <div style={{ height: '300px' }} />
+    </LoadingOverlay>
 
     <HomeFooter />
   </>

@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import { HomeFooter, HomeNav } from 'containers';
 import { Title } from 'components';
 
-export const Contact: FunctionComponent = () => (
+const Contact: FunctionComponent = () => (
   <>
     <HomeNav />
 
@@ -12,3 +12,5 @@ export const Contact: FunctionComponent = () => (
     <HomeFooter />
   </>
 );
+
+export default Contact;

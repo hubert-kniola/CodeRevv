@@ -10,7 +10,7 @@ type RouteParams = {
   token: string;
 };
 
-export const AccountActivate: FunctionComponent = () => {
+const AccountActivate: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const { uid, token } = useParams<RouteParams>();
@@ -41,10 +41,12 @@ export const AccountActivate: FunctionComponent = () => {
       <HomeNav />
 
       <LoadingOverlay active={loading} text="Czekamy na odpowiedź serwera...">
-        <MessageOverlay active={!loading} text={message!}/>
+        <MessageOverlay active={!loading} text={message!} />
       </LoadingOverlay>
 
       <HomeFooter />
     </>
   );
 };
+
+export default AccountActivate;
