@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+export *  from './data'
 
 export type FormEntry = {
   label: string;

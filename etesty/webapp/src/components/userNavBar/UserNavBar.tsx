@@ -8,7 +8,7 @@ import {
     DropDown, 
 } from './style';
 
-import {Data, userNavBarData} from './userNavBarData';
+import {Data, userNavBarData} from '../../const/index';
 
 
 export const Item = (item: Data, click?: () => void) =>(

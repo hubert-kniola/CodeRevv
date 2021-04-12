@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import LaptopChromebookIcon from '@material-ui/icons/LaptopChromebook';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import ScoreIcon from '@material-ui/icons/Score';
@@ -6,7 +7,10 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import GroupIcon from '@material-ui/icons/Group';
-import { ReactElement } from 'react';
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
+import EditIcon from '@material-ui/icons/Edit';
+import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
+import ErrorIcon from '@material-ui/icons/Error';
 
 
 //https://material-ui.com/components/material-icons/#material-icons
@@ -15,14 +19,14 @@ export type SubMenu = {
     title: string;
     icon: ReactElement;
     link: string;
-}
+};
 
 export type SidebarItem = {
     title: string;
     icon: ReactElement;
     link: string;
     subMenu: SubMenu[];
-}
+};
 
 export const SidebarData: SidebarItem[] = [
     {
@@ -71,4 +75,33 @@ export const SidebarData: SidebarItem[] = [
         link: '/home',
         subMenu:[],
     },
-]
+];
+
+export type Data = {
+    title: string;
+    icon: ReactElement;
+    link: string;
+};
+
+export const userNavBarData: Data[]  = [
+    {
+        title: "Mój profil",
+        icon: <EmojiEmotionsIcon/>,
+        link: '#'
+    },
+    {
+        title: "Edytuj profil",
+        icon: <EditIcon/>,
+        link: '#'
+    },
+    {
+        title: "jakaś opcja",
+        icon: <ErrorIcon/>,
+        link: '#'
+    },
+    {
+        title: "Wyloguj",
+        icon: <DirectionsWalkIcon/>,
+        link: '#'
+    },
+];

@@ -11,7 +11,6 @@ const Dashboard: FunctionComponent = () => {
     <>
       <UserNavBar/>
       <UserDashboard/>
-
     </>
   );
 };

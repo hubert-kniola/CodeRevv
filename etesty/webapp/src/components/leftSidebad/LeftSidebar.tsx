@@ -1,8 +1,7 @@
 import { FunctionComponent, useState } from 'react'
 import { Board, LeftBar, MainBoard, MenuHeader,Row, SidebarList,Icon, TitleRow, SubRow } from './styles'
-import { SidebarData } from './SidebarData'
+import { SidebarData, SidebarItem } from '../../const/index';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-import type { SidebarItem } from './SidebarData'
 
 type Props = {
     item: SidebarItem;
