@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import styled,{ css } from 'styled-components';
 
 export const Board = styled.div<{open: boolean}>`
@@ -58,10 +59,10 @@ export const SidebarList = styled.ul`
   margin : 0;
 `
 
-export const Row  = styled.li`
+export const Row  = styled(NavLink)`
   width:100%;
   height: 50px;
-  list-style-type:none;
+  text-decoration: none;
   margin: 0;
   display: flex;
   flex-direction: row;
@@ -70,6 +71,7 @@ export const Row  = styled.li`
   align-items: center;
   font-size: 15px;
   padding: 0;
+  transition: 0.5s;
 
   :hover{
     cursor: pointer;
@@ -92,6 +94,7 @@ export const SubRow = styled.li`
   align-items: center;
   font-size: 15px;
   padding: 0;
+  transition: 0.3s;
 
   :hover{
     cursor: pointer;
@@ -115,3 +118,4 @@ export const TitleRow = styled.div`
 export const MainBoard = styled.div`
     grid-column: 2/3;
 `
+

@@ -1,6 +1,6 @@
 
 import { FunctionComponent, useState } from 'react'
-import type { SidebarItem, SubMenu } from './SidebarData'
+import type { SidebarItem } from './SidebarData'
 import { Row, Icon, TitleRow, SubRow } from './styles'
 
 type Props = {
@@ -18,11 +18,12 @@ export const DropDownList  :FunctionComponent<Props> = ({item, open, key}) => {
     
     return(
        <>
-            <Row key ={key} onClick={!open ? showSubNav : doNothing}>
+            <Row to={item.link} key ={key} onClick={!open ? showSubNav : doNothing}>
                 <Icon>{item.icon}</Icon>
                 {!open ?
                 <TitleRow  >{item.title}</TitleRow>
                 : null
+                
                 }
             </Row>
             {subNav && !open && item.subMenu.map((item, index) =>{

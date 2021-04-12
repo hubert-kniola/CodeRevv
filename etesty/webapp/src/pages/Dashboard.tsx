@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext } from 'react';
 
-import { HomeNav, UserDashboard } from 'containers';
+import { HomeNav, UserDashboard, UserNavBar } from 'containers';
 import { AuthContext } from 'context';
 
 const Dashboard: FunctionComponent = () => {
@@ -9,7 +9,7 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <>
-      <HomeNav />
+      <UserNavBar/>
       <UserDashboard/>
 
     </>

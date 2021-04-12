@@ -28,7 +28,7 @@ export const SidebarData: SidebarItem[] = [
     {
         title: "Testy",
         icon: <LaptopChromebookIcon />,
-        link: '/home',
+        link: '/dashboardTest#',
         subMenu: [
             {
                 title: "Stwórz test",
@@ -45,7 +45,7 @@ export const SidebarData: SidebarItem[] = [
     {
         title: "Grupy",
         icon: <PeopleAltIcon />,
-        link: '/home',
+        link: '/dashboardTest#',
         subMenu:[
             {
                 title: "Stwórz grupę",
