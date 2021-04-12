@@ -1,4 +1,4 @@
-import { LeftSidebar  } from 'components/leftSidebad/LeftSidebar'
+import { LeftSidebar  } from 'components/leftSidebar/LeftSidebar'
 import {FunctionComponent} from 'react'
 
 
