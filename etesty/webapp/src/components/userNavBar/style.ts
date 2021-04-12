@@ -22,6 +22,7 @@ export const ButtonSpace  = styled.div`
 `;
 
 export const Row = styled.div<{title: string}>`
+  user-select: none;
   width:100%;
   text-decoration: none;
   display: flex;
@@ -61,6 +62,7 @@ export const Row = styled.div<{title: string}>`
             border: 1px solid ${({ theme }) => theme.colors.primary};
           }
       `}
+    
 
 `
 export const UserMenu = styled(Row)`

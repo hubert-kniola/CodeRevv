@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import styled,{ css } from 'styled-components';
 
 export const Board = styled.div<{open: boolean}>`
+  user-select: none;  
   display:grid;
   grid-template-columns: minmax(150px, 15%) 1fr;
   height: 1000px;
