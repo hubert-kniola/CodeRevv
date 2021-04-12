@@ -22,16 +22,14 @@ export const ButtonSpace  = styled.div`
   justify-content: center;
 `;
 
-export const Row = styled.div`
+export const Row = styled.div<{title: string}>`
   width:100%;
-  height: 40px;
   text-decoration: none;
-  margin: 0;
   display: flex;
   flex-direction: row;
   color: ${({ theme }) => theme.colors.text};
-  justify-content: center;
   align-items: center;
+  margin: auto;
   font-size: 15px;
   padding: 0;
 
@@ -40,6 +38,31 @@ export const Row = styled.div`
     background-color: ${({ theme }) => theme.colors.primary}
   }
 
+  ${({ title }) =>
+    (title === "Mój profil" &&
+      css`
+        transition: 0.5s;
+          :hover{
+            cursor: pointer;
+            background-color: ${({ theme }) => theme.colors.primary}
+          }
+      `) || (title === "Wyloguj" &&
+      css`
+        transition: 0.5s;
+         :hover{
+          cursor: pointer;
+          background:  ${({ theme }) => theme.colors.background};
+          color: ${({ theme }) => theme.colors.primary};
+
+      }`) || 
+      css`
+        :hover{
+            cursor: pointer;
+            background:  ${({ theme }) => theme.colors.background};
+            border: 1px solid ${({ theme }) => theme.colors.primary};
+          }
+      `}
+
 `
 export const UserMenu = styled(Row)`
 
@@ -47,16 +70,23 @@ export const UserMenu = styled(Row)`
 
 `
 
-export const DropDown = styled.div`
+export const DropDown = styled.div<{open: boolean}>`
   width: 100%;
-  margin-top: 15px;
   background-color:   ${({ theme }) => theme.colors.background};
-  border: 1px solid ${({ theme }) => theme.colors.lighterBackgound};
   
+  ${({ open }) =>
+    ( !open &&
+      css`
+        margin-top: 15px;
+        border: 1px solid ${({ theme }) => theme.colors.lighterBackgound};
+      `)} 
+
+
   `
 
 export const Icon = styled.div`
   margin: 0;
+  height: 40px;
   flex: 30%;
   display: grid;
   place-items: center;
@@ -67,21 +97,6 @@ export const TitleRow = styled.div`
   margin: 0;
 `
 
-export const SubOption = styled(Row)`
-
-  :hover{
-
-    background:  ${({ theme }) => theme.colors.background};
-    border: 1px solid ${({ theme }) => theme.colors.primary};
-  }
-`
-
-export const LogOut = styled(SubOption)`
-  transition: 0.5s;
-  :hover{
-    color: ${({ theme }) => theme.colors.primary}
-  }
-`
 
 
 

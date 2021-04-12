@@ -1,61 +1,46 @@
-import { Button } from "components/navbar/styles";
-import {  FunctionComponent, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import {
     NavBarUser, 
     ButtonSpace, 
-    UserMenu, 
     Row, 
     Icon, 
     TitleRow, 
     DropDown, 
-    SubOption,
-    LogOut
 } from './style'
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import EditIcon from '@material-ui/icons/Edit';
-import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
-import ErrorIcon from '@material-ui/icons/Error';
+
+import {Data, userNavBarData} from './userNavBarData'
 
 
-export const UserNavbar: FunctionComponent = () =>{
+export const Item = (item: Data, click?: () => void) =>(
+    <Row title = {item.title}>
+        <Icon>{item.icon}</Icon>
+        <TitleRow> {item.title} </TitleRow>
+    </Row>
+)
+
+export const List : FunctionComponent = () =>{
     const [open, setOpen] = useState(true)
-
     const openIt = () =>{
         setOpen(!open)
-
     }
-    return (
-        <NavBarUser>
-            <ButtonSpace>
-                {
-                    open ? 
-                    <UserMenu onClick={openIt}>
-                        <Icon><EmojiEmotionsIcon/></Icon>
-                        <TitleRow> Mój profil </TitleRow>
-                    </UserMenu> 
-                    : 
-                    <DropDown onClick={openIt}>
-                        <Row >
-                            <Icon><EmojiEmotionsIcon/></Icon>
-                            <TitleRow> Mój profil </TitleRow>
-                        </Row>
-                        <SubOption>
-                            <Icon><EditIcon/></Icon>
-                            <TitleRow> Edytuj profil </TitleRow>
-                        </SubOption>
-                        <SubOption>
-                            <Icon><ErrorIcon/></Icon>
-                            <TitleRow> Opcja </TitleRow>
-                        </SubOption>
-                        <LogOut>
-                            <Icon><DirectionsWalkIcon/></Icon>
-                            <TitleRow> Wyloguj </TitleRow>
-                        </LogOut>
-                    </DropDown>
-                }
-            </ButtonSpace>
-        </NavBarUser>
+
+    return(
+        <DropDown onClick={openIt} open = {open}>
+        {
+            !open ? 
+                userNavBarData.map((item) => {
+                    return Item(item, openIt);
+                })    
+                :
+            Item(userNavBarData[0])
+            }
+        </DropDown>
     )
 }
+
+export const SpaceButton : FunctionComponent = ({children}) => <ButtonSpace>{children} </ButtonSpace>
+
+export const UserNavbar: FunctionComponent = ({children}) =><NavBarUser>{children}</NavBarUser>
+
 
 

@@ -1,12 +1,16 @@
 
-import { UserNavbar } from 'components'
+import { UserNavbar, SpaceButton, List } from 'components'
 import { FunctionComponent } from 'react'
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
+
 
 export const UserNavBar: FunctionComponent = () =>
 {
     return (
-        <UserNavbar/>
+        <UserNavbar>
+            <SpaceButton>
+                <List/>
+            </SpaceButton>
+        </UserNavbar>
     )
 }
 

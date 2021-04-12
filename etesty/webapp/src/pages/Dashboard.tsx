@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext } from 'react';
 
-import { HomeNav, UserDashboard, UserNavBar } from 'containers';
+import { UserDashboard, UserNavBar } from 'containers';
 import { AuthContext } from 'context';
 
 const Dashboard: FunctionComponent = () => {

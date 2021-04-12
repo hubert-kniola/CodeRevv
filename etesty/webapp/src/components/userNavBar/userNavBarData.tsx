@@ -10,7 +10,7 @@ export type Data = {
     link: string;
 }
 
-const userNavBarData: Data[]  = [
+export const userNavBarData: Data[]  = [
     {
         title: "Mój profil",
         icon: <EmojiEmotionsIcon/>,
