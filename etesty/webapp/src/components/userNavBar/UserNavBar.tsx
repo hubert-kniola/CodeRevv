@@ -6,9 +6,9 @@ import {
     Icon, 
     TitleRow, 
     DropDown, 
-} from './style'
+} from './style';
 
-import {Data, userNavBarData} from './userNavBarData'
+import {Data, userNavBarData} from './userNavBarData';
 
 
 export const Item = (item: Data, click?: () => void) =>(
@@ -16,7 +16,7 @@ export const Item = (item: Data, click?: () => void) =>(
         <Icon>{item.icon}</Icon>
         <TitleRow> {item.title} </TitleRow>
     </Row>
-)
+);
 
 export const List : FunctionComponent = () =>{
     const [open, setOpen] = useState(true)
@@ -29,18 +29,18 @@ export const List : FunctionComponent = () =>{
         {
             !open ? 
                 userNavBarData.map((item) => {
-                    return Item(item, openIt);
+                   return Item(item, openIt);
                 })    
                 :
             Item(userNavBarData[0])
             }
         </DropDown>
     )
-}
+};
 
-export const SpaceButton : FunctionComponent = ({children}) => <ButtonSpace>{children} </ButtonSpace>
+export const SpaceButton : FunctionComponent = ({children}) => <ButtonSpace>{children} </ButtonSpace>;
 
-export const UserNavbar: FunctionComponent = ({children}) =><NavBarUser>{children}</NavBarUser>
+export const UserNavbar: FunctionComponent = ({children}) =><NavBarUser>{children}</NavBarUser>;
 
 
 
