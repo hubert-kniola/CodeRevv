@@ -1,7 +1,7 @@
 import { FunctionComponent, useContext } from 'react';
 
+import { UserDashboard, UserNavBar } from 'containers';
 import { Title } from 'components';
-import { HomeNav } from 'containers';
 import { AuthContext } from 'context';
 
 const Dashboard: FunctionComponent = () => {
@@ -10,9 +10,10 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <>
-      <HomeNav />
-
-      <Title>Witaj, {userInfo?.name}!</Title>
+      <UserNavBar />
+      <UserDashboard>
+        <Title>Cześć, {userInfo?.name}!</Title>
+      </UserDashboard>
     </>
   );
 };

@@ -7,10 +7,12 @@ export const Navbar: FunctionComponent = ({ children }) => {
 
   useEffect(() => {
     const handleScroll = () => setScroll(window.scrollY > 80);
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
 
     return () => window.removeEventListener('scroll', handleScroll);
-  });
+  }, []);
 
   return <Container scroll={scroll}>{children}</Container>;
 };

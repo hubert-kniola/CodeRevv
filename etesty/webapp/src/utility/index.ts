@@ -9,8 +9,11 @@ export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginRespon
   console.log(response);
 };
 
-export const captchaValidateHuman = async (token: string | null | undefined) => {
-  //WORK
-  console.log(token);
-  return false;
+export const captchaValidateHuman = async (token: string) => {
+  try {
+    const { data, status } = await apiAxios.post('/recaptcha/', { token });
+    return status === 200 && data.success === true;
+  } catch (err) {
+    throw new Error('Nie mogliśmy nawiązać połączenia z Google.');
+  }
 };
