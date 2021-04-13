@@ -4,4 +4,4 @@ export * from './HomeFaq';
 export * from './AutoForm';
 export * from './Recover';
 export * from './UserDashboard';
-export * from './UserNavBar'
+export * from './UserNavBar';

@@ -9,4 +9,5 @@ export * from './form/Form';
 export * from './loading-overlay/LoadingOverlay';
 export * from './re-captcha/ReCaptcha';
 export * from './misc/Misc';
-export * from './userNavBar/UserNavBar'
+export * from './userNavBar/UserNavBar';
+export * from './left-sidebar/LeftSidebar';
