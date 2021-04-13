@@ -1,10 +1,11 @@
-import { LeftSidebar } from 'components';
 import { FunctionComponent } from 'react';
 
-export const UserDashboard: FunctionComponent = () => {
+import { LeftSidebar } from 'components';
+
+export const UserDashboard: FunctionComponent = ({ children }) => {
   return (
     <>
-      <LeftSidebar />
+      <LeftSidebar>{children}</LeftSidebar>
     </>
   );
 };

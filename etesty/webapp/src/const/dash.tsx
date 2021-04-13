@@ -77,6 +77,7 @@ export const sidebarData: SidebarItem[] = [
 ];
 
 export type NavBarData = {
+  id: string;
   title: string;
   icon: ReactElement;
   link: string;
@@ -84,21 +85,25 @@ export type NavBarData = {
 
 export const userNavBarData: NavBarData[] = [
   {
+    id: 'profile',
     title: 'Mój profil',
     icon: <EmojiEmotionsIcon />,
     link: '#',
   },
   {
+    id: 'edit',
     title: 'Edytuj profil',
     icon: <EditIcon />,
     link: '#',
   },
   {
+    id: 'sth',
     title: 'jakaś opcja',
     icon: <ErrorIcon />,
     link: '#',
   },
   {
+    id: 'logout',
     title: 'Wyloguj',
     icon: <DirectionsWalkIcon />,
     link: '#',

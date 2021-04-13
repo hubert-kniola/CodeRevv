@@ -1,6 +1,7 @@
 import { FunctionComponent, useState } from 'react';
-import { Board, LeftBar, MainBoard, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow } from './styles';
+import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
 import { sidebarData, SidebarItem } from 'const';
+
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
 type Props = {
@@ -35,7 +36,7 @@ export const DropDownList: FunctionComponent<Props> = ({ item, open, key }) => {
   );
 };
 
-export const LeftSidebar: FunctionComponent = () => {
+export const LeftSidebar: FunctionComponent = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -57,7 +58,7 @@ export const LeftSidebar: FunctionComponent = () => {
           ))}
         </SidebarList>
       </LeftBar>
-      <MainBoard>MainBoard</MainBoard>
+      <MainBoard>{children}</MainBoard>
     </Board>
   );
 };
