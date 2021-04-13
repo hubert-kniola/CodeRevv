@@ -34,7 +34,7 @@ const PasswordRecover: FunctionComponent = () => {
         Jeśli w ciągu 5 minut nie otrzymasz żadnego maila - odśwież stronę i spróbuj ponownie.`
       );
     } catch (err) {
-      setError('Nie możemy połączyć się z serwerem, spróbuj jeszcze raz.');
+      setError('Nie możemy połączyć się z serwerem, spróbuj jeszcze raz po odświeżeniu strony.');
     }
 
     setLoading(false);
