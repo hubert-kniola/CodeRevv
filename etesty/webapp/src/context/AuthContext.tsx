@@ -58,7 +58,9 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   };
 
   const logout = async () => {
-    await apiAxios.post('/logout/');
+    try {
+      await apiAxios.post('/logout/');
+    } catch (err) {}
 
     clearState();
     setAuthState(emptyState);
