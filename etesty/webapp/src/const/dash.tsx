@@ -31,47 +31,47 @@ export const sidebarData: SidebarItem[] = [
   {
     title: 'Testy',
     icon: <LaptopChromebookIcon />,
-    link: '/dashboardTest#',
+    link: '#',
     subMenu: [
       {
         title: 'Stwórz test',
         icon: <NoteAddIcon />,
-        link: '/home',
+        link: '#',
       },
       {
         title: 'Moje testy',
         icon: <AssignmentIcon />,
-        link: '/home',
+        link: '#',
       },
     ],
   },
   {
     title: 'Grupy',
     icon: <PeopleAltIcon />,
-    link: '/dashboardTest#',
+    link: '#',
     subMenu: [
       {
         title: 'Stwórz grupę',
         icon: <GroupAddIcon />,
-        link: '/home',
+        link: '#',
       },
       {
         title: 'Moje grupy',
         icon: <GroupIcon />,
-        link: '/home',
+        link: '#',
       },
     ],
   },
   {
     title: 'Wyniki',
     icon: <ScoreIcon />,
-    link: '/home',
+    link: '#',
     subMenu: [],
   },
   {
     title: 'Zarządzaj kontem',
     icon: <SettingsIcon />,
-    link: '/home',
+    link: '#',
     subMenu: [],
   },
 ];
