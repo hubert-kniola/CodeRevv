@@ -1,4 +1,5 @@
 import { createContext, useState, FunctionComponent } from 'react';
+import { apiAxios } from 'utility';
 
 export type UserInfo = {
   name: string;
@@ -56,7 +57,9 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     return userInfo != null && expiresAt != null && new Date().getTime() / 1000 < expiresAt;
   };
 
-  const logout = (): void => {
+  const logout = async () => {
+    await apiAxios.post('/logout/');
+
     clearState();
     setAuthState(emptyState);
   };
