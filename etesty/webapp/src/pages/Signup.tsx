@@ -33,7 +33,9 @@ const Signup: FunctionComponent = () => {
 
     try {
       if (!(await captchaValidateHuman(token))) {
-        setFetchError('Nie mogliśmy zweryfikować czy jesteś człowiekiem. Możesz spróbować ponownie po odświeżeniu strony.');
+        setFetchError(
+          'Nie mogliśmy zweryfikować czy jesteś człowiekiem. Możesz spróbować ponownie po odświeżeniu strony.'
+        );
         return;
       }
 
