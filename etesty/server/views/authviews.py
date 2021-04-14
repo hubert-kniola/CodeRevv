@@ -69,7 +69,6 @@ def user_login(request):
 
         user = authenticate(
             username=user_data['email'], password=user_data['password'])
-        time_diff = datetime.now() - user.date_joined
         if user is not None:
             if user.is_active:
                 user.last_login = timezone.now()
@@ -100,13 +99,57 @@ def user_login(request):
                 response.set_cookie(
                     'refresh', tokens['refresh'], httponly=True)
                 return response
-            if time_diff.total_seconds() > 86400:
+            if (datetime.now() - user.date_joined).total_seconds() > 86400:
                 user.delete()
                 return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
             return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
     return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['GET', 'POST'])
+@permission_classes([])
+@authentication_classes([])
+def user_google_login(request):
+    google_data = request.data
+    user = authenticate(
+        username=google_data['email'], password=google_data['password'])
+    if not user:
+        user_data = {'email': google_data['email'], 'first_name': google_data['givenName'], 'last_name': google_data['familyName'], 'password': google_data['googleID']}
+        serializer = UserRegisterSerializer(data=user_data)
+        if serializer.is_valid():
+            serializer.is_active = True
+            user = serializer.save()
+        else:
+            return Response({'success': False}, status=status.HTTP_409_CONFLICT)
+    user.last_login = timezone.now()
+    user.save()
+
+    serializer = TokenPairSerializer()
+    attr = {
+        'email': user.email,
+        'password': google_data['password']
+    }
+
+    tokens = serializer.validate(attr)
+    exp = tokens.pop('exp')
+
+    ret = {
+        'success': True,
+        'state': {
+            'expiresAt': exp,
+            'userInfo': {
+                "name": user.first_name,
+                "surname": user.last_name,
+                "role": user.role,
+            }
+        }
+    }
+    response = Response(ret, status=status.HTTP_200_OK)
+    response.set_cookie('access', tokens['access'], httponly=True)
+    response.set_cookie(
+        'refresh', tokens['refresh'], httponly=True)
+    return response
 
 @api_view(['GET', 'POST'])
 @permission_classes([])
