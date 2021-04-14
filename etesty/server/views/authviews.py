@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import jwt
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
@@ -67,7 +69,7 @@ def user_login(request):
 
         user = authenticate(
             username=user_data['email'], password=user_data['password'])
-
+        time_diff = datetime.now() - user.date_joined
         if user is not None:
             if user.is_active:
                 user.last_login = timezone.now()
@@ -98,6 +100,9 @@ def user_login(request):
                 response.set_cookie(
                     'refresh', tokens['refresh'], httponly=True)
                 return response
+            if time_diff.total_seconds() > 86400:
+                user.delete()
+                return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
             return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
     return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
@@ -137,13 +142,15 @@ def user_register(request):
 def activate(request):
     if request.method == 'POST':
         data = request.data
-        print(data)
         try:
             uid = urlsafe_base64_decode(data['uid']).decode()
             user = AuthUser.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, UserWarning):
             user = None
         if user is not None and default_token_generator.check_token(user, data['token']):
+            if (datetime.now() - user.date_joined).total_seconds() > 86400:
+                user.delete()
+                return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
             user.is_active = True
             user.save()
             return Response({'success': True}, status=status.HTTP_200_OK)
