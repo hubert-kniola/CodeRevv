@@ -9,21 +9,13 @@ import type { FormData } from 'const';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
-  onSuccessGoogle?: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
-  onFailureGoogle?: (error: any) => void;
+  onGoogleSubmit?: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   formData: FormData;
   headerText: string;
   buttonText: string;
 };
 
-export const AutoForm: FunctionComponent<Props> = ({
-  headerText,
-  buttonText,
-  formData,
-  onSubmit,
-  onSuccessGoogle,
-  onFailureGoogle,
-}) => {
+export const AutoForm: FunctionComponent<Props> = ({ headerText, buttonText, formData, onSubmit, onGoogleSubmit }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(formData.schema),
   });
@@ -54,9 +46,7 @@ export const AutoForm: FunctionComponent<Props> = ({
       ))}
 
       <FormButton>{buttonText}</FormButton>
-      {onSuccessGoogle != null && onFailureGoogle != null ? (
-        <GoogleLoginButton onSuccess={onSuccessGoogle} onFailure={onFailureGoogle} />
-      ) : null}
+      {onGoogleSubmit != null ? <GoogleLoginButton onSuccess={onGoogleSubmit} /> : null}
     </Form>
   );
 };

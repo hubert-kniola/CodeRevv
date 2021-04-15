@@ -1,14 +1,13 @@
 import { FunctionComponent, useContext, useRef, useState } from 'react';
+import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
 
-import { AuthContext } from 'context';
 import { LoadingOverlay, CenteredLink, MessageOverlay, scrollIntoMessageOverlay } from 'components';
 import { AutoForm, HomeFooter, HomeNav } from 'containers';
+import { LoginSchema, loginFormData } from 'const';
+import { AuthContext } from 'context';
 import { apiAxios } from 'utility';
-import { loginFormData } from 'const';
 
-import type { LoginSchema } from 'const';
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 
 const Login: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
@@ -85,8 +84,7 @@ const Login: FunctionComponent = () => {
           headerText="Masz już konto?"
           formData={loginFormData}
           onSubmit={onSubmit}
-          onSuccessGoogle={responseGoogle}
-          onFailureGoogle={responseGoogle}
+          onGoogleSubmit={responseGoogle}
           buttonText="Zaloguj się"
         />
       </LoadingOverlay>

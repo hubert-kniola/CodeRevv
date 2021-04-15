@@ -3,7 +3,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 import { LoadingOverlay, MessageOverlay, ReCaptcha, scrollIntoMessageOverlay } from 'components';
 import { HomeNav, AutoForm, HomeFooter } from 'containers';
-import { apiAxios, responseGoogle, captchaValidateHuman } from 'utility';
+import { apiAxios, captchaValidateHuman } from 'utility';
 import { registerFormData } from 'const';
 
 import type { RegisterSchema } from 'const';
@@ -69,6 +69,7 @@ const Signup: FunctionComponent = () => {
   return (
     <>
       <HomeNav />
+
       <MessageOverlay ref={errorRef} active={error != null} title="Wystąpił błąd." text={error!} noLogo />
 
       <MessageOverlay active={message != null} title="Gratulacje!" text={message!}>
@@ -77,13 +78,12 @@ const Signup: FunctionComponent = () => {
             headerText="Stwórz konto"
             formData={registerFormData}
             onSubmit={onSubmit}
-            onSuccessGoogle={responseGoogle}
-            onFailureGoogle={responseGoogle}
             buttonText="Zarejestruj się"
           />
           <ReCaptcha ref={reCaptchaRef} />
         </LoadingOverlay>
       </MessageOverlay>
+
       <HomeFooter />
     </>
   );
