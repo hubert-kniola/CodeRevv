@@ -67,8 +67,8 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   };
 
   const hasRequiredRole = (role?: string): boolean => {
-    const roles = ['user', 'premium', 'admin'];
-    if (role == null) role = 'user';
+    const roles = ['google_user', 'user', 'premium', 'admin'];
+    if (role == null) role = 'google_user';
     let isAuthorized = false;
 
     const { userInfo } = authState;

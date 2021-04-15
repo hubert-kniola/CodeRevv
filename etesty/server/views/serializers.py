@@ -47,7 +47,7 @@ class UserGoogleRegisterSerializer(serializers.ModelSerializer):
         instance.last_name = data['last_name']
         instance.username = data['first_name'] + data['last_name'] + f'{random.randint(0, 1000)}'
         instance.email = data['email']
-        instance.role = 'user'
+        instance.role = 'google_user'
         instance.is_active = True
         instance.date_joined = timezone.now()
 

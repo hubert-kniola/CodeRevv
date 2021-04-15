@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import jwt
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
@@ -70,38 +68,40 @@ def user_login(request):
         user = authenticate(
             username=user_data['email'], password=user_data['password'])
         if user is not None:
-            if user.is_active:
-                user.last_login = timezone.now()
-                user.save()
+            if user.role != 'google_user':
+                if user.is_active:
+                    user.last_login = timezone.now()
+                    user.save()
 
-                serializer = TokenPairSerializer()
-                attr = {
-                    'email': user.email,
-                    'password': user_data['password']
-                }
+                    serializer = TokenPairSerializer()
+                    attr = {
+                        'email': user.email,
+                        'password': user_data['password']
+                    }
 
-                tokens = serializer.validate(attr)
-                exp = tokens.pop('exp')
+                    tokens = serializer.validate(attr)
+                    exp = tokens.pop('exp')
 
-                ret = {
-                    'success': True,
-                    'state': {
-                        'expiresAt': exp,
-                        'userInfo': {
-                            "name": user.first_name,
-                            "surname": user.last_name,
-                            "role": user.role,
+                    ret = {
+                        'success': True,
+                        'state': {
+                            'expiresAt': exp,
+                            'userInfo': {
+                                "name": user.first_name,
+                                "surname": user.last_name,
+                                "role": user.role,
+                            }
                         }
                     }
-                }
-                response = Response(ret, status=status.HTTP_200_OK)
-                response.set_cookie('access', tokens['access'], httponly=True)
-                response.set_cookie(
-                    'refresh', tokens['refresh'], httponly=True)
-                return response
-            if (datetime.now() - user.date_joined).total_seconds() > 86400:
-                user.delete()
-                return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
+                    response = Response(ret, status=status.HTTP_200_OK)
+                    response.set_cookie('access', tokens['access'], httponly=True)
+                    response.set_cookie(
+                        'refresh', tokens['refresh'], httponly=True)
+                    return response
+                if (datetime.now() - user.date_joined).total_seconds() > 86400:
+                    user.delete()
+                    return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
+                return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
             return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
     return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
@@ -207,6 +207,8 @@ def activate(request):
 def password_reset(request):
     if request.method == 'POST':
         user = AuthUser.objects.get(email=request.data['email'])
+        if user['role'] == 'google_user':
+            return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         user_email = user.email
         user_active = user.is_active
         if user_active:
