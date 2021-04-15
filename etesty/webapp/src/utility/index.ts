@@ -5,8 +5,8 @@ export const apiAxios = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-export const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-  console.log(response);
+export const responseGoogle = async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+  //TODO remove googleLogin from signup
 };
 
 export const captchaValidateHuman = async (token: string) => {
