@@ -33,6 +33,28 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserGoogleRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ('email', 'password', 'first_name', 'last_name')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, data):
+        instance = self.Meta.model()
+        instance.set_password(data['password'])
+        instance.last_login = timezone.now()
+        instance.first_name = data['first_name']
+        instance.last_name = data['last_name']
+        instance.username = data['first_name'] + data['last_name'] + f'{random.randint(0, 1000)}'
+        instance.email = data['email']
+        instance.role = 'user'
+        instance.is_active = True
+        instance.date_joined = timezone.now()
+
+        instance.save()
+        return instance
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser

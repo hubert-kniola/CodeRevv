@@ -113,10 +113,10 @@ def user_login(request):
 def user_google_login(request):
     google_data = request.data
     user = authenticate(
-        username=google_data['email'], password=google_data['password'])
+        username=google_data['email'], password=google_data['googleId'])
     if not user:
-        user_data = {'email': google_data['email'], 'first_name': google_data['givenName'], 'last_name': google_data['familyName'], 'password': google_data['googleID']}
-        serializer = UserRegisterSerializer(data=user_data)
+        user_data = {'email': google_data['email'], 'first_name': google_data['givenName'], 'last_name': google_data['familyName'], 'password': google_data['googleId']}
+        serializer = UserGoogleRegisterSerializer(data=user_data)
         if serializer.is_valid():
             serializer.is_active = True
             user = serializer.save()
@@ -128,7 +128,7 @@ def user_google_login(request):
     serializer = TokenPairSerializer()
     attr = {
         'email': user.email,
-        'password': google_data['password']
+        'password': google_data['googleId']
     }
 
     tokens = serializer.validate(attr)
