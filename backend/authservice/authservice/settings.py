@@ -38,19 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     # my_apps
     'server',
     # auth
     'rest_framework',
     'rest_framework.authtoken',
-    # 'rest_auth',
-    # 'rest_auth.registration',
     # # social_auth
     'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
     # cross-origin
     'corsheaders',
     # captcha
@@ -88,6 +83,8 @@ AUTH_USER_MODEL = "server.AuthUser"
 
 SITE_ID = 1
 
+# Background_Tasks
+BACKGROUND_TASK_RUN_ASYNC = True
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
