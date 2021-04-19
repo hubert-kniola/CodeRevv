@@ -157,10 +157,10 @@ def user_google_login(request):
 def user_register(request):
     if request.method == 'POST':
         serializer = UserRegisterSerializer(data=request.data)
-        print(serializer.initial_data)
         if serializer.is_valid():
             user = serializer.save()
-            user_email = user.email
+            user.username = user.username + f'{user.id}'
+            user.save()
             if user:
                 # current_site = get_current_site(request) # PO UZYSKANIU DOMENY
                 message = render_to_string('acc_active_email.html', {
@@ -170,7 +170,7 @@ def user_register(request):
                     'token': default_token_generator.make_token(user),
                 })
                 email = EmailMessage(
-                    '[CodeRevv] Aktywacja konta', message, to=[user_email])
+                    '[CodeRevv] Aktywacja konta', message, to=[user.email])
                 email.content_subtype = 'html'
                 email.send()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
