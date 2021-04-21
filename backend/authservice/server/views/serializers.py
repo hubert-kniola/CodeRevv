@@ -77,11 +77,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ['email', 'password']
 
 
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OnlineTest
-        fields = '__all__'
-
 
 class TokenPairSerializer(TokenObtainPairSerializer):
 
