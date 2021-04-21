@@ -21,19 +21,19 @@ def shutdown_event():
     client.close()
 
 
-@app.post('/create', response_model=models.Test)
+@app.post('/create', response_model=models.Test, status_code=201)
 async def create_test(test: models.Test):
     new_test = await engine.save(test)
     created_test = await engine.find_one(models.Test, models.Test.id == new_test.id)
 
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=jsonable_encoder(created_test))
+    return jsonable_encoder(created_test)
 
 
 @app.get('/tests', response_model=List[models.Test])
 async def tests_list():
     tests = await engine.find(models.Test)
 
-    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(tests))
+    return jsonable_encoder(tests)
 
 
 if __name__ == '__main__':
