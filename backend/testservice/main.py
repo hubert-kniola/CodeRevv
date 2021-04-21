@@ -1,9 +1,8 @@
 import uvicorn
 
-from fastapi import FastAPI, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 from typing import List
+from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
