@@ -46,7 +46,7 @@ async def tests_list():
     return jsonable_encoder(tests)
 
 
-@app.post('/test/delete', status_code=204)
+@app.delete('/test/delete', status_code=204)
 async def delete_test(test: models.Test):
     await engine.delete(test)
 
@@ -58,7 +58,7 @@ async def add_user(test_name, user_id):
     await engine.save(test)
 
 
-@app.post('/test/user/delete', status_code=204)
+@app.delete('/test/user/delete', status_code=204)
 async def delete_user(test_name, user_id):
     test = await engine.find_one(models.Test, models.Test.name == test_name)
     test.users.remove(int(user_id))
@@ -72,14 +72,14 @@ async def add_question(test_name, question: models.Question):
     await engine.save(test)
 
 
-@app.post('/test/question/delete', status_code=200)
+@app.delete('/test/question/delete', status_code=200)
 async def delete_question(test_name, question_id):
     test = await engine.find_one(models.Test, models.Test.name == test_name)
     test.question.pop(int(question_id))
     await engine.save(test)
 
 
-@app.post('/test/question/modify', status_code=200)
+@app.patch('/test/question/modify', status_code=200)
 async def modify_question(test_name, question_id, question: models.Question):
     test = await engine.find_one(models.Test, models.Test.name == test_name)
     test.question[int(question_id)] = question
@@ -93,14 +93,14 @@ async def add_answer(test_name, answer: models.Answer):
     await engine.save(test)
 
 
-@app.post('/test/answer/delete', status_code=204)
+@app.delete('/test/answer/delete', status_code=204)
 async def delete_question(test_name, answer_id):
     test = await engine.find_one(models.Test, models.Test.name == test_name)
     test.user_answers.pop(int(answer_id))
     await engine.save(test)
 
 
-@app.post('/test/answer/modify', status_code=200)
+@app.patch('/test/answer/modify', status_code=200)
 async def modify_question(test_name, answer_id, answer: models.Answer):
     test = await engine.find_one(models.Test, models.Test.name == test_name)
     test.user_answers[int(answer_id)] = answer
