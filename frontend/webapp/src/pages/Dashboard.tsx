@@ -1,7 +1,7 @@
 import { FunctionComponent, useContext } from 'react';
 
 import { UserDashboard, UserNavBar } from 'containers';
-import { Title } from 'components';
+import { Title, PythonEditor } from 'components';
 import { AuthContext } from 'context';
 
 const Dashboard: FunctionComponent = () => {
@@ -12,7 +12,7 @@ const Dashboard: FunctionComponent = () => {
     <>
       <UserNavBar />
       <UserDashboard>
-        <Title>Cześć, {userInfo?.name}!</Title>
+        <PythonEditor name='python'/>
       </UserDashboard>
     </>
   );

@@ -12,3 +12,4 @@ export * from './misc/Misc';
 export * from './message-overlay/MessageOverlay';
 export * from './userNavBar/UserNavBar';
 export * from './left-sidebar/LeftSidebar';
+export * from './code-editor/PythonEditor';
