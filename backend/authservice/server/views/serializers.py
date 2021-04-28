@@ -23,7 +23,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         instance.last_login = timezone.now()
         instance.first_name = data['first_name']
         instance.last_name = data['last_name']
-        instance.username = data['first_name'] + data['last_name'] + f'{random.randint(0, 1000)}'
+        instance.username = data['first_name'] + data['last_name']
         instance.email = data['email']
         instance.role = 'user'
         instance.is_active = False
@@ -76,11 +76,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = AuthUser
         fields = ['email', 'password']
 
-
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OnlineTest
-        fields = '__all__'
 
 
 class TokenPairSerializer(TokenObtainPairSerializer):

@@ -1,7 +1,9 @@
+from background_task.models import Task
 from django.urls import path, include
 from .views.views import *
 from .views.authviews import *
 from .views.dashboardviews import *
+from .background import delete_inactive_users
 
 urlpatterns = [
     path('api/v1/users/', user_list),
