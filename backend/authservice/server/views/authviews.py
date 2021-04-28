@@ -207,8 +207,9 @@ def activate(request):
 def password_reset(request):
     if request.method == 'POST':
         user = AuthUser.objects.get(email=request.data['email'])
-        if user['role'] == 'google_user':
+        if user.role == 'google_user':
             return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
+            
         user_email = user.email
         user_active = user.is_active
         if user_active:
