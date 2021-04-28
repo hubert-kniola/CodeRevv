@@ -12,3 +12,5 @@ export const captchaValidateHuman = async (token: string) => {
     throw new Error('Nie mogliśmy nawiązać połączenia z Google.');
   }
 };
+
+export const promiseDelay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
