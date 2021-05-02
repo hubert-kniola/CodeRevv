@@ -21,6 +21,7 @@ engine = AIOEngine(motor_client=client, database='testdb')
 def shutdown_event():
     client.close()
 
+
 # tworzenie testu - do zmiany
 # usuwanie testu - done
 # dodawanie uzytkownika do testu - done (zmienic nazwe na id)
@@ -53,7 +54,7 @@ async def delete_test(test_id):
     return {'message': 'test deleted'}
 
 
-@app.post('/test/user/add', status_code=200)
+@app.post('/test/user', status_code=200)
 async def add_user(test_id, user_id):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.users.append(int(user_id))
@@ -61,8 +62,7 @@ async def add_user(test_id, user_id):
     return {'message': 'user added'}
 
 
-
-@app.delete('/test/user/delete', status_code=204)
+@app.delete('/test/user', status_code=204)
 async def delete_user(test_id, user_id):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.users.remove(int(user_id))
@@ -70,7 +70,7 @@ async def delete_user(test_id, user_id):
     return {'message': 'user deleted'}
 
 
-@app.post('/test/question/add', status_code=200)
+@app.post('/test/question', status_code=200)
 async def add_question(test_id, question: models.Question):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question.append(question)
@@ -78,7 +78,7 @@ async def add_question(test_id, question: models.Question):
     return {'message': 'question added'}
 
 
-@app.delete('/test/question/delete', status_code=204)
+@app.delete('/test/question', status_code=204)
 async def delete_question(test_id, question_id):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question.pop(int(question_id))
@@ -86,7 +86,7 @@ async def delete_question(test_id, question_id):
     return {'message': 'question deleted'}
 
 
-@app.patch('/test/question/modify', status_code=200)
+@app.patch('/test/question', status_code=200)
 async def modify_question(test_id, question_id, question: models.Question):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question[int(question_id)] = question
@@ -94,7 +94,7 @@ async def modify_question(test_id, question_id, question: models.Question):
     return {'message': 'question modified'}
 
 
-@app.post('/test/answer/add', status_code=201)
+@app.post('/test/answer', status_code=201)
 async def add_answer(test_id, answer: models.Answer):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers.append(answer)
@@ -102,7 +102,7 @@ async def add_answer(test_id, answer: models.Answer):
     return {'message': 'answer added'}
 
 
-@app.delete('/test/answer/delete', status_code=204)
+@app.delete('/test/answer', status_code=204)
 async def delete_answer(test_id, answer_id):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers.pop(int(answer_id))
@@ -110,7 +110,7 @@ async def delete_answer(test_id, answer_id):
     return {'message': 'answer deleted'}
 
 
-@app.patch('/test/answer/modify', status_code=200)
+@app.patch('/test/answer', status_code=200)
 async def modify_answer(test_id, answer_id, answer: models.Answer):
     test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers[int(answer_id)] = answer
