@@ -151,6 +151,7 @@ def user_google_login(request):
         'refresh', tokens['refresh'], httponly=True)
     return response
 
+
 @api_view(['GET', 'POST'])
 @permission_classes([])
 @authentication_classes([])

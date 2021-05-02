@@ -1,6 +1,8 @@
 import uvicorn
 
 from typing import List
+
+from bson import ObjectId
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from odmantic import AIOEngine
@@ -35,76 +37,85 @@ def shutdown_event():
 async def create_test(test: models.Test):
     new_test = await engine.save(test)
     created_test = await engine.find_one(models.Test, models.Test.id == new_test.id)
-
     return jsonable_encoder(created_test)
 
 
-@app.get('/test/list', response_model=List[models.Test])
+@app.get('/test/list', response_model=List[models.Test], status_code=201)
 async def tests_list():
     tests = await engine.find(models.Test)
-
     return jsonable_encoder(tests)
 
 
 @app.delete('/test/delete', status_code=204)
-async def delete_test(test: models.Test):
+async def delete_test(test_id):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     await engine.delete(test)
+    return {'message': 'test deleted'}
 
 
 @app.post('/test/user/add', status_code=200)
-async def add_user(test_name, user_id):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def add_user(test_id, user_id):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.users.append(int(user_id))
     await engine.save(test)
+    return {'message': 'user added'}
+
 
 
 @app.delete('/test/user/delete', status_code=204)
-async def delete_user(test_name, user_id):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def delete_user(test_id, user_id):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.users.remove(int(user_id))
     await engine.save(test)
+    return {'message': 'user deleted'}
 
 
 @app.post('/test/question/add', status_code=200)
-async def add_question(test_name, question: models.Question):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def add_question(test_id, question: models.Question):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question.append(question)
     await engine.save(test)
+    return {'message': 'question added'}
 
 
-@app.delete('/test/question/delete', status_code=200)
-async def delete_question(test_name, question_id):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+@app.delete('/test/question/delete', status_code=204)
+async def delete_question(test_id, question_id):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question.pop(int(question_id))
     await engine.save(test)
+    return {'message': 'question deleted'}
 
 
 @app.patch('/test/question/modify', status_code=200)
-async def modify_question(test_name, question_id, question: models.Question):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def modify_question(test_id, question_id, question: models.Question):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.question[int(question_id)] = question
     await engine.save(test)
+    return {'message': 'question modified'}
 
 
 @app.post('/test/answer/add', status_code=201)
-async def add_answer(test_name, answer: models.Answer):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def add_answer(test_id, answer: models.Answer):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers.append(answer)
     await engine.save(test)
+    return {'message': 'answer added'}
 
 
 @app.delete('/test/answer/delete', status_code=204)
-async def delete_question(test_name, answer_id):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def delete_answer(test_id, answer_id):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers.pop(int(answer_id))
     await engine.save(test)
+    return {'message': 'answer deleted'}
 
 
 @app.patch('/test/answer/modify', status_code=200)
-async def modify_question(test_name, answer_id, answer: models.Answer):
-    test = await engine.find_one(models.Test, models.Test.name == test_name)
+async def modify_answer(test_id, answer_id, answer: models.Answer):
+    test = await engine.find_one(models.Test, models.Test.id == ObjectId(test_id))
     test.user_answers[int(answer_id)] = answer
     await engine.save(test)
+    return {'message': 'answer modified'}
 
 
 if __name__ == '__main__':
