@@ -1,13 +1,14 @@
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
 import pytest
 
-from ..main import app
+from ..src.models import Test
+from ..src.main import app, engine, client
 
+engine.database_name = 'test_testdb'
+engine.database = client[engine.database_name]
 client = TestClient(app)
 
-test_data = {
+test_data = [{
     "name": "string",
     "pub_test": "string",
     "creator": 0,
@@ -31,8 +32,8 @@ test_data = {
             "score": 2
         }
     ],
-    "id": "5f85f36d6dfecacc68428a46"
-}
+    "id": "5f85f36d6dfecacc68428a47"
+}]
 
 user_data = {"testname": "testname",
              "user_id": 1}
@@ -53,10 +54,23 @@ answer_data = {
 }
 
 
+@pytest.mark.asyncio
+async def setup_method():
+
+    
+    @pytest.mark.asyncio
+    async def teardown_method():
+        tests = await engine.find(Test)
+        print(tests)
+
+        for t in tests:
+            await engine.delete(t)
+
+
 def test_create_test():
-    response = client.post('/test/create', json=test_data)
+    response = client.post('/test/create', json=test_data[0])
     assert response.status_code == 201
-    assert response.json() == test_data
+    assert response.json() == test_data[0]
 
 
 def test_lists_test():
