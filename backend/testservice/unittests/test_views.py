@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import backend.testservice.main as main
+
 import pytest
 
-client = TestClient(main.app)
+from ..main import app
+
+client = TestClient(app)
 
 test_data = {
     "name": "string",
