@@ -19,6 +19,7 @@ class Answer(EmbeddedModel):
 
 
 class Test(Model):
+    __test__ = False
     name: str
     pub_test: str
     creator: int
