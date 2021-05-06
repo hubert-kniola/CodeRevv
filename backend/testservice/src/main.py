@@ -55,9 +55,9 @@ async def delete_test(test_id):
 
 
 @app.post('/test/user', status_code=200)
-async def add_user(test_id, user_id):
-    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.users.append(int(user_id))
+async def add_user(data: dict):
+    test = await engine.find_one(Test, Test.id == ObjectId(data['test_id']))
+    test.users.append(int(data['user_id']))
     await engine.save(test)
     return {'message': 'user added'}
 

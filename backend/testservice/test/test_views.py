@@ -79,7 +79,7 @@ def test_lists_test():
 
 
 def test_add_user():
-    response = client.post('/test/user?test_id=5f85f36d6dfecacc68428a47&user_id=1')
+    response = client.post('/test/user', json=user_data)
     assert response.status_code == 200
     assert response.json() == {'message': 'user added'}
 
