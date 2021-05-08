@@ -50,24 +50,6 @@ def user_detail(request, pk):
     return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET', 'POST'])
-def test_list(request):
-    if check_token(request):
-        if request.method == 'GET':
-            tests = OnlineTest.objects.all()
-            serializer = TestSerializer(tests, many=True)
-            return Response(serializer.data)
-
-        elif request.method == 'POST':
-            serializer = TestSerializer(data=request.data)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
-
-
 class TokenPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = TokenPairSerializer

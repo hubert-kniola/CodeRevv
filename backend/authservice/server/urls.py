@@ -2,13 +2,11 @@ from background_task.models import Task
 from django.urls import path, include
 from .views.views import *
 from .views.authviews import *
-from .views.dashboardviews import *
 from .background import delete_inactive_users
 
 urlpatterns = [
     path('api/v1/users/', user_list, name='user_list'),
     path('api/v1/user/<int:pk>/', user_detail, name='user'),
-    path('api/v1/tests/', test_list, name='test_list'),
     path('api/v1/login/', user_login, name='login'),
     path('api/v1/login/google/', user_google_login, name='google_login'),
     path('api/v1/register/', user_register, name='register'),

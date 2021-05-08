@@ -24,14 +24,14 @@ def shutdown_event():
 
 # tworzenie testu - do zmiany
 # usuwanie testu - done
-# dodawanie uzytkownika do testu - done (zmienic nazwe na id)
-# usuwanie uzytkownika z testu - done (zmienic nazwe na id)
-# dodawanie pytania - done (zmienic nazwe na id)
-# usuwanie pytania - done (zmienic nazwe na id)
-# modyfikacja pytania - done (zmienic nazwe na id)
-# dodawanie odpowiedzi - done (zmienic nazwe na id)
-# usuwanie odpowiedzi - done (zmienic nazwe na id)
-# modyfikacja odpowiedzi - done (zmienic nazwe na id)
+# dodawanie uzytkownika do testu - done
+# usuwanie uzytkownika z testu - done
+# dodawanie pytania - done
+# usuwanie pytania - done
+# modyfikacja pytania - done
+# dodawanie odpowiedzi - done
+# usuwanie odpowiedzi - done
+# modyfikacja odpowiedzi - done
 
 
 @app.post('/test/create', response_model=Test, status_code=201)

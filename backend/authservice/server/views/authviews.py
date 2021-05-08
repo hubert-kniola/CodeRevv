@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, logout
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.conf import settings
+from rest_framework_simplejwt.exceptions import TokenError
 import requests
 
 
@@ -51,7 +52,7 @@ def refresh_token(request):
             'refresh': request.data['refresh']
         }
         token = serializer.validate(attr)
-    except ValueError:
+    except(ValueError, TokenError):
         return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
     response = Response({'success': True}, status=status.HTTP_200_OK)
     response.set_cookie('access', token['access'], httponly=True)
@@ -207,9 +208,12 @@ def activate(request):
 @authentication_classes([])
 def password_reset(request):
     if request.method == 'POST':
-        user = AuthUser.objects.get(email=request.data['email'])
-        if user.role == 'google_user':
-            return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            user = AuthUser.objects.get(email=request.data['email'])
+            if user.role == 'google_user':
+                return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
+        except:
+            return Response({'success': False}, status=status.HTTP_409_CONFLICT)
             
         user_email = user.email
         user_active = user.is_active
