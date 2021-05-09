@@ -14,7 +14,9 @@ type Props = {
   name: string;
 };
 
-const JUDGE_URL = 'http://18.222.194.36:2358';
+
+const API_URL = '18.220.31.50'
+const JUDGE_URL = `http://${API_URL}:2358`;
 const LANG_ID = 71;
 
 export const PythonEditor: FC<Props> = ({ name }) => {

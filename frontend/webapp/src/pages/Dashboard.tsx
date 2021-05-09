@@ -1,13 +1,9 @@
-import { FunctionComponent, useContext } from 'react';
+import { FC } from 'react';
 
 import { UserDashboard, UserNavBar } from 'containers';
-import { Title, PythonEditor } from 'components';
-import { AuthContext } from 'context';
+import { PythonEditor } from 'components';
 
-const Dashboard: FunctionComponent = () => {
-  const authContext = useContext(AuthContext);
-  const { userInfo } = authContext.authState;
-
+const Dashboard: FC = () => {
   return (
     <>
       <UserNavBar />
