@@ -4,3 +4,4 @@ export * from './HomeFaq';
 export * from './AutoForm';
 export * from './UserDashboard';
 export * from './UserNavBar';
+export * from './TestCreator';
