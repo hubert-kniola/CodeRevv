@@ -1,16 +1,14 @@
 import { FC } from 'react';
 
 import { UserDashboard, UserNavBar } from 'containers';
-import { PythonEditor } from 'components';
+import { DashContextProvider } from 'context';
 
 const Dashboard: FC = () => {
   return (
-    <>
+    <DashContextProvider>
       <UserNavBar />
-      <UserDashboard>
-        <PythonEditor name='python'/>
-      </UserDashboard>
-    </>
+      <UserDashboard />
+    </DashContextProvider>
   );
 };
 

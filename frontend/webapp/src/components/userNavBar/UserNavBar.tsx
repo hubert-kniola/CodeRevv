@@ -34,6 +34,8 @@ export const List: FunctionComponent = () => {
     history.push('/');
   };
 
+  //TODO context rework
+
   const clickMap: ClickMapper = { logout: logOutClick, default: toggleOpen };
 
   return (

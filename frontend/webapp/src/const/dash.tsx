@@ -12,12 +12,15 @@ import EditIcon from '@material-ui/icons/Edit';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import ErrorIcon from '@material-ui/icons/Error';
 
+import { IDashContext } from 'context';
+
 //https://material-ui.com/components/material-icons/#material-icons
 
 export type SubMenu = {
   title: string;
   icon: ReactElement;
   link: string;
+  action: (c: IDashContext) => void;
 };
 
 export type SidebarItem = {
@@ -36,12 +39,14 @@ export const sidebarData: SidebarItem[] = [
       {
         title: 'Stwórz test',
         icon: <NoteAddIcon />,
-        link: '#',
+        link: '/create/test',
+        action: ({ setMode }) => setMode('newtest'),
       },
       {
         title: 'Moje testy',
         icon: <AssignmentIcon />,
         link: '#',
+        action: ({ setMode }) => setMode('mytests'),
       },
     ],
   },
@@ -54,11 +59,13 @@ export const sidebarData: SidebarItem[] = [
         title: 'Stwórz grupę',
         icon: <GroupAddIcon />,
         link: '#',
+        action: (_) => {},
       },
       {
         title: 'Moje grupy',
         icon: <GroupIcon />,
         link: '#',
+        action: (_) => {},
       },
     ],
   },
@@ -81,6 +88,7 @@ export type NavBarData = {
   title: string;
   icon: ReactElement;
   link: string;
+  action: (c: IDashContext) => void;
 };
 
 export const userNavBarData: NavBarData[] = [
@@ -89,23 +97,27 @@ export const userNavBarData: NavBarData[] = [
     title: 'Mój profil',
     icon: <EmojiEmotionsIcon />,
     link: '#',
+    action: (_) => {},
   },
   {
     id: 'edit',
     title: 'Edytuj profil',
     icon: <EditIcon />,
     link: '#',
+    action: (_) => {},
   },
   {
     id: 'sth',
     title: 'jakaś opcja',
     icon: <ErrorIcon />,
     link: '#',
+    action: (_) => {},
   },
   {
     id: 'logout',
     title: 'Wyloguj',
     icon: <DirectionsWalkIcon />,
     link: '#',
+    action: (_) => {},
   },
 ];

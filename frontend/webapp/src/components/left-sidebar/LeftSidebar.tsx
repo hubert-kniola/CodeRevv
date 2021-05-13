@@ -1,8 +1,9 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, useContext } from 'react';
 import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
 import { sidebarData, SidebarItem } from 'const';
 
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+import { DashContext } from 'context';
 
 type Props = {
   item: SidebarItem;
@@ -12,6 +13,7 @@ type Props = {
 
 export const DropDownList: FunctionComponent<Props> = ({ item, open, key }) => {
   const [subNav, setSubNav] = useState(false);
+  const dashContext = useContext(DashContext);
 
   const showSubNav = (): void => setSubNav(!subNav);
   const doNothing = (): void => {};
@@ -26,7 +28,7 @@ export const DropDownList: FunctionComponent<Props> = ({ item, open, key }) => {
         !open &&
         item.subMenu.map((item, index) => {
           return (
-            <SubRow key={index}>
+            <SubRow key={index} onClick={() => item.action(dashContext)}>
               <Icon>{item.icon}</Icon>
               <TitleRow>{item.title}</TitleRow>
             </SubRow>
