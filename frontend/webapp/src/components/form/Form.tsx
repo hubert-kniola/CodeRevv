@@ -1,11 +1,11 @@
-import { FormEventHandler, forwardRef, FunctionComponent, ReactNode } from 'react';
+import { FormEventHandler, forwardRef, FC, ReactNode } from 'react';
 import { Button, Container, Error, FormContainer, FormGroupContainer, FormInner, Input } from './styles';
 
 type Props = {
   onSubmit?: FormEventHandler<HTMLFormElement>;
 };
 
-export const Form: FunctionComponent<Props> = ({ onSubmit, children }) => (
+export const Form: FC<Props> = ({ onSubmit, children }) => (
   <Container>
     <FormContainer onSubmit={onSubmit}>
       <FormInner>{children}</FormInner>
@@ -13,10 +13,10 @@ export const Form: FunctionComponent<Props> = ({ onSubmit, children }) => (
   </Container>
 );
 
-export const FormGroup: FunctionComponent = ({ children, ...restProps }) => (
+export const FormGroup: FC = ({ children, ...restProps }) => (
   <FormGroupContainer {...restProps}>{children}</FormGroupContainer>
 );
-export const FormButton: FunctionComponent = ({ children, ...restProps }) => <Button {...restProps}>{children}</Button>;
+export const FormButton: FC = ({ children, ...restProps }) => <Button {...restProps}>{children}</Button>;
 
 type BaseProps = {
   children: ReactNode;

@@ -9,6 +9,8 @@ export const NavBarUser = styled.nav`
   background-color: ${({ theme }) => theme.colors.background};
   padding: 0 1rem;
   z-index: 999;
+  padding-top: 30px;
+  padding-left: 30px;
 
   transition: 0.5s;
 `;
@@ -17,11 +19,7 @@ export const ButtonSpace = styled.div`
   grid-column: 3/4;
   width: 100%;
   height: 100%;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
+
   transition: 0.5s;
 `;
 
@@ -66,22 +64,10 @@ export const Row = styled.div<{ id: string }>`
       }
     `}
 `;
-export const UserMenu = styled(Row)`
-  transition: 0.5s;
-`;
 
 export const DropDown = styled.div<{ open: boolean }>`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.background};
-  
-  transition: 0.5s;
-
-  ${({ open }) =>
-    !open &&
-    css`
-      margin-top: 15px;
-      border: 1px solid ${({ theme }) => theme.colors.lighterBackgound};
-    `}
 `;
 
 export const Icon = styled.div`
@@ -90,8 +76,6 @@ export const Icon = styled.div`
   flex: 30%;
   display: grid;
   place-items: center;
-  
-  transition: 0.5s;
 `;
 
 export const TitleRow = styled.div`
