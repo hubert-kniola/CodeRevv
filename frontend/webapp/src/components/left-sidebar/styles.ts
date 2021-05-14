@@ -83,7 +83,7 @@ export const Row = styled(NavLink)`
   }
 `;
 
-export const SubRow = styled.li`
+export const SubRow = styled(NavLink)`
   width: 100%;
   height: 50px;
   list-style-type: none;
@@ -99,6 +99,7 @@ export const SubRow = styled.li`
   font-size: 15px;
   padding: 0;
   transition: 0.3s;
+  text-decoration: none;
 
   :hover {
     cursor: pointer;
@@ -115,13 +116,16 @@ export const Icon = styled.div`
 
 export const TitleRow = styled.div`
   flex: 75%;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   margin: 0;
 `;
 
 export const MainBoard = styled.div`
+  margin-top: 5vw;
   grid-column: 2/3;
+  display: grid;
+  justify-content: center;
   transition: width 0.5s;
 `;

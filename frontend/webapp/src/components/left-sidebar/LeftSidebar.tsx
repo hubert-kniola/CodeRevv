@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const DropDownList: FC<Props> = ({ item, visible, key }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const dashContext = useContext(DashContext);
 
   const showSubNav = () => setOpen(!open);
@@ -26,7 +26,7 @@ export const DropDownList: FC<Props> = ({ item, visible, key }) => {
       {open &&
         item.subMenu.map((item, index) => {
           return (
-            <SubRow key={index} onClick={() => item.action(dashContext)}>
+            <SubRow to={item.link} key={index} onClick={() => item.action(dashContext)}>
               <Icon>{item.icon}</Icon>
               {!visible && <TitleRow>{item.title}</TitleRow>}
             </SubRow>

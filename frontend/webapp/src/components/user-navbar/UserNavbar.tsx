@@ -1,5 +1,5 @@
 import { FunctionComponent, useContext } from 'react';
-import { NavBarUser, ButtonSpace, Row, Icon, TitleRow, DropDown } from './style';
+import { NavBarUser, ButtonSpace, Row, Icon, TitleRow, DropDown } from './styles';
 
 import { NavBarData, userNavBarData } from 'const';
 import { AuthContext, DashContext } from 'context';

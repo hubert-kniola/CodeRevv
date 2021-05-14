@@ -21,7 +21,7 @@ const App = () => (
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/recover/:uid?/:token?" component={PasswordRecover} />
         <Route exact path="/activate/:uid/:token" component={AccountActivate} />
-        <ProtectedRoute exact path="/dashboard" For={Dashboard} fallbackPath="/signin" />
+        <ProtectedRoute exact path="/dashboard/:verb?/:resource?/:id?" For={Dashboard} fallbackPath="/signin" />
         <Route exact path="/dashboardTest" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>

@@ -1,18 +1,44 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 
 import { LeftSidebar } from 'components';
-import { DashContext } from 'context';
 
-import { DashNavbar, TestCreator, UserFeed } from 'containers';
+import { DashNavbar, TestEditor, UserFeed } from 'containers';
+import { useParams } from 'react-router-dom';
+
+type RouteParams = {
+  verb?: string;
+  resource?: string;
+  id?: string;
+};
 
 export const UserDashboard: FC = () => {
-  const { mode } = useContext(DashContext);
+  const { verb, resource, id } = useParams<RouteParams>();
 
-  let MainComponent: FC;
+  let MainComponent: FC | null = null;
 
-  if (mode === 'newtest') {
-    MainComponent = TestCreator;
-  } else {
+  if (verb && resource) {
+    if (verb === 'create') {
+      if (resource === 'test') {
+        MainComponent = TestEditor;
+      } else if (resource === 'group') {
+        //TODO
+      }
+    } else if (verb === 'view') {
+      if (resource === 'tests') {
+        //TODO
+      } else if (resource === 'groups') {
+        //TODO
+      }
+    } else if (verb === 'edit' && id) {
+      if (resource === 'test') {
+        //TODO
+      } else if (resource === 'group') {
+        //TODO
+      }
+    }
+  }
+
+  if (!MainComponent) {
     MainComponent = UserFeed;
   }
 

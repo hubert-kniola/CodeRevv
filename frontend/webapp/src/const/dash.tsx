@@ -40,14 +40,14 @@ export const sidebarData: SidebarItem[] = [
       {
         title: 'Stwórz test',
         icon: <NoteAddIcon />,
-        link: '#',
-        action: ({ setMode }) => setMode('newtest'),
+        link: '/dashboard/create/test',
+        action: (_) => {},
       },
       {
         title: 'Moje testy',
         icon: <AssignmentIcon />,
-        link: '#',
-        action: ({ setMode }) => setMode('mytests'),
+        link: '/dashboard/view/tests',
+        action: (_) => {},
       },
     ],
     action: (_) => {},

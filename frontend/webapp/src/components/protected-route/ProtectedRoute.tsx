@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from 'context';
 
 type Props = {
-  exact: boolean;
+  exact?: boolean;
   path: string;
   For: LazyExoticComponent<FunctionComponent>;
   fallbackPath: string;
@@ -15,6 +15,6 @@ export const ProtectedRoute: FunctionComponent<Props> = ({ For, fallbackPath, re
   const { hasRequiredRole } = useContext(AuthContext);
 
   return (
-    <Route render={() => (hasRequiredRole(requiredRole) ? <For /> : <Redirect to={fallbackPath} />)} {...restProps} />
+    <Route {...restProps} render={() => (hasRequiredRole(requiredRole) ? <For /> : <Redirect to={fallbackPath} />)} />
   );
 };
