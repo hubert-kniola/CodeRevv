@@ -66,6 +66,7 @@ export const CenteringContainer = styled.div`
 `;
 
 export const Input = styled.input`
+  display: flex;
   width: 500px;
   padding: 15px 15px;
   border: 0px solid transparent;
@@ -74,6 +75,7 @@ export const Input = styled.input`
 `;
 
 export const Error = styled.h3`
+  display: flex;
   margin-left: 10px;
   font-size: 15px;
   color: ${({ theme }) => theme.colors.error};
@@ -170,4 +172,17 @@ export const QuestionWithDelete = styled.div`
   margin: 40px;
   display: flex;
   justify-content: center;
+`;
+
+export const InlineItem = styled.div`
+  display: inline-block;
+  margin: 0;
+`;
+
+export const DummyTest = styled.div`
+  width: min(600px, 60vw);
+  height: 100px;
+  margin-inline: 20px;
+  background-color: yellow;
+  display: inline-block;
 `;

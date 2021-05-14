@@ -11,6 +11,8 @@ import {
   QuestionWithDelete,
   RemoveIcon,
   CenteringContainer,
+  DummyTest,
+  InlineItem,
 } from './styles';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -82,6 +84,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Header>{title}</Header>
+
         <CenteringContainer>
           <Input
             name="testName"
@@ -90,6 +93,8 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
             ref={register}
             onChange={(e) => setEditorState({ ...editorState, testName: e.target.value })}
           />
+        </CenteringContainer>
+        <CenteringContainer>
           <Error>{errors['testName']?.message}</Error>
         </CenteringContainer>
 
@@ -104,29 +109,19 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
               text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
               noLogo
             >
-              <div
-                style={{
-                  width: 'min(600px, 60vw)',
-                  height: '100px',
-                  marginInline: '20px',
-                  backgroundColor: 'yellow',
-                  display: 'inline-block',
-                }}
-                key={index}
-              >
-                {q.text}
-              </div>
+              <DummyTest key={index}>{q.text}</DummyTest>
             </MessageOverlay>
-            <div style={{ display: 'inline-block' }} onClick={() => removeQuestion(index)}>
+
+            <InlineItem onClick={() => removeQuestion(index)}>
               <RemoveIcon />
-            </div>
+            </InlineItem>
           </QuestionWithDelete>
         ))}
 
         <CenteringContainer>
           <NewQuestionButton onClick={addEmptyQuestion}>
             <PlusIcon />
-            <p style={{ display: 'inline-block', margin: 0 }}>Dodaj pytanie</p>
+            <InlineItem>Dodaj pytanie</InlineItem>
           </NewQuestionButton>
         </CenteringContainer>
 
