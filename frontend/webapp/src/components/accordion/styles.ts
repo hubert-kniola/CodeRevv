@@ -70,6 +70,7 @@ export const Header = styled.div<{ show: boolean }>`
     ${({ show }) =>
       !show &&
       css`
+        transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         -moz-transform: rotate(45deg);
         -o-transform: rotate(45deg);

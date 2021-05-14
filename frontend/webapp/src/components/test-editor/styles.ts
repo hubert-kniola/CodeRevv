@@ -3,15 +3,21 @@ import styled, { css } from 'styled-components';
 import plusImg from 'images/open.png';
 
 export const Container = styled.div`
-  width: 70vw;
+  width: min(80vw, 1000px);
   background: ${({ theme }) => theme.colors.background};
   border-radius: 30px;
-
   height: max-content;
   margin-bottom: 10px;
-
+  padding-top: 15px;
+  padding-bottom: 30px;
   display: flex;
   justify-content: center;
+
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 400px;
+  }
 
   input::placeholder {
     color: ${({ theme }) => theme.colors.text};
@@ -48,35 +54,34 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.h3`
+  margin-top: 15px;
   text-align: center;
   font-size: 30px;
   color: ${({ theme }) => theme.colors.text};
 `;
 
-export const Input = styled.input`
+export const CenteringContainer = styled.div`
   display: flex;
-  margin-top: 10px;
+  justify-content: center;
+`;
+
+export const Input = styled.input`
   width: 500px;
   padding: 15px 15px;
   border: 0px solid transparent;
-  background-color: ${({ theme }) => theme.colors.setting};
-
   border-radius: 15px;
+  background-color: ${({ theme }) => theme.colors.setting};
 `;
 
 export const Error = styled.h3`
-  margin-top: 5px;
-  margin-left: 20px;
-  font-size: 13px;
+  margin-left: 10px;
+  font-size: 15px;
   color: ${({ theme }) => theme.colors.error};
   text-align: left;
 `;
 
 export const Button = styled.button`
-  display: block;
   width: 500px;
-  margin-top: 30px;
-  margin-bottom: 30px;
   padding: 10px 15px;
   border: 0px solid transparent;
   border-radius: 15px;
@@ -97,9 +102,8 @@ export const NewQuestionButton = styled.div`
   background: ${({ theme }) => theme.colors.setting};
   color: ${({ theme }) => theme.colors.text};
   border-radius: 15px;
-
-  margin-bottom: 10px;
-
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -112,13 +116,13 @@ export const NewQuestionButton = styled.div`
 `;
 
 export const PlusIcon = styled.img`
-  filter: brightness(0) invert(1);
+  filter: invert(1);
   height: 20px;
-  width: auto;
+  display: inline-block;
   user-select: none;
-  transition: all 0.1s ease-in-out;
 
-  margin: 15px;
+  transition: all 0.1s ease-in-out;
+  margin-right: 15px;
 
   ${({ theme }) =>
     theme.name === 'light' &&
@@ -132,8 +136,38 @@ PlusIcon.defaultProps = {
   src: plusImg,
 };
 
+export const RemoveIcon = styled.img`
+  filter: invert(1);
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+
+  height: 30px;
+  position: sticky;
+  margin-top: 0;
+  margin-left: 50px;
+  display: inline-block;
+
+  ${({ theme }) =>
+    theme.name === 'light' &&
+    css`
+      filter: invert(0);
+    `}
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+RemoveIcon.defaultProps = {
+  alt: 'Remove',
+  src: plusImg,
+};
+
 export const QuestionWithDelete = styled.div`
-  display: grid;
-  width: 1000px;
-  background-color: white;
+  margin: 40px;
+  display: flex;
+  justify-content: center;
 `;
