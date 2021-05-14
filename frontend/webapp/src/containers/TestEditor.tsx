@@ -1,9 +1,19 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
-import { EditorForm } from 'components';
+import { EditorState, TestEditorForm } from 'components';
 
 export const TestEditor: FC = () => {
-  const handleEditorSubmit = console.log;
+  const [editorState, setEditorState] = useState({ testName: '', questions: [] } as EditorState);
 
-  return <EditorForm onSubmit={handleEditorSubmit}></EditorForm>;
+  const handleEditorSubmit = (data: any) => console.log({ data, editorState });
+
+  return (
+    <TestEditorForm
+      title="Stwórz nowy test"
+      buttonText="Zakończ i zapisz"
+      onSubmit={handleEditorSubmit}
+      editorState={editorState}
+      setEditorState={setEditorState}
+    />
+  );
 };

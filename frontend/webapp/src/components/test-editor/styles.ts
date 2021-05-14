@@ -1,16 +1,24 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+import plusImg from 'images/open.png';
 
 export const Container = styled.div`
-  width: 80vw;
+  width: 70vw;
   background: ${({ theme }) => theme.colors.background};
   border-radius: 30px;
 
-  justify-content: center;
   height: max-content;
   margin-bottom: 10px;
 
+  display: flex;
+  justify-content: center;
+
   input::placeholder {
     color: ${({ theme }) => theme.colors.text};
+  }
+
+  button {
+    text-align: center;
   }
 
   input,
@@ -46,8 +54,9 @@ export const Header = styled.h3`
 `;
 
 export const Input = styled.input`
+  display: flex;
   margin-top: 10px;
-  width: 50%;
+  width: 500px;
   padding: 15px 15px;
   border: 0px solid transparent;
   background-color: ${({ theme }) => theme.colors.setting};
@@ -65,13 +74,12 @@ export const Error = styled.h3`
 
 export const Button = styled.button`
   display: block;
-  width: 60%;
+  width: 500px;
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 10px 15px;
   border: 0px solid transparent;
   border-radius: 15px;
-  text-align: center;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.text};
   font-size: 20px;
@@ -82,4 +90,50 @@ export const Button = styled.button`
     background: ${({ theme }) => theme.colors.text};
     color: ${({ theme }) => theme.colors.setting};
   }
+`;
+
+export const NewQuestionButton = styled.div`
+  width: 500px;
+  background: ${({ theme }) => theme.colors.setting};
+  color: ${({ theme }) => theme.colors.text};
+  border-radius: 15px;
+
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  &:hover {
+    transition: all 0.5s ease-in-out;
+    background: ${({ theme }) => theme.colors.primary};
+    cursor: pointer;
+  }
+`;
+
+export const PlusIcon = styled.img`
+  filter: brightness(0) invert(1);
+  height: 20px;
+  width: auto;
+  user-select: none;
+  transition: all 0.1s ease-in-out;
+
+  margin: 15px;
+
+  ${({ theme }) =>
+    theme.name === 'light' &&
+    css`
+      filter: invert(0);
+    `}
+`;
+
+PlusIcon.defaultProps = {
+  alt: 'Add',
+  src: plusImg,
+};
+
+export const QuestionWithDelete = styled.div`
+  display: grid;
+  width: 1000px;
+  background-color: white;
 `;

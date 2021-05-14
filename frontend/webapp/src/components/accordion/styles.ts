@@ -45,7 +45,6 @@ export const Item = styled.div`
 `;
 
 export const Header = styled.div<{ show: boolean }>`
-  display: flex;
   justify-content: space-between;
   cursor: pointer;
   margin-bottom: 1px;
