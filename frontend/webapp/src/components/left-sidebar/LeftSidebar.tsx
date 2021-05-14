@@ -8,30 +8,25 @@ import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, M
 type Props = {
   item: SidebarItem;
   visible: boolean;
-  key: number;
 };
 
-export const DropDownList: FC<Props> = ({ item, visible, key }) => {
+export const DropDownList: FC<Props> = ({ item, visible }) => {
   const [open, setOpen] = useState(true);
   const dashContext = useContext(DashContext);
 
-  const showSubNav = () => setOpen(!open);
-
   return (
     <>
-      <Row to={item.link} key={key} onClick={showSubNav}>
+      <Row to={item.link} key={item.title} onClick={() => setOpen(!open)}>
         <Icon>{item.icon}</Icon>
         {!visible ? <TitleRow>{item.title}</TitleRow> : null}
       </Row>
       {open &&
-        item.subMenu.map((item, index) => {
-          return (
-            <SubRow to={item.link} key={index} onClick={() => item.action(dashContext)}>
-              <Icon>{item.icon}</Icon>
-              {!visible && <TitleRow>{item.title}</TitleRow>}
-            </SubRow>
-          );
-        })}
+        item.subMenu.map((item) => (
+          <SubRow to={item.link} key={item.title} onClick={() => item.action(dashContext)}>
+            <Icon>{item.icon}</Icon>
+            {!visible && <TitleRow>{item.title}</TitleRow>}
+          </SubRow>
+        ))}
     </>
   );
 };
@@ -52,8 +47,8 @@ export const LeftSidebar: FC = ({ children }) => {
           )}
         </MenuHeader>
         <SidebarList>
-          {sidebarData.map((item: SidebarItem, key: number) => (
-            <DropDownList item={item} visible={open} key={key} />
+          {sidebarData.map((item) => (
+            <DropDownList item={item} key={item.title} visible={open} />
           ))}
         </SidebarList>
       </LeftBar>

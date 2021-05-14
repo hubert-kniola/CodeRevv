@@ -8,6 +8,35 @@ export const Container = styled.div`
   justify-content: center;
   height: max-content;
   margin-bottom: 10px;
+
+  input::placeholder {
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  input,
+  select,
+  textarea {
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  textarea:focus,
+  input:focus {
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: ${({ theme }) => theme.colors.text};
+    background-color: ${({ theme }) => theme.colors.setting};
+    transition: background-color 5000s ease-in-out 0s;
+  }
 `;
 
 export const Header = styled.h3`
