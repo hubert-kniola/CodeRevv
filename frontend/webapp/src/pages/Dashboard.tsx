@@ -1,12 +1,13 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 
-import { UserDashboard, UserNavBar } from 'containers';
-import { DashContextProvider } from 'context';
+import { UserDashboard } from 'containers';
+import { AuthContext, DashContextProvider } from 'context';
 
 const Dashboard: FC = () => {
+  const { logout } = useContext(AuthContext);
+
   return (
-    <DashContextProvider>
-      <UserNavBar />
+    <DashContextProvider logoutCallback={logout}>
       <UserDashboard />
     </DashContextProvider>
   );

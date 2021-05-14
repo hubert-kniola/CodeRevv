@@ -1,14 +1,16 @@
 import styled, { css } from 'styled-components';
 
 export const NavBarUser = styled.nav`
-  height: 70px;
+  height: 80px;
   display: grid;
   grid-template-columns: 20% 65% minmax(120px, 15%);
   position: sticky;
   top: 0px;
-  justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.background};
   padding: 0 1rem;
+  z-index: 999;
+
+  transition: 0.5s;
 `;
 
 export const ButtonSpace = styled.div`
@@ -19,37 +21,34 @@ export const ButtonSpace = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  transition: 0.5s;
 `;
 
-export const Row = styled.div<{ title: string }>`
-  user-select: none;
+export const Row = styled.div<{ id: string }>`
   width: 100%;
-  text-decoration: none;
   display: flex;
   flex-direction: row;
   color: ${({ theme }) => theme.colors.text};
   align-items: center;
-  margin: auto;
   font-size: 15px;
-  padding: 0;
+  transition: 0.5s;
 
   :hover {
     cursor: pointer;
     background-color: ${({ theme }) => theme.colors.primary};
   }
 
-  ${({ title }) =>
-    (title === 'Mój profil' &&
+  ${({ id }) =>
+    (id === 'profile' &&
       css`
-        transition: 0.5s;
         :hover {
           cursor: pointer;
           background-color: ${({ theme }) => theme.colors.primary};
         }
       `) ||
-    (title === 'Wyloguj' &&
+    (id === 'logout' &&
       css`
-        transition: 0.5s;
         :hover {
           cursor: pointer;
           background: ${({ theme }) => theme.colors.background};
@@ -60,7 +59,10 @@ export const Row = styled.div<{ title: string }>`
       :hover {
         cursor: pointer;
         background: ${({ theme }) => theme.colors.background};
-        border: 1px solid ${({ theme }) => theme.colors.primary};
+
+        -webkit-box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.primary};
+        -moz-box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.primary};
+        box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.primary};
       }
     `}
 `;
@@ -71,6 +73,8 @@ export const UserMenu = styled(Row)`
 export const DropDown = styled.div<{ open: boolean }>`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.background};
+  
+  transition: 0.5s;
 
   ${({ open }) =>
     !open &&
@@ -86,6 +90,8 @@ export const Icon = styled.div`
   flex: 30%;
   display: grid;
   place-items: center;
+  
+  transition: 0.5s;
 `;
 
 export const TitleRow = styled.div`

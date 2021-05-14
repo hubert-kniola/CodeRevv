@@ -5,7 +5,8 @@ export const Board = styled.div<{ open: boolean }>`
   user-select: none;
   display: grid;
   grid-template-columns: minmax(150px, 15%) 1fr;
-  height: 1000px;
+  min-height: 1000px;
+  z-index: 999;
 
   ${({ open }) =>
     open &&
@@ -24,9 +25,12 @@ export const Board = styled.div<{ open: boolean }>`
 export const LeftBar = styled.div<{ open: boolean }>`
   position: fixed;
   grid-column: 1/2;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
   background-color: ${({ theme }) => theme.colors.background};
   height: 100%;
+  z-index: 999;
+
+  transition: 0.5s;
 
   ${({ open }) =>
     !open &&
@@ -111,9 +115,13 @@ export const Icon = styled.div`
 
 export const TitleRow = styled.div`
   flex: 75%;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
   margin: 0;
 `;
 
 export const MainBoard = styled.div`
   grid-column: 2/3;
+  transition: width 0.5s;
 `;

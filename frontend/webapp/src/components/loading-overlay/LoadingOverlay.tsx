@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FC } from 'react';
 
 import { Overlay } from './styles';
 import { Logo } from 'components/message-overlay/styles';
@@ -9,7 +9,7 @@ type Props = {
   logo?: boolean;
 };
 
-export const LoadingOverlay: FunctionComponent<Props> = ({ children, active, text, logo }) => (
+export const LoadingOverlay: FC<Props> = ({ children, active, text, logo }) => (
   <Overlay
     text={
       logo ? (

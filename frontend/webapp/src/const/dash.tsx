@@ -28,6 +28,7 @@ export type SidebarItem = {
   icon: ReactElement;
   link: string;
   subMenu: SubMenu[];
+  action: (c: IDashContext) => void;
 };
 
 export const sidebarData: SidebarItem[] = [
@@ -39,7 +40,7 @@ export const sidebarData: SidebarItem[] = [
       {
         title: 'Stwórz test',
         icon: <NoteAddIcon />,
-        link: '/create/test',
+        link: '#',
         action: ({ setMode }) => setMode('newtest'),
       },
       {
@@ -49,6 +50,7 @@ export const sidebarData: SidebarItem[] = [
         action: ({ setMode }) => setMode('mytests'),
       },
     ],
+    action: (_) => {},
   },
   {
     title: 'Grupy',
@@ -68,18 +70,21 @@ export const sidebarData: SidebarItem[] = [
         action: (_) => {},
       },
     ],
+    action: (_) => {},
   },
   {
     title: 'Wyniki',
     icon: <ScoreIcon />,
     link: '#',
     subMenu: [],
+    action: (_) => {},
   },
   {
     title: 'Zarządzaj kontem',
     icon: <SettingsIcon />,
     link: '#',
     subMenu: [],
+    action: (_) => {},
   },
 ];
 
@@ -97,7 +102,7 @@ export const userNavBarData: NavBarData[] = [
     title: 'Mój profil',
     icon: <EmojiEmotionsIcon />,
     link: '#',
-    action: (_) => {},
+    action: ({ navbarOpen, setNavbarOpen }) => setNavbarOpen(!navbarOpen),
   },
   {
     id: 'edit',
@@ -107,8 +112,8 @@ export const userNavBarData: NavBarData[] = [
     action: (_) => {},
   },
   {
-    id: 'sth',
-    title: 'jakaś opcja',
+    id: 'error',
+    title: 'Zgłoś problem',
     icon: <ErrorIcon />,
     link: '#',
     action: (_) => {},
@@ -118,6 +123,6 @@ export const userNavBarData: NavBarData[] = [
     title: 'Wyloguj',
     icon: <DirectionsWalkIcon />,
     link: '#',
-    action: (_) => {},
+    action: ({ logout }) => logout(),
   },
 ];

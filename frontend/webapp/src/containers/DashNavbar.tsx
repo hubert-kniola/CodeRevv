@@ -1,7 +1,7 @@
 import { UserNavbar, SpaceButton, List } from 'components';
-import { FunctionComponent } from 'react';
+import { FC } from 'react';
 
-export const UserNavBar: FunctionComponent = () => {
+export const DashNavbar: FC = () => {
   return (
     <UserNavbar>
       <SpaceButton>

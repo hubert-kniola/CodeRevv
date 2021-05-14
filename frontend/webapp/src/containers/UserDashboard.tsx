@@ -1,11 +1,28 @@
-import { FunctionComponent } from 'react';
+import { FC, useContext } from 'react';
 
 import { LeftSidebar } from 'components';
+import { DashContext } from 'context';
 
-export const UserDashboard: FunctionComponent = ({ children }) => {
+import { DashNavbar, TestCreator, UserFeed } from 'containers';
+
+export const UserDashboard: FC = () => {
+  const { mode } = useContext(DashContext);
+
+  let MainComponent: FC;
+
+  if (mode === 'newtest') {
+    MainComponent = TestCreator;
+  } else {
+    MainComponent = UserFeed;
+  }
+
   return (
     <>
-      <LeftSidebar>{children}</LeftSidebar>
+      <DashNavbar />
+
+      <LeftSidebar>
+        <MainComponent />
+      </LeftSidebar>
     </>
   );
 };

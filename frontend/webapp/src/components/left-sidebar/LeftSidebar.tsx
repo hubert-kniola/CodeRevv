@@ -1,36 +1,34 @@
-import { FunctionComponent, useState, useContext } from 'react';
-import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
+import { FC, useState, useContext } from 'react';
+import { DashContext } from 'context';
 import { sidebarData, SidebarItem } from 'const';
 
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-import { DashContext } from 'context';
+import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
 
 type Props = {
   item: SidebarItem;
-  open: boolean;
+  visible: boolean;
   key: number;
 };
 
-export const DropDownList: FunctionComponent<Props> = ({ item, open, key }) => {
-  const [subNav, setSubNav] = useState(false);
+export const DropDownList: FC<Props> = ({ item, visible, key }) => {
+  const [open, setOpen] = useState(false);
   const dashContext = useContext(DashContext);
 
-  const showSubNav = (): void => setSubNav(!subNav);
-  const doNothing = (): void => {};
+  const showSubNav = () => setOpen(!open);
 
   return (
     <>
-      <Row to={item.link} key={key} onClick={!open ? showSubNav : doNothing}>
+      <Row to={item.link} key={key} onClick={showSubNav}>
         <Icon>{item.icon}</Icon>
-        {!open ? <TitleRow>{item.title}</TitleRow> : null}
+        {!visible ? <TitleRow>{item.title}</TitleRow> : null}
       </Row>
-      {subNav &&
-        !open &&
+      {open &&
         item.subMenu.map((item, index) => {
           return (
             <SubRow key={index} onClick={() => item.action(dashContext)}>
               <Icon>{item.icon}</Icon>
-              <TitleRow>{item.title}</TitleRow>
+              {!visible && <TitleRow>{item.title}</TitleRow>}
             </SubRow>
           );
         })}
@@ -38,7 +36,7 @@ export const DropDownList: FunctionComponent<Props> = ({ item, open, key }) => {
   );
 };
 
-export const LeftSidebar: FunctionComponent = ({ children }) => {
+export const LeftSidebar: FC = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -47,7 +45,6 @@ export const LeftSidebar: FunctionComponent = ({ children }) => {
         <MenuHeader onClick={() => setOpen(!open)}>
           {open ? (
             <Icon>
-              {' '}
               <MenuOpenIcon />
             </Icon>
           ) : (
@@ -56,7 +53,7 @@ export const LeftSidebar: FunctionComponent = ({ children }) => {
         </MenuHeader>
         <SidebarList>
           {sidebarData.map((item: SidebarItem, key: number) => (
-            <DropDownList item={item} open={open} key={key} />
+            <DropDownList item={item} visible={open} key={key} />
           ))}
         </SidebarList>
       </LeftBar>
