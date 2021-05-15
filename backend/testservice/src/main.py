@@ -41,7 +41,7 @@ async def create_test(test: Test):
     return jsonable_encoder(created_test)
 
 
-@app.get('/test/list', response_model=List[Test], status_code=201)
+@app.get('/test/list', response_model=List[Test], status_code=200)
 async def tests_list():
     tests = await engine.find(Test)
     return jsonable_encoder(tests)
