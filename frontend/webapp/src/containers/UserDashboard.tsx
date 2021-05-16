@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { LeftSidebar } from 'components';
+import { LeftSidebar, QuestionTest } from 'components';
 
 import { DashNavbar, TestEditor, UserFeed } from 'containers';
 import { useParams } from 'react-router-dom';
@@ -49,7 +49,7 @@ export const UserDashboard: FC = () => {
       <DashNavbar />
 
       <LeftSidebar>
-        <TextEditor />
+        <QuestionTest/>
       </LeftSidebar>
     </>
   );

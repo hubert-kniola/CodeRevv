@@ -14,4 +14,4 @@ export * from './user-navbar/UserNavbar';
 export * from './left-sidebar/LeftSidebar';
 export * from './code-editor/PythonEditor';
 export * from './test-editor/TestEditorForm';
-export * from './text-editor/TextEditor';
+export * from './question/Question';

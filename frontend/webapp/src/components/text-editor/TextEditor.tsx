@@ -1,11 +1,8 @@
 import { FC, useState } from "react";
-import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte'
+import RichTextEditor, { EditorValue } from 'react-rte'
 
 export const TextEditor: FC = () => {
   const [value, setValue] = useState<EditorValue>(RichTextEditor.createEmptyValue());
- 
-
-
 
   return(
       <RichTextEditor
