@@ -14,12 +14,14 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.conf import settings
 from rest_framework_simplejwt.exceptions import TokenError
+from .proxy_decorators import session_authentication
 import requests
 
 proxy = str('http://127.0.0.1:8080')
 
 
 @api_view(['POST'])
+@session_authentication
 def test_create(request):
     print(type(request.data))
     response = requests.post(proxy + '/test/create', json=request.data)
@@ -27,6 +29,7 @@ def test_create(request):
 
 
 @api_view(['GET'])
+@session_authentication
 def test_list(request):
     response = requests.get(proxy + '/test/list')
     return Response(response, response.status_code)
@@ -34,7 +37,6 @@ def test_list(request):
 
 @api_view(['DELETE'])
 def test_delete(request):
-
     response = requests.delete(proxy + '/test/delete?test_id=' + str(request.data['test_id']))
     return Response(response, response.status_code)
 

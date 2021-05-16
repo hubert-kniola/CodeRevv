@@ -26,3 +26,9 @@ class Test(Model):
     users: List[int]
     question: Optional[List[Question]]
     user_answers: Optional[List[Answer]]
+
+
+class TestSearcher(Model):
+    creator_id: int
+    test_id: List[str]
+    users_id: List[int]
