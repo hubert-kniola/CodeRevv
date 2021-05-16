@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Home, NotFound, Loading } from 'pages';
 import { ProtectedRoute } from 'components';
+import { TestEditor } from 'containers';
 
 const Contact = lazy(() => import('pages/Contact'));
 const Login = lazy(() => import('pages/Login'));
@@ -23,6 +24,7 @@ const App = () => (
         <Route exact path="/activate/:uid/:token" component={AccountActivate} />
         <ProtectedRoute exact path="/dashboard/:verb?/:resource?/:id?" For={Dashboard} fallbackPath="/signin" />
         <Route exact path="/dashboardTest" component={Dashboard} />
+        <Route exact path="/dashboardTestAdd" component={TestEditor} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
