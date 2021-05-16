@@ -20,12 +20,12 @@ export const QuestionEditor: FC = () => {
   const [question, setQuestion] = useState(RichTextEditor.createEmptyValue());
   const [answers, setAnswers] = useState([newAnswerEditor(), newAnswerEditor()] as Answer[]);
 
-  const setAnswer = (pos: number) => {
-    return (value: Answer) => setAnswers([...answers.slice(0, pos), value, ...answers.slice(pos + 1)]);
+  const replaceAnswer = (pos: number, value: Answer) => {
+    setAnswers([...answers.slice(0, pos), value, ...answers.slice(pos + 1)]);
   };
 
   const removeAnswer = (pos: number) => {
-    return () => setAnswers(answers.filter((_, index) => index !== pos));
+    setAnswers(answers.filter((_, index) => index !== pos));
   };
 
   const newAnswer = () => {
@@ -40,8 +40,8 @@ export const QuestionEditor: FC = () => {
         <AnswerEditor
           key={item.id}
           answerState={item}
-          setAnswerState={setAnswer(index)}
-          onDelete={removeAnswer(index)}
+          setAnswerState={(state) => replaceAnswer(index, state)}
+          onDelete={() => removeAnswer(index)}
         />
       ))}
 
