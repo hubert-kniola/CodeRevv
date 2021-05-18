@@ -36,8 +36,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
       setAnswers(answers.filter((_, index) => index !== pos));
     } else {
       const answer = answers[pos];
-      answer.deleteError = true;
-      replaceAnswer(pos, answer);
+      replaceAnswer(pos, { ...answer, deleteError: !answer.deleteError });
     }
   };
 
@@ -77,7 +76,7 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
     }
   };
   return (
-    <AnswerConteiner deleteError={answerState.deleteError}>
+    <AnswerConteiner deleteError={answerState.deleteError} onClick={resetError}>
       <AnswerBlock>
         <div className="div1">
           <RichTextEditor
@@ -102,8 +101,8 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
         </div>
       </AnswerBlock>
       {answerState.deleteError && (
-        <p onClick={resetError}>
-          Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className = 'icon'/>
+        <p>
+          Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className="icon" />
         </p>
       )}
     </AnswerConteiner>
