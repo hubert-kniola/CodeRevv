@@ -1,13 +1,9 @@
 import styled, { css } from 'styled-components';
-import { AnswerEditor } from './Question';
 
-export const DefaultContainer = styled.div`
-  width: 750px;
-  background-color: white;
-`;
 
 export const Question = styled.div`
-  max-width: 95%;
+  min-width: 600px;
+  width: 95%;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #1f1f1f;
@@ -61,6 +57,13 @@ export const AnswerConteiner = styled.div<{ deleteError: boolean }>`
     color: #f53030;
     font-size: 14px;
     margin: 0;
+    align-items: center;
+
+    .icon {
+      font-size: 16px;
+      height: 100%;
+      margin: 0 auto;
+    }
   }
 `;
 

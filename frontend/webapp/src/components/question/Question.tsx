@@ -103,8 +103,7 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
       </AnswerBlock>
       {answerState.deleteError && (
         <p onClick={resetError}>
-          Każde pytanie musi zawierać dwie odpowiedzi!
-          <HighlightOffIcon />
+          Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className = 'icon'/>
         </p>
       )}
     </AnswerConteiner>
