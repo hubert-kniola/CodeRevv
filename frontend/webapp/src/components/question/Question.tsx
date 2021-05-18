@@ -1,12 +1,15 @@
 import { FC, useState } from 'react';
-import { TempContainer, Editor, Option } from './style';
+import { Question, Button, AnswerBlock, AnswerConteiner } from './style';
 import RichTextEditor, { EditorValue } from 'react-rte';
 import { nanoid } from 'nanoid';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 type Answer = {
   id: string;
   value: EditorValue;
   isCorrect: boolean;
+  deleteError: boolean;
 };
 
 const newAnswerEditor = () =>
@@ -16,7 +19,11 @@ const newAnswerEditor = () =>
     isCorrect: false,
   } as Answer);
 
-export const QuestionEditor: FC = () => {
+type QuestionEditorProps = {
+  questionNo: number;
+};
+
+export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
   const [question, setQuestion] = useState(RichTextEditor.createEmptyValue());
   const [answers, setAnswers] = useState([newAnswerEditor(), newAnswerEditor()] as Answer[]);
 
@@ -25,7 +32,13 @@ export const QuestionEditor: FC = () => {
   };
 
   const removeAnswer = (pos: number) => {
-    setAnswers(answers.filter((_, index) => index !== pos));
+    if (answers.length > 2) {
+      setAnswers(answers.filter((_, index) => index !== pos));
+    } else {
+      const answer = answers[pos];
+      answer.deleteError = true;
+      replaceAnswer(pos, answer);
+    }
   };
 
   const newAnswer = () => {
@@ -33,8 +46,9 @@ export const QuestionEditor: FC = () => {
   };
 
   return (
-    <TempContainer>
-      <RichTextEditor value={question} onChange={setQuestion} />
+    <Question>
+      <label>Pytanie #{questionNo}: </label>
+      <RichTextEditor className="text-editor" value={question} onChange={setQuestion} />
 
       {answers.map((item, index) => (
         <AnswerEditor
@@ -45,17 +59,8 @@ export const QuestionEditor: FC = () => {
         />
       ))}
 
-      <button onClick={newAnswer}>Dodaj pytanie</button>
-      <button
-        onClick={() => {
-          console.log(question.toString('html'));
-
-          answers.forEach((item) => console.log({ correct: item.isCorrect, text: item.value.toString('html') }));
-        }}
-      >
-        Podsumuj w konsoli
-      </button>
-    </TempContainer>
+      <Button onClick={newAnswer}>Dodaj odpowiedź</Button>
+    </Question>
   );
 };
 
@@ -66,15 +71,42 @@ type AnswerEditorProps = {
 };
 
 export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerState, onDelete }) => {
+  const resetError = () => {
+    if (answerState.deleteError) {
+      setAnswerState({ ...answerState, deleteError: !answerState.deleteError });
+    }
+  };
   return (
-    <>
-      <RichTextEditor value={answerState.value} onChange={(value) => setAnswerState({ ...answerState, value })} />
-      <input
-        type="checkbox"
-        checked={answerState.isCorrect}
-        onChange={() => setAnswerState({ ...answerState, isCorrect: !answerState.isCorrect })}
-      />
-      <button onClick={onDelete}>X</button>
-    </>
+    <AnswerConteiner deleteError={answerState.deleteError}>
+      <AnswerBlock>
+        <div className="div1">
+          <RichTextEditor
+            className="text-editor"
+            value={answerState.value}
+            onChange={(value) => setAnswerState({ ...answerState, value })}
+          />
+        </div>
+        <div className="div2">
+          <input
+            type="checkbox"
+            checked={answerState.isCorrect}
+            onChange={() => setAnswerState({ ...answerState, isCorrect: !answerState.isCorrect })}
+          />
+          Poprawna
+        </div>
+        <div className="div3" onClick={onDelete}>
+          <div className="div3_1">
+            <DeleteForeverIcon className="ico" />
+          </div>
+          <div className="div3_2">Usuń</div>
+        </div>
+      </AnswerBlock>
+      {answerState.deleteError && (
+        <p onClick={resetError}>
+          Każde pytanie musi zawierać dwie odpowiedzi!
+          <HighlightOffIcon />
+        </p>
+      )}
+    </AnswerConteiner>
   );
 };
