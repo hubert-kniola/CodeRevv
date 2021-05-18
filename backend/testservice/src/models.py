@@ -24,11 +24,11 @@ class Test(Model):
     pub_test: str
     creator: int
     users: List[int]
-    question: Optional[List[Question]]
+    questions: Optional[List[Question]]
     user_answers: Optional[List[Answer]]
 
 
 class TestSearcher(Model):
     creator_id: int
-    test_id: List[str]
+    test_id: str
     users_id: List[int]

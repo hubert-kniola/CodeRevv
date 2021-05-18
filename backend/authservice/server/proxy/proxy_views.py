@@ -1,23 +1,21 @@
 import jwt
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.exceptions import AuthenticationFailed
-from ..views.serializers import *
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import authenticate, logout
-from django.utils import timezone
-from django.utils.encoding import force_bytes
-from django.conf import settings
-from rest_framework_simplejwt.exceptions import TokenError
-from .proxy_decorators import session_authentication
 import requests
+from django.conf import settings
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-proxy = str('http://127.0.0.1:8080')
+from .proxy_decorators import session_authentication
+
+proxy = r'http://127.0.0.1:8080'
+
+
+@api_view(['POST'])
+@session_authentication
+def test_join(request):
+    token1 = request.COOKIES['access']
+    payload = jwt.decode(token1, settings.SECRET_KEY, settings.SIMPLE_JWT['ALGORITHM'])
+    response = request.post(proxy + f"/test/{request.data['test_id']}/{payload['user_id']}")
+    return Response(response, response.status_code)
 
 
 @api_view(['POST'])

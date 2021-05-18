@@ -1,11 +1,8 @@
-from background_task.models import Task
-from django.urls import path, include
-from ..views.views import *
-from ..views.authviews import *
-from ..background import delete_inactive_users
+from django.urls import path
 from .proxy_views import *
 
 urlpatterns = [
+    path('api/v1/test/<str:test_id>/<int:user_id>', test_join, name='test_join'),
     path('api/v1/test/create', test_create, name='test_create'),
     path('api/v1/test/list', test_list, name='test_list'),
     path('api/v1/test/delete', test_delete, name='test_delete'),

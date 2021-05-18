@@ -34,6 +34,13 @@ def shutdown_event():
 # modyfikacja odpowiedzi - done
 
 
+@app.post('/test/{test_id}/{user_id}', status_code=200)
+async def join_test(test_id, user_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    test.users.append(int(user_id))
+    return {'name': test.name, 'creator': test.creator, 'questions': test.questions}
+
+
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     new_test = await engine.save(test)

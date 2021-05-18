@@ -1,15 +1,9 @@
 import jwt
-from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.shortcuts import render, resolve_url
-from urllib.parse import urlparse
-from ..views.authviews import check_token
-from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
-from rest_framework.exceptions import AuthenticationFailed
-from ..views.serializers import AuthUser
-from rest_framework.response import Response
-from rest_framework import status
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.core.exceptions import PermissionDenied
+
+from ..views.serializers import AuthUser
 
 
 def session_authentication(function, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
