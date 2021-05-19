@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 export const Question = styled.div`
   min-width: 600px;
   width: 95%;
-  margin: 2rem auto;
+  margin: 2rem auto ;
   padding: 1rem;
   background-color: #1f1f1f;
   border-radius: 15px;
@@ -22,15 +22,18 @@ export const Question = styled.div`
     border-radius: 0 15px 15px 15px;
     color: black;
     text-align: left;
+    background-color:  ${({ theme }) => theme.colors.text};
+
+
   }
 `;
 
-export const Button = styled.button<{ disabled: boolean }>`
+export const Button = styled.button`
   width: 95%;
   height: 40px;
+  margin: 0 auto 1rem auto;
   border-radius: 15px;
   border: 0px;
-  margin: 0 auto;
   font-size: 22px;
   background-color: ${({ theme }) => theme.colors.lighterBackgound};
   color: ${({ theme }) => theme.colors.text};

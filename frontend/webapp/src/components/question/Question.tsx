@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Question, Button, AnswerBlock, AnswerConteiner } from './style';
-import RichTextEditor, { EditorValue } from 'react-rte';
+import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte';
 import { nanoid } from 'nanoid';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -17,10 +17,31 @@ const newAnswerEditor = () =>
     id: nanoid(),
     value: RichTextEditor.createEmptyValue(),
     isCorrect: false,
+    deleteError: false,
   } as Answer);
 
 type QuestionEditorProps = {
   questionNo: number;
+};
+
+const toolbarConfig: ToolbarConfig = {
+  // Optionally specify the groups to display (displayed in the order listed).
+  display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
+  INLINE_STYLE_BUTTONS: [
+    { label: 'Bold', style: 'BOLD', className: 'custom-css-class' },
+    { label: 'Italic', style: 'ITALIC' },
+    { label: 'Underline', style: 'UNDERLINE' },
+  ],
+  BLOCK_TYPE_DROPDOWN: [
+    { label: 'Normal', style: 'unstyled' },
+    { label: 'Heading Large', style: 'header-one' },
+    { label: 'Heading Medium', style: 'header-two' },
+    { label: 'Heading Small', style: 'header-three' },
+  ],
+  BLOCK_TYPE_BUTTONS: [
+    { label: 'UL', style: 'unordered-list-item' },
+    { label: 'OL', style: 'ordered-list-item' },
+  ],
 };
 
 export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
@@ -33,25 +54,20 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
   };
 
   const removeAnswer = (pos: number) => {
-    if (answers.length > 2) {
-      if(answers.length === 10){
-        setButtonDisabled(false);
-      }
+    if (answers.length > 2 ) {
       setAnswers(answers.filter((_, index) => index !== pos));
     } else {
       const answer = answers[pos];
       replaceAnswer(pos, { ...answer, deleteError: !answer.deleteError });
     }
-
-  
   };
 
   const newAnswer = () => {
     if (answers.length < 10) {
       setAnswers([...answers, newAnswerEditor()]);
-    } 
-    
-    if ([...answers].length === 10){
+    }
+
+    if ([...answers].length === 10) {
       setButtonDisabled(true);
     }
   };
@@ -76,7 +92,9 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
           </>
         )}
       </p>
-      <Button onClick={newAnswer} disabled={buttonDisabled}>Dodaj odpowiedź</Button>
+      <Button onClick={newAnswer} disabled={buttonDisabled}>
+        Dodaj odpowiedź
+      </Button>
     </Question>
   );
 };
