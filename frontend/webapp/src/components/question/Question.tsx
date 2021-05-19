@@ -26,6 +26,7 @@ type QuestionEditorProps = {
 export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
   const [question, setQuestion] = useState(RichTextEditor.createEmptyValue());
   const [answers, setAnswers] = useState([newAnswerEditor(), newAnswerEditor()] as Answer[]);
+  const [buttonDisabled, setButtonDisabled] = useState(false as boolean);
 
   const replaceAnswer = (pos: number, value: Answer) => {
     setAnswers([...answers.slice(0, pos), value, ...answers.slice(pos + 1)]);
@@ -33,15 +34,26 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
 
   const removeAnswer = (pos: number) => {
     if (answers.length > 2) {
+      if(answers.length === 10){
+        setButtonDisabled(false);
+      }
       setAnswers(answers.filter((_, index) => index !== pos));
     } else {
       const answer = answers[pos];
       replaceAnswer(pos, { ...answer, deleteError: !answer.deleteError });
     }
+
+  
   };
 
   const newAnswer = () => {
-    setAnswers([...answers, newAnswerEditor()]);
+    if (answers.length < 10) {
+      setAnswers([...answers, newAnswerEditor()]);
+    } 
+    
+    if ([...answers].length === 10){
+      setButtonDisabled(true);
+    }
   };
 
   return (
@@ -57,8 +69,14 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
           onDelete={() => removeAnswer(index)}
         />
       ))}
-
-      <Button onClick={newAnswer}>Dodaj odpowiedź</Button>
+      <p>
+        {buttonDisabled && (
+          <>
+            Każde pytanie może mieć tylko 10 odpowiedzi <HighlightOffIcon className="icon" />{' '}
+          </>
+        )}
+      </p>
+      <Button onClick={newAnswer} disabled={buttonDisabled}>Dodaj odpowiedź</Button>
     </Question>
   );
 };
@@ -77,7 +95,7 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
   };
   return (
     <AnswerConteiner deleteError={answerState.deleteError} onClick={resetError}>
-      <AnswerBlock>
+      <AnswerBlock className="test">
         <div className="div1">
           <RichTextEditor
             className="text-editor"
@@ -100,11 +118,13 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
           <div className="div3_2">Usuń</div>
         </div>
       </AnswerBlock>
-      {answerState.deleteError && (
-        <p>
-          Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className="icon" />
-        </p>
-      )}
+      <p>
+        {answerState.deleteError && (
+          <>
+            Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className="icon" />{' '}
+          </>
+        )}
+      </p>
     </AnswerConteiner>
   );
 };

@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 
-
 export const Question = styled.div`
   min-width: 600px;
   width: 95%;
@@ -26,7 +25,7 @@ export const Question = styled.div`
   }
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ disabled: boolean }>`
   width: 95%;
   height: 40px;
   border-radius: 15px;
@@ -39,7 +38,13 @@ export const Button = styled.button`
   box-shadow: 0px 8px 14px 4px #000000;
 
   :hover {
-    background-color: ${({ theme }) => theme.colors.primary};
+      background-color: ${({ theme }) => theme.colors.primary};
+    }
+
+  :disabled {
+    :hover {
+      background-color: ${({ theme }) => theme.colors.lighterBackgound};;
+    }
   }
 `;
 
@@ -51,7 +56,8 @@ export const AnswerConteiner = styled.div<{ deleteError: boolean }>`
   font-size: 20px;
   background-color: #2b282d;
   box-shadow: 0px 8px 14px 4px #000000;
-  border: ${props => props.deleteError ? '2px solid #f53030' : ''};
+  transition: all 1s;
+  border: ${(props) => (props.deleteError ? '2px solid #f53030' : '2px solid #2b282d')};
 
   p {
     color: #f53030;
