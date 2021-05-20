@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const Question = styled.div`
-  min-width: 600px;
+  min-width: 800px;
   width: 95%;
   margin: 2rem auto ;
   padding: 1rem;
