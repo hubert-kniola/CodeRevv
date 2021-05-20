@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useState, useContext } from 'react';
 
 import {
   Container,
@@ -11,7 +11,6 @@ import {
   QuestionWithDelete,
   RemoveIcon,
   CenteringContainer,
-  DummyTest,
   InlineItem,
 } from './styles';
 
@@ -19,65 +18,59 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { MessageOverlay } from 'components';
+import { MessageOverlay, QuestionEditor } from 'components';
+import { newQuestion, Question, SetQuestionLambda, TestEditorContext } from 'context';
 
 const schema = yup.object().shape({
   testName: yup.string().required('Musisz wprowadzić nazwę testu').min(10, 'Nazwa musi mieć conajmniej 10 znaków'),
 });
 
-export type Question = {
-  text: string;
-  answers: string[];
-  lock: boolean;
-};
-
-export type EditorState = {
-  testName: string;
-  questions: Question[];
-};
-
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
   title: string;
   buttonText: string;
-  editorState: EditorState;
-  setEditorState: (state: EditorState) => void;
 };
 
-export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorState, setEditorState }) => {
+export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   const [currentDeleteTimeout, setCurrentDeleteTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { questions, setQuestions, setTestName } = useContext(TestEditorContext);
+
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
   });
 
   const addEmptyQuestion = () => {
-    const { questions } = editorState;
-    setEditorState({ ...editorState, questions: [...questions, { text: 'TEST', answers: [], lock: false }] });
+    setQuestions((questions) => [...questions, newQuestion()]);
   };
 
   const removeQuestion = (pos: number) => {
-    const { questions } = editorState;
-
     if (questions[pos].lock && currentDeleteTimeout != null) {
       clearTimeout(currentDeleteTimeout);
       setCurrentDeleteTimeout(null);
-      setEditorState({ ...editorState, questions: questions.filter((_, index) => index !== pos) });
+      setQuestions((questions) => questions.filter((_, index) => index !== pos));
     } else if (currentDeleteTimeout == null) {
-      setEditorState({
-        ...editorState,
-        questions: [...questions.slice(0, pos), { ...questions[pos], lock: true }, ...questions.slice(pos + 1)],
-      });
+      setQuestions((questions) => [
+        ...questions.slice(0, pos),
+        { ...questions[pos], lock: true },
+        ...questions.slice(pos + 1),
+      ]);
 
       setCurrentDeleteTimeout(
         setTimeout(() => {
-          setEditorState({
-            ...editorState,
-            questions: [...questions.slice(0, pos), { ...questions[pos], lock: false }, ...questions.slice(pos + 1)],
-          });
+          setQuestions((questions) => [
+            ...questions.slice(0, pos),
+            { ...questions[pos], lock: false },
+            ...questions.slice(pos + 1),
+          ]);
           setCurrentDeleteTimeout(null);
         }, 1000)
       );
     }
+  };
+
+  const handleSetQuestion = (q: Question | SetQuestionLambda) => {
+    
+
   };
 
   return (
@@ -91,7 +84,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
             type="text"
             placeholder="Nazwa testu..."
             ref={register}
-            onChange={(e) => setEditorState({ ...editorState, testName: e.target.value })}
+            onChange={(e) => setTestName(e.target.value)}
           />
         </CenteringContainer>
         <CenteringContainer>
@@ -102,14 +95,14 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
 
         <Header>Pytania</Header>
 
-        {editorState.questions?.map((q, index) => (
+        {questions.map((q, index) => (
           <QuestionWithDelete>
             <MessageOverlay
-              active={editorState.questions[index].lock}
+              active={q.lock}
               text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
               noLogo
             >
-              <DummyTest key={index}>{q.text}</DummyTest>
+              <QuestionEditor key={q.id} questionNo={index} question={q} setQuestion={handleSetQuestion} />
             </MessageOverlay>
 
             <InlineItem onClick={() => removeQuestion(index)}>

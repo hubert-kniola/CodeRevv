@@ -1,73 +1,67 @@
-import { FC, useEffect, useState } from 'react';
-import { Question, Button, AnswerBlock, AnswerConteiner } from './style';
-import RichTextEditor, { EditorValue, ToolbarConfig,  } from 'react-rte';
-import { nanoid } from 'nanoid';
+import { FC, useEffect, useState, MouseEvent } from 'react';
+import RichTextEditor from 'react-rte';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { toolbarConfig } from 'const'
 
-
-type Answer = {
-  id: string;
-  value: EditorValue;
-  isCorrect: boolean;
-  deleteError: boolean;
-};
-
-const newAnswerEditor = () =>
-  ({
-    id: nanoid(),
-    value: RichTextEditor.createEmptyValue(),
-    isCorrect: false,
-    deleteError: false,
-  } as Answer);
+import { QuestionContainer, Button, AnswerBlock, AnswerConteiner } from './style';
+import { Question, Answer, newAnswer, SetQuestionLambda } from 'context';
+import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
   questionNo: number;
+  question: Question;
+  setQuestion: (q: Question | SetQuestionLambda) => void;
 };
 
+export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, setQuestion }) => {
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
-
-export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
-  const [question, setQuestion] = useState(RichTextEditor.createEmptyValue());
-  const [answers, setAnswers] = useState([newAnswerEditor(), newAnswerEditor()] as Answer[]);
-  const [buttonDisabled, setButtonDisabled] = useState(false as boolean);
-  
   const replaceAnswer = (pos: number, value: Answer) => {
-    setAnswers( answers => [...answers.slice(0, pos), value, ...answers.slice(pos + 1)]);
+    setQuestion((question) => ({
+      ...question,
+      answers: [...question.answers.slice(0, pos), value, ...question.answers.slice(pos + 1)],
+    }));
   };
 
   const removeAnswer = (pos: number) => {
-    if (answers.length > 2 ) {
-      setAnswers(answers => answers.filter((_, index) => index !== pos));
-    } else {
-      const answer = {...answers[pos]}
-      replaceAnswer(pos, { ...answer, deleteError: true });
+    if (question.answers.length > 2) {
+      setQuestion((question) => ({
+        ...question,
+        answers: question.answers.filter((_, index) => index !== pos),
+      }));
     }
   };
 
-  const newAnswer = () => {
-    if (answers.length < 10) {
-      setAnswers(answers =>[...answers, newAnswerEditor()]);
-    }
+  const addAnswer = (e: MouseEvent) => {
+    e.preventDefault();
 
-    if ([...answers].length === 10) {
+    if (question.answers.length < 10) {
+      setQuestion((question) => ({
+        ...question,
+        answers: [...question.answers, newAnswer()],
+      }));
+    } else {
       setButtonDisabled(true);
     }
   };
 
   return (
-    <Question>
+    <QuestionContainer>
       <label>Pytanie #{questionNo}: </label>
-      <RichTextEditor toolbarConfig = {toolbarConfig} className="text-editor" value={question} onChange={setQuestion} />
+      <RichTextEditor
+        toolbarConfig={toolbarConfig}
+        className="text-editor"
+        value={question.value}
+        onChange={(value) => setQuestion({ ...question, value })}
+      />
 
-      {answers.map((item, index) => (
+      {question.answers.map((item, index) => (
         <AnswerEditor
           key={item.id}
           answerState={item}
           setAnswerState={(state) => replaceAnswer(index, state)}
           onDelete={() => removeAnswer(index)}
-          answersCount = {answers.length}
+          answersCount={question.answers.length}
         />
       ))}
       <p>
@@ -77,10 +71,10 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo }) => {
           </>
         )}
       </p>
-      <Button onClick={newAnswer} disabled={buttonDisabled}>
+      <Button onClick={addAnswer} disabled={buttonDisabled}>
         Dodaj odpowiedź
       </Button>
-    </Question>
+    </QuestionContainer>
   );
 };
 
@@ -88,38 +82,34 @@ type AnswerEditorProps = {
   answerState: Answer;
   setAnswerState: (value: Answer) => void;
   onDelete: () => void;
-  answersCount: number
+  answersCount: number;
 };
 
-export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerState, onDelete, answersCount  }) => {
-  const[deleteError, setDeleteError] = useState(false)
+export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerState, onDelete, answersCount }) => {
+  const [deleteError, setDeleteError] = useState(false);
 
-
-  useEffect(() =>{
-    if(deleteError){
-        setTimeout(() => {
-          setDeleteError(false)
-      }
-    ,2000);}
-  }, [deleteError])
-
-
-  const DeleteAnswer = () =>{
-    if(answersCount > 2){
-      onDelete();
+  useEffect(() => {
+    if (deleteError) {
+      setTimeout(() => {
+        setDeleteError(false);
+      }, 2000);
     }
-    else{
+  }, [deleteError]);
+
+  const DeleteAnswer = () => {
+    if (answersCount > 2) {
+      onDelete();
+    } else {
       setDeleteError(true);
     }
-  }
-
+  };
 
   return (
-    <AnswerConteiner deleteError={deleteError} >
+    <AnswerConteiner deleteError={deleteError}>
       <AnswerBlock className="test">
         <div className="div1">
           <RichTextEditor
-            toolbarConfig = {toolbarConfig}
+            toolbarConfig={toolbarConfig}
             className="text-editor"
             value={answerState.value}
             onChange={(value) => setAnswerState({ ...answerState, value })}

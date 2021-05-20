@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export const Question = styled.div`
+export const QuestionContainer = styled.div`
   min-width: 800px;
   width: 95%;
   margin: 2rem auto ;

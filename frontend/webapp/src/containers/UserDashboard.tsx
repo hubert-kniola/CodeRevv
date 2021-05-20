@@ -47,7 +47,7 @@ export const UserDashboard: FC = () => {
       <DashNavbar />
 
       <LeftSidebar>
-        <QuestionEditor questionNo={1}/>
+        <MainComponent/>
       </LeftSidebar>
     </>
   );
