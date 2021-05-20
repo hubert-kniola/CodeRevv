@@ -1,11 +1,12 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useRef, useState, useContext } from 'react';
 
 import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorForm } from 'components';
-import { TestEditorContextProvider } from 'context';
+import { TestEditorContext, TestEditorContextProvider } from 'context';
 
-export const TestEditor: FC = () => {
+const TestEditorIn: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const testEditorContext = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
 
   const handleEditorSubmit = () => {
@@ -25,3 +26,9 @@ export const TestEditor: FC = () => {
     </TestEditorContextProvider>
   );
 };
+
+export const TestEditor: FC = () => (
+  <TestEditorContextProvider>
+    <TestEditorIn />
+  </TestEditorContextProvider>
+);

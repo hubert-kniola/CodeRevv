@@ -1,9 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const QuestionContainer = styled.div`
   min-width: 800px;
   width: 95%;
-  margin: 2rem auto ;
+  margin: 2rem auto;
   padding: 1rem;
   background-color: #1f1f1f;
   border-radius: 15px;
@@ -22,9 +22,7 @@ export const QuestionContainer = styled.div`
     border-radius: 0 15px 15px 15px;
     color: black;
     text-align: left;
-    background-color:  ${({ theme }) => theme.colors.text};
-
-
+    background-color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -41,12 +39,12 @@ export const Button = styled.button`
   box-shadow: 0px 8px 14px 4px #000000;
 
   :hover {
-      background-color: ${({ theme }) => theme.colors.primary};
-    }
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
 
   :disabled {
     :hover {
-      background-color: ${({ theme }) => theme.colors.lighterBackgound};;
+      background-color: ${({ theme }) => theme.colors.lighterBackgound};
     }
   }
 `;
