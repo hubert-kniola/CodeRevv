@@ -1,9 +1,10 @@
-import { FC, useEffect, useState, MouseEvent, useContext } from 'react';
+import { FC, useEffect, useState, MouseEvent, useContext, useRef } from 'react';
 import RichTextEditor from 'react-rte';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Grow from '@material-ui/core/Grow';
 
-import { QuestionContainer, Button, AnswerBlock, AnswerContainer } from './style';
+import { QuestionContainer, Button, AnswerBlock, AnswerContainer, ErrorText } from './style';
 import { Question, Answer, newAnswer, TestEditorContext } from 'context';
 import { toolbarConfig } from 'const';
 
@@ -14,7 +15,10 @@ type QuestionEditorProps = {
 
 export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [grow, setGrow] = useState(true);
   const { setSingleQuestion } = useContext(TestEditorContext);
+  const questionRef = useRef(question);
+  questionRef.current = question;
 
   const replaceAnswer = (pos: number, value: Answer) => {
     setSingleQuestion(
@@ -56,11 +60,27 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
     }
   };
 
-  return (
-    <QuestionContainer>
-      {question.error && <p>question.error</p>}
+  useEffect(() => {
+    if (question.error != null) {
+      setTimeout(() => {
+        setGrow(false);
+      }, 1800);
 
+      setTimeout(() => {
+        setSingleQuestion({ ...questionRef.current, error: null }, index);
+        setGrow(true);
+      }, 2000);
+    }
+  }, [question.value]);
+
+  return (
+    <QuestionContainer error={question.error != null}>
       <label>Pytanie {index + 1}: </label>
+
+      <Grow in={grow} timeout={500}>
+        <ErrorText>{question.error}</ErrorText>
+      </Grow>
+
       <RichTextEditor
         toolbarConfig={toolbarConfig}
         className="text-editor"
@@ -71,7 +91,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
       {question.answers.map((item, index) => (
         <AnswerEditor
           key={item.id}
-          answerState={item}
+          answer={item}
           setAnswerState={(state) => replaceAnswer(index, state)}
           onDelete={() => removeAnswer(index)}
           answersCount={question.answers.length}
@@ -93,64 +113,80 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
 };
 
 type AnswerEditorProps = {
-  answerState: Answer;
+  answer: Answer;
   setAnswerState: (value: Answer) => void;
   onDelete: () => void;
   answersCount: number;
 };
 
-export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerState, onDelete, answersCount }) => {
-  const [deleteError, setDeleteError] = useState(false);
+export const AnswerEditor: FC<AnswerEditorProps> = ({ answer, setAnswerState, onDelete, answersCount }) => {
+  const [error, setError] = useState(false);
+  const [grow, setGrow] = useState(true);
+  const answerRef = useRef(answer);
+  answerRef.current = answer;
 
   useEffect(() => {
-    if (deleteError) {
+    if (error) {
       setTimeout(() => {
-        setDeleteError(false);
+        setError(false);
       }, 2000);
     }
-  }, [deleteError]);
+  }, [error]);
 
-  const DeleteAnswer = () => {
+  useEffect(() => {
+    if (answer.error != null) {
+      setTimeout(() => {
+        setGrow(false);
+      }, 1800);
+
+      setTimeout(() => {
+        setAnswerState({ ...answerRef.current, error: null });
+        setGrow(true);
+      }, 2000);
+    }
+  }, [answer.value]);
+
+  const deleteAnswer = () => {
     if (answersCount > 2) {
       onDelete();
     } else {
-      setDeleteError(true);
+      setError(true);
     }
   };
 
   return (
-    <AnswerContainer deleteError={deleteError}>
+    <AnswerContainer deleteError={error || answer.error != null}>
+      <Grow in={grow} timeout={500}>
+        <ErrorText>
+          {answer.error != null && <>{answer.error}</>}
+          {error && <>Każde pytanie musi zawierać dwie odpowiedzi!</>}
+        </ErrorText>
+      </Grow>
+
       <AnswerBlock className="test">
         <div className="div1">
           <RichTextEditor
             toolbarConfig={toolbarConfig}
             className="text-editor"
-            value={answerState.value}
-            onChange={(value) => setAnswerState({ ...answerState, value })}
+            value={answer.value}
+            onChange={(value) => setAnswerState({ ...answer, value })}
           />
         </div>
         <div className="div2">
           <input
             type="checkbox"
-            checked={answerState.isCorrect}
-            onChange={() => setAnswerState({ ...answerState, isCorrect: !answerState.isCorrect })}
+            checked={answer.isCorrect}
+            onChange={() => setAnswerState({ ...answer, isCorrect: !answer.isCorrect })}
           />
           Poprawna
         </div>
-        <div className="div3" onClick={DeleteAnswer}>
+        <div className="div3" onClick={deleteAnswer}>
           <div className="div3_1">
             <DeleteForeverIcon className="ico" />
           </div>
           <div className="div3_2">Usuń</div>
         </div>
       </AnswerBlock>
-      <p>
-        {deleteError && (
-          <>
-            Każde pytanie musi zawierać dwie odpowiedzi! <HighlightOffIcon className="icon" />{' '}
-          </>
-        )}
-      </p>
     </AnswerContainer>
   );
 };

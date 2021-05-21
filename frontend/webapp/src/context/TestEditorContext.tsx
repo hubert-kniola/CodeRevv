@@ -6,6 +6,7 @@ export type Answer = {
   id: string;
   value: EditorValue;
   isCorrect: boolean;
+  error: string | null;
 };
 
 export type Question = {
@@ -34,6 +35,7 @@ export const newAnswer = () =>
     id: nanoid(),
     value: RichTextEditor.createEmptyValue(),
     isCorrect: false,
+    error: null,
   } as Answer);
 
 export const newQuestion = () =>

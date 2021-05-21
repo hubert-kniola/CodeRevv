@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const QuestionContainer = styled.div`
+export const QuestionContainer = styled.div<{ error: boolean }>`
   min-width: 500px;
   width: 95%;
   margin: 2rem auto;
@@ -9,6 +9,9 @@ export const QuestionContainer = styled.div`
   border-radius: 15px;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;
+  border: ${({ error }) => (error ? '2px solid #f53030' : '2px solid #1f1f1f')};
+  height: auto;
+  transition: all 1s ease;
 
   & label {
     display: block;
@@ -24,6 +27,12 @@ export const QuestionContainer = styled.div`
     text-align: left;
     background-color: ${({ theme }) => theme.colors.text};
   }
+`;
+
+export const ErrorText = styled.div`
+  transition: 0.5s;
+  white-space: pre-wrap;
+  margin: 1rem auto;
 `;
 
 export const Button = styled.button`

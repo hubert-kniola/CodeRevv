@@ -38,7 +38,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   });
 
   const removeQuestion = (pos: number) => {
-    if (questions[pos].lock && currentDeleteTimeout != null) {
+    if (questions.length > 1 && questions[pos].lock && currentDeleteTimeout != null) {
       clearTimeout(currentDeleteTimeout);
       setCurrentDeleteTimeout(null);
       removeSingleQuestion(pos);
@@ -80,7 +80,11 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
           <QuestionWithDelete>
             <MessageOverlay
               active={q.lock}
-              text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
+              text={
+                questions.length > 1
+                  ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
+                  : 'Test musi zawierać przynajmniej jedno pytanie!'
+              }
               noLogo
             >
               <QuestionEditor key={q.id} index={index} question={q} />
