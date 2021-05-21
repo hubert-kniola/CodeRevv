@@ -4,31 +4,31 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { QuestionContainer, Button, AnswerBlock, AnswerConteiner } from './style';
-import { Question, Answer, newAnswer, SetQuestionLambda } from 'context';
+import { Question, Answer, newAnswer } from 'context';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
   questionNo: number;
   question: Question;
-  setQuestion: (q: Question | SetQuestionLambda) => void;
+  setQuestionDelegate: (q: Question) => void;
 };
 
-export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, setQuestion }) => {
+export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, setQuestionDelegate }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const replaceAnswer = (pos: number, value: Answer) => {
-    setQuestion((question) => ({
+    setQuestionDelegate({
       ...question,
       answers: [...question.answers.slice(0, pos), value, ...question.answers.slice(pos + 1)],
-    }));
+    });
   };
 
   const removeAnswer = (pos: number) => {
     if (question.answers.length > 2) {
-      setQuestion((question) => ({
+      setQuestionDelegate({
         ...question,
         answers: question.answers.filter((_, index) => index !== pos),
-      }));
+      });
     }
   };
 
@@ -36,10 +36,10 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
     e.preventDefault();
 
     if (question.answers.length < 10) {
-      setQuestion((question) => ({
+      setQuestionDelegate({
         ...question,
         answers: [...question.answers, newAnswer()],
-      }));
+      });
     } else {
       setButtonDisabled(true);
     }
@@ -52,7 +52,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
         toolbarConfig={toolbarConfig}
         className="text-editor"
         value={question.value}
-        onChange={(value) => setQuestion({ ...question, value })}
+        onChange={(value) => setQuestionDelegate({ ...question, value })}
       />
 
       {question.answers.map((item, index) => (

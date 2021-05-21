@@ -15,15 +15,14 @@ export type Question = {
   lock: boolean;
 };
 
-export type SetQuestionLambda = (q: Question) => Question;
-export type SetQuestionsLambda = (qs: Question[]) => Question[];
-export type SetTestNameLambda = (s: string) => string;
+export type SetQuestionsDispatch = (qs: Question[]) => Question[];
+export type SetTestNameDispatch = (s: string) => string;
 
 export interface ITestEditorContext {
   testName: string;
   questions: Question[];
-  setQuestions: (qs: Question[] | SetQuestionsLambda) => void;
-  setTestName: (t: string | SetTestNameLambda) => void;
+  setQuestions: (qs: Question[] | SetQuestionsDispatch) => void;
+  setTestName: (t: string | SetTestNameDispatch) => void;
 }
 
 export const TestEditorContext = createContext({} as ITestEditorContext);

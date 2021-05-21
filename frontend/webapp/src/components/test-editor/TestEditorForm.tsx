@@ -16,14 +16,10 @@ import {
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 
 import { MessageOverlay, QuestionEditor } from 'components';
-import { newQuestion, Question, SetQuestionLambda, TestEditorContext } from 'context';
-
-const schema = yup.object().shape({
-  testName: yup.string().required('Musisz wprowadzić nazwę testu').min(10, 'Nazwa musi mieć conajmniej 10 znaków'),
-});
+import { newQuestion, Question, TestEditorContext } from 'context';
+import { testEditorSchema } from 'const';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
@@ -36,11 +32,15 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   const { questions, setQuestions, setTestName } = useContext(TestEditorContext);
 
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(testEditorSchema),
   });
 
   const addEmptyQuestion = () => {
     setQuestions((questions) => [...questions, newQuestion()]);
+  };
+
+  const setSingleQuestion = (q: Question, pos: number) => {
+    setQuestions((questions) => [...questions.slice(0, pos), q, ...questions.slice(pos + 1)]);
   };
 
   const removeQuestion = (pos: number) => {
@@ -49,28 +49,15 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
       setCurrentDeleteTimeout(null);
       setQuestions((questions) => questions.filter((_, index) => index !== pos));
     } else if (currentDeleteTimeout == null) {
-      setQuestions((questions) => [
-        ...questions.slice(0, pos),
-        { ...questions[pos], lock: true },
-        ...questions.slice(pos + 1),
-      ]);
+      setSingleQuestion({ ...questions[pos], lock: true }, pos);
 
       setCurrentDeleteTimeout(
         setTimeout(() => {
-          setQuestions((questions) => [
-            ...questions.slice(0, pos),
-            { ...questions[pos], lock: false },
-            ...questions.slice(pos + 1),
-          ]);
+          setSingleQuestion({ ...questions[pos], lock: false }, pos);
           setCurrentDeleteTimeout(null);
         }, 1000)
       );
     }
-  };
-
-  const handleSetQuestion = (q: Question | SetQuestionLambda) => {
-    
-
   };
 
   return (
@@ -102,7 +89,12 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
               text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
               noLogo
             >
-              <QuestionEditor key={q.id} questionNo={index} question={q} setQuestion={handleSetQuestion} />
+              <QuestionEditor
+                key={q.id}
+                questionNo={index}
+                question={q}
+                setQuestionDelegate={(question) => setSingleQuestion(question, index)}
+              />
             </MessageOverlay>
 
             <InlineItem onClick={() => removeQuestion(index)}>
