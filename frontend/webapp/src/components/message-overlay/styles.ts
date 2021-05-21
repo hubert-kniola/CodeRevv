@@ -35,6 +35,7 @@ export const Title = styled.h1`
 `;
 
 export const Body = styled.p`
+  white-space: pre-wrap;
   font-size: 20px;
   font-weight: normal;
   line-height: normal;

@@ -29,6 +29,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
         ...question,
         answers: question.answers.filter((_, index) => index !== pos),
       });
+      setButtonDisabled(false);
     }
   };
 
@@ -47,6 +48,8 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
 
   return (
     <QuestionContainer>
+      {question.error && <p>question.error</p>}
+
       <label>Pytanie {questionNo}: </label>
       <RichTextEditor
         toolbarConfig={toolbarConfig}
@@ -71,6 +74,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
           </>
         )}
       </p>
+
       <Button onClick={addAnswer} disabled={buttonDisabled}>
         Dodaj odpowiedź
       </Button>
