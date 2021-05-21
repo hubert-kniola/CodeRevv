@@ -1,9 +1,8 @@
 import { FC, useRef, useState, useContext } from 'react';
 
 import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorForm } from 'components';
-import { Question, TestEditorContext, TestEditorContextProvider } from 'context';
+import { TestEditorContext, TestEditorContextProvider } from 'context';
 
-import { apiAxios } from 'utility';
 import { EditorValue } from 'react-rte';
 
 const MIN_QUESTION_BODY = 5;
@@ -21,7 +20,7 @@ const validateEditorValue = (e: EditorValue) => {
 const TestEditorIn: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { testName, questions, setQuestions } = useContext(TestEditorContext);
+  const { testName, questions } = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
 
   const getRawTestEditorData = () => ({

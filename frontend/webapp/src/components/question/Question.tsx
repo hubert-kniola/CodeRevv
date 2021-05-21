@@ -1,34 +1,41 @@
-import { FC, useEffect, useState, MouseEvent } from 'react';
+import { FC, useEffect, useState, MouseEvent, useContext } from 'react';
 import RichTextEditor from 'react-rte';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { QuestionContainer, Button, AnswerBlock, AnswerContainer } from './style';
-import { Question, Answer, newAnswer } from 'context';
+import { Question, Answer, newAnswer, TestEditorContext } from 'context';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
-  questionNo: number;
+  index: number;
   question: Question;
-  setQuestionDelegate: (q: Question) => void;
 };
 
-export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, setQuestionDelegate }) => {
+export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const { setSingleQuestion } = useContext(TestEditorContext);
 
   const replaceAnswer = (pos: number, value: Answer) => {
-    setQuestionDelegate({
-      ...question,
-      answers: [...question.answers.slice(0, pos), value, ...question.answers.slice(pos + 1)],
-    });
+    setSingleQuestion(
+      {
+        ...question,
+        answers: [...question.answers.slice(0, pos), value, ...question.answers.slice(pos + 1)],
+      },
+      index
+    );
   };
 
   const removeAnswer = (pos: number) => {
     if (question.answers.length > 2) {
-      setQuestionDelegate({
-        ...question,
-        answers: question.answers.filter((_, index) => index !== pos),
-      });
+      setSingleQuestion(
+        {
+          ...question,
+          answers: question.answers.filter((_, index) => index !== pos),
+        },
+        index
+      );
+
       setButtonDisabled(false);
     }
   };
@@ -37,10 +44,13 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
     e.preventDefault();
 
     if (question.answers.length < 10) {
-      setQuestionDelegate({
-        ...question,
-        answers: [...question.answers, newAnswer()],
-      });
+      setSingleQuestion(
+        {
+          ...question,
+          answers: [...question.answers, newAnswer()],
+        },
+        index
+      );
     } else {
       setButtonDisabled(true);
     }
@@ -50,12 +60,12 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
     <QuestionContainer>
       {question.error && <p>question.error</p>}
 
-      <label>Pytanie {questionNo}: </label>
+      <label>Pytanie {index + 1}: </label>
       <RichTextEditor
         toolbarConfig={toolbarConfig}
         className="text-editor"
         value={question.value}
-        onChange={(value) => setQuestionDelegate({ ...question, value })}
+        onChange={(value) => setSingleQuestion({ ...question, value }, index)}
       />
 
       {question.answers.map((item, index) => (

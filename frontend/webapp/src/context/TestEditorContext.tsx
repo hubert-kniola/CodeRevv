@@ -16,14 +16,15 @@ export type Question = {
   error: string | null;
 };
 
-export type SetQuestionsDispatch = (qs: Question[]) => Question[];
 export type SetTestNameDispatch = (s: string) => string;
 
 export interface ITestEditorContext {
   testName: string;
   questions: Question[];
-  setQuestions: (qs: Question[] | SetQuestionsDispatch) => void;
   setTestName: (t: string | SetTestNameDispatch) => void;
+  addEmptyQuestion: () => void;
+  setSingleQuestion: (q: Question, i: number) => void;
+  removeSingleQuestion: (i: number) => void;
 }
 
 export const TestEditorContext = createContext({} as ITestEditorContext);
@@ -48,10 +49,29 @@ export const TestEditorContextProvider: FC = ({ children }) => {
   const [testName, setTestName] = useState('');
   const [questions, setQuestions] = useState([newQuestion()] as Question[]);
 
-  
+  const addEmptyQuestion = () => {
+    setQuestions((questions) => [...questions, newQuestion()]);
+  };
+
+  const setSingleQuestion = (q: Question, pos: number) => {
+    setQuestions((questions) => [...questions.slice(0, pos), q, ...questions.slice(pos + 1)]);
+  };
+
+  const removeSingleQuestion = (pos: number) => {
+    setQuestions((questions) => questions.filter((_, index) => index !== pos));
+  };
 
   return (
-    <TestEditorContext.Provider value={{ questions, setQuestions, testName, setTestName }}>
+    <TestEditorContext.Provider
+      value={{
+        questions,
+        testName,
+        setTestName,
+        addEmptyQuestion,
+        setSingleQuestion,
+        removeSingleQuestion,
+      }}
+    >
       {children}
     </TestEditorContext.Provider>
   );

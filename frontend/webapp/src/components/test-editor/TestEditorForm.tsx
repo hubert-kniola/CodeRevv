@@ -18,7 +18,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { MessageOverlay, QuestionEditor } from 'components';
-import { newQuestion, Question, TestEditorContext } from 'context';
+import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
 
 type Props = {
@@ -29,25 +29,19 @@ type Props = {
 
 export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   const [currentDeleteTimeout, setCurrentDeleteTimeout] = useState<NodeJS.Timeout | null>(null);
-  const { questions, setQuestions, setTestName } = useContext(TestEditorContext);
+  const { questions, setTestName, setSingleQuestion, addEmptyQuestion, removeSingleQuestion } = useContext(
+    TestEditorContext
+  );
 
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(testEditorSchema),
   });
 
-  const addEmptyQuestion = () => {
-    setQuestions((questions) => [...questions, newQuestion()]);
-  };
-
-  const setSingleQuestion = (q: Question, pos: number) => {
-    setQuestions((questions) => [...questions.slice(0, pos), q, ...questions.slice(pos + 1)]);
-  };
-
   const removeQuestion = (pos: number) => {
     if (questions[pos].lock && currentDeleteTimeout != null) {
       clearTimeout(currentDeleteTimeout);
       setCurrentDeleteTimeout(null);
-      setQuestions((questions) => questions.filter((_, index) => index !== pos));
+      removeSingleQuestion(pos);
     } else if (currentDeleteTimeout == null) {
       setSingleQuestion({ ...questions[pos], lock: true }, pos);
 
@@ -89,12 +83,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
               text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
               noLogo
             >
-              <QuestionEditor
-                key={q.id}
-                questionNo={index + 1}
-                question={q}
-                setQuestionDelegate={(question) => setSingleQuestion(question, index)}
-              />
+              <QuestionEditor key={q.id} index={index} question={q} />
             </MessageOverlay>
 
             <InlineItem onClick={() => removeQuestion(index)}>
