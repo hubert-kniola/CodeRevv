@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const QuestionContainer = styled.div<{ error: boolean }>`
   min-width: 500px;
+  max-width: 900px;
   width: 95%;
   margin: 2rem auto;
   padding: 1rem;
