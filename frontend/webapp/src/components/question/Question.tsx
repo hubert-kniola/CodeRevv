@@ -3,7 +3,7 @@ import RichTextEditor from 'react-rte';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-import { QuestionContainer, Button, AnswerBlock, AnswerConteiner } from './style';
+import { QuestionContainer, Button, AnswerBlock, AnswerContainer } from './style';
 import { Question, Answer, newAnswer } from 'context';
 import { toolbarConfig } from 'const';
 
@@ -47,7 +47,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ questionNo, question, 
 
   return (
     <QuestionContainer>
-      <label>Pytanie #{questionNo}: </label>
+      <label>Pytanie {questionNo}: </label>
       <RichTextEditor
         toolbarConfig={toolbarConfig}
         className="text-editor"
@@ -105,7 +105,7 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
   };
 
   return (
-    <AnswerConteiner deleteError={deleteError}>
+    <AnswerContainer deleteError={deleteError}>
       <AnswerBlock className="test">
         <div className="div1">
           <RichTextEditor
@@ -137,6 +137,6 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answerState, setAnswerStat
           </>
         )}
       </p>
-    </AnswerConteiner>
+    </AnswerContainer>
   );
 };

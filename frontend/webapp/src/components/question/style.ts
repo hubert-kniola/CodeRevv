@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const QuestionContainer = styled.div`
-  min-width: 800px;
+  min-width: 500px;
   width: 95%;
   margin: 2rem auto;
   padding: 1rem;
@@ -49,27 +49,26 @@ export const Button = styled.button`
   }
 `;
 
-export const AnswerConteiner = styled.div<{ deleteError: boolean }>`
+export const AnswerContainer = styled.div<{ deleteError: boolean }>`
   width: 95%;
   margin: 1.5rem auto;
   padding: 1rem 1rem 1rem 1rem;
   border-radius: 0 15px 15px 15px;
-  font-size: 20px;
+  font-size: 1rem;
   background-color: #2b282d;
   box-shadow: 0px 8px 14px 4px #000000;
   transition: all 1s;
-  border: ${(props) => (props.deleteError ? '2px solid #f53030' : '2px solid #2b282d')};
+  border: ${({ deleteError }) => (deleteError ? '2px solid #f53030' : '2px solid #2b282d')};
 
   p {
-    color: #f53030;
-    font-size: 14px;
+    color: ${({ theme }) => theme.colors.text};
     margin: 0;
     align-items: center;
 
     .icon {
       font-size: 16px;
       height: 100%;
-      margin: 0 auto;
+      margin: 0 10 0 0;
     }
   }
 `;
@@ -119,7 +118,7 @@ export const AnswerBlock = styled.div`
     }
     .div3_2 {
       grid-area: 1 / 2 / 2 / 3;
-      margin-left: 0.4rem;
+      margin-left: 0.8rem;
       text-align: left;
     }
 

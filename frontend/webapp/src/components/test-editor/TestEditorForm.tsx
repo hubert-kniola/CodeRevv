@@ -91,7 +91,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
             >
               <QuestionEditor
                 key={q.id}
-                questionNo={index}
+                questionNo={index + 1}
                 question={q}
                 setQuestionDelegate={(question) => setSingleQuestion(question, index)}
               />
