@@ -13,6 +13,7 @@ export type Question = {
   value: EditorValue;
   answers: Answer[];
   lock: boolean;
+  error: string | null;
 };
 
 export type SetQuestionsDispatch = (qs: Question[]) => Question[];
@@ -40,11 +41,14 @@ export const newQuestion = () =>
     value: RichTextEditor.createEmptyValue(),
     answers: [newAnswer(), newAnswer()],
     lock: false,
+    error: null,
   } as Question);
 
 export const TestEditorContextProvider: FC = ({ children }) => {
   const [testName, setTestName] = useState('');
   const [questions, setQuestions] = useState([newQuestion()] as Question[]);
+
+  
 
   return (
     <TestEditorContext.Provider value={{ questions, setQuestions, testName, setTestName }}>
