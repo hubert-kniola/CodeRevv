@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .models import Test, Question, Answer 
+from .models import Test, Question, UserAnswer
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
@@ -102,9 +102,9 @@ async def modify_question(test_id, question_id, question: Question):
 
 
 @app.post('/test/answer', status_code=201)
-async def add_answer(test_id, answer: Answer):
+async def add_answer(test_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers.append(answer)
+    test.user_answers.append(user_answer)
     await engine.save(test)
     return {'message': 'answer added'}
 
@@ -118,11 +118,13 @@ async def delete_answer(test_id, answer_id):
 
 
 @app.patch('/test/answer', status_code=200)
-async def modify_answer(test_id, answer_id, answer: Answer):
+async def modify_answer(test_id, answer_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers[int(answer_id)] = answer
+    test.user_answers[int(answer_id)] = user_answer
     await engine.save(test)
     return {'message': 'answer modified'}
+
+
 
 
 if __name__ == '__main__':
