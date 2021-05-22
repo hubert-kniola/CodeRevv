@@ -11,7 +11,7 @@ export const List: FC = () => {
   const dashContext = useContext(DashContext);
   const dropDownRef = useRef<HTMLDivElement>(null);
 
-  userNavBarData[0].title = `Cześć, ${authState.userInfo!.name}!`;
+  userNavBarData[0].title = `Cześć, !`; //${authState.userInfo!.name}
 
   const dataToItem = (item: NavBarData) => (
     <Row onClick={() => item.action(dashContext)} id={item.id}>

@@ -24,10 +24,15 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
 
   & .text-editor {
     border-radius: 0 15px 15px 15px;
-    color: black;
     text-align: left;
+    color: black;
     background-color: ${({ theme }) => theme.colors.text};
   }
+
+  & select{
+    color: black;
+  }
+
 `;
 
 export const ErrorText = styled.div`
@@ -93,6 +98,10 @@ export const AnswerBlock = styled.div`
     grid-area: 1 / 1 / 4 / 2;
     margin: 0 0 0;
     margin: 0 1rem 0 0;
+    color: black;
+
+  }
+
   }
   .div2 {
     grid-area: 1 / 2 / 2 / 3;
