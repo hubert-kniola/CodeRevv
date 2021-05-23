@@ -21,7 +21,11 @@ def test_join(request):
 @api_view(['POST'])
 @session_authentication
 def test_create(request):
-    response = requests.post(proxy + '/test/create', json=request.data)
+    x = request.data
+    x['creator'] = 696969696
+
+    print(x)
+    response = requests.post(proxy + '/test/create', json=x)
     return Response(response, response.status_code)
 
 

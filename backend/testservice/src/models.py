@@ -12,15 +12,17 @@ class UserAnswer(EmbeddedModel):
 
 
 class TestAnswer(EmbeddedModel):
-    answer: str
-    correct: bool
+    index: int
+    content: str
+    is_correct: bool
 
 
 class Question(EmbeddedModel):
+    index: int
     question_type: Optional[str]
     content: str
     answers: List[TestAnswer]
-    max_score: Optional[float]
+    max_score: Optional[int]
 
 
 class Test(Model):

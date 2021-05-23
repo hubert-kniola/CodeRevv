@@ -4,6 +4,7 @@ import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorFor
 import { Question, TestEditorContext, TestEditorContextProvider } from 'context';
 
 import { EditorValue } from 'react-rte';
+import { apiAxios } from 'utility';
 
 const MIN_QUESTION_BODY = 5;
 const MIN_ANSWER_BODY = 1;
@@ -24,14 +25,14 @@ const TestEditorIn: FC = () => {
   const errorRef = useRef<HTMLDivElement>(null);
 
   const getRawTestEditorData = () => ({
-    testName,
+    name: testName,
     questions: questions.map((q, iQuestion) => ({
       index: iQuestion,
-      body: q.value.toString('html'),
+      content: q.value.toString('html'),
       answers: q.answers.map((a, iAnswer) => ({
         index: iAnswer,
-        body: a.value.toString('html'),
-        isCorrect: a.isCorrect,
+        content: a.value.toString('html'),
+        is_correct: a.isCorrect,
       })),
     })),
   });
@@ -90,12 +91,18 @@ const TestEditorIn: FC = () => {
     return hadErrors;
   };
 
-  const handleEditorSubmit = () => {
+  const handleEditorSubmit = async () => {
     setLoading(true);
     setError(null);
 
     if (!editorHasErrors()) {
-      console.log({ testName, data: getRawTestEditorData() });
+      try {
+        const { data } = await apiAxios.post('/test/create', getRawTestEditorData());
+
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       setError('Formularz zawiera błędy.');
       scrollIntoMessageOverlay(errorRef);
