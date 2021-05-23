@@ -170,7 +170,6 @@ export const AnswerBlock = styled.div`
 
   }
 
-  }
   .div2 {
     grid-area: 1 / 2 / 2 / 3;
     align-items: center;
