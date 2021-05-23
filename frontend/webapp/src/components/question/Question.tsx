@@ -88,6 +88,15 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
         onChange={(value) => setSingleQuestion({ ...question, value }, index)}
       />
 
+      <input
+        type="number"
+        min={1}
+        max={10}
+        step={0.5}
+        value={question.maxScore}
+        onChange={(e) => setSingleQuestion({ ...question, maxScore: +e.target.value }, index)}
+      />
+
       {question.answers.map((item, index) => (
         <AnswerEditor
           key={item.id}

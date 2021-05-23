@@ -1,21 +1,17 @@
-import { useState, useContext, createContext, FunctionComponent } from 'react';
+import { useState, useContext, createContext, FC } from 'react';
 import { Container, Frame, Title, Item, Inner, Header, Body } from './styles';
 
 import open from 'images/open.png';
 
-export const Accordion: FunctionComponent = ({ children, ...restProps }) => (
+export const Accordion: FC = ({ children, ...restProps }) => (
   <Container>
     <Inner {...restProps}>{children}</Inner>
   </Container>
 );
 
-export const AccordionTitle: FunctionComponent = ({ children, ...restProps }) => (
-  <Title {...restProps}>{children}</Title>
-);
+export const AccordionTitle: FC = ({ children, ...restProps }) => <Title {...restProps}>{children}</Title>;
 
-export const AccordionFrame: FunctionComponent = ({ children, ...restProps }) => (
-  <Frame {...restProps}>{children}</Frame>
-);
+export const AccordionFrame: FC = ({ children, ...restProps }) => <Frame {...restProps}>{children}</Frame>;
 
 interface IToggleContext {
   show: boolean;
@@ -24,8 +20,12 @@ interface IToggleContext {
 
 const ToggleContext = createContext({} as IToggleContext);
 
-export const AccordionItem: FunctionComponent = ({ children, ...restProps }) => {
-  const [show, setShow] = useState(true);
+type ItemProps = {
+  isOpen?: boolean;
+};
+
+export const AccordionItem: FC<ItemProps> = ({ children, isOpen, ...restProps }) => {
+  const [show, setShow] = useState(isOpen != null ? !isOpen : true);
 
   return (
     <ToggleContext.Provider value={{ show, setShow }}>
@@ -34,7 +34,7 @@ export const AccordionItem: FunctionComponent = ({ children, ...restProps }) => 
   );
 };
 
-export const AccordionHeader: FunctionComponent = ({ children, ...restProps }) => {
+export const AccordionHeader: FC = ({ children, ...restProps }) => {
   const { show, setShow } = useContext(ToggleContext);
 
   return (
@@ -45,7 +45,7 @@ export const AccordionHeader: FunctionComponent = ({ children, ...restProps }) =
   );
 };
 
-export const AccordionBody: FunctionComponent = ({ children, ...restProps }) => {
+export const AccordionBody: FC = ({ children, ...restProps }) => {
   const { show } = useContext(ToggleContext);
 
   return (

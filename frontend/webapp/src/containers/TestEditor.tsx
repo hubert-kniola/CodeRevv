@@ -29,6 +29,7 @@ const TestEditorIn: FC = () => {
     questions: questions.map((q, iQuestion) => ({
       index: iQuestion,
       content: q.value.toString('html'),
+      max_score: q.maxScore,
       answers: q.answers.map((a, iAnswer) => ({
         index: iAnswer,
         content: a.value.toString('html'),
@@ -97,7 +98,9 @@ const TestEditorIn: FC = () => {
 
     if (!editorHasErrors()) {
       try {
-        const { data } = await apiAxios.post('/test/create', getRawTestEditorData());
+        const raw = getRawTestEditorData();
+        console.log(raw)
+        const { data } = await apiAxios.post('/test/create', raw);
 
         console.log(data);
       } catch (err) {

@@ -17,7 +17,7 @@ import {
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { MessageOverlay, QuestionEditor } from 'components';
+import { AccordionBody, AccordionHeader, AccordionItem, MessageOverlay, QuestionEditor } from 'components';
 import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
 
@@ -87,11 +87,16 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
               }
               noLogo
             >
-              <QuestionEditor key={q.id} index={index} question={q} />
+              <AccordionItem key={q.id} isOpen>
+                <AccordionHeader>test</AccordionHeader>
+                <AccordionBody>
+                  <QuestionEditor index={index} question={q} />
+                </AccordionBody>
+              </AccordionItem>
             </MessageOverlay>
 
-            <InlineItem onClick={() => removeQuestion(index)}>
-              <RemoveIcon />
+            <InlineItem>
+              <RemoveIcon onClick={() => removeQuestion(index)} />
             </InlineItem>
           </QuestionWithDelete>
         ))}

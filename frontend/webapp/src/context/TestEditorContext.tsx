@@ -13,6 +13,7 @@ export type Question = {
   id: string;
   value: EditorValue;
   answers: Answer[];
+  maxScore: number;
   lock: boolean;
   error: string | null;
 };
@@ -43,6 +44,7 @@ export const newQuestion = () =>
     id: nanoid(),
     value: RichTextEditor.createEmptyValue(),
     answers: [newAnswer(), newAnswer()],
+    maxScore: 1,
     lock: false,
     error: null,
   } as Question);
