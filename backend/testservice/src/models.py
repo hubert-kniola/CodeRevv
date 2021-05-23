@@ -3,14 +3,7 @@ from typing import Optional, List
 from odmantic import Model, EmbeddedModel
 
 
-class Question(EmbeddedModel):
-    question_type: str
-    content: str
-    answer: str
-    max_score: float
-
-
-class Answer(EmbeddedModel):
+class UserAnswer(EmbeddedModel):
     question: int
     answer: str
     user: int
@@ -18,11 +11,29 @@ class Answer(EmbeddedModel):
     score: float
 
 
+class TestAnswer(EmbeddedModel):
+    answer: str
+    correct: bool
+
+
+class Question(EmbeddedModel):
+    question_type: Optional[str]
+    content: str
+    answers: List[TestAnswer]
+    max_score: Optional[float]
+
+
 class Test(Model):
     __test__ = False
     name: str
-    pub_test: str
+    pub_test: Optional[str]
     creator: int
-    users: List[int]
-    question: Optional[List[Question]]
-    user_answers: Optional[List[Answer]]
+    users: Optional[List[int]]
+    questions: List[Question]
+    user_answers: Optional[List[UserAnswer]]
+
+
+class TestSearcher(Model):
+    creator_id: int
+    test_id: str
+    users_id: List[int]

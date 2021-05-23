@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .models import Test, Question, Answer 
+from .models import Test, Question, UserAnswer
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
@@ -34,6 +34,13 @@ def shutdown_event():
 # modyfikacja odpowiedzi - done
 
 
+@app.post('/test/{test_id}/{user_id}', status_code=200)
+async def join_test(test_id, user_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    test.users.append(int(user_id))
+    return {'name': test.name, 'creator': test.creator, 'questions': test.questions}
+
+
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     new_test = await engine.save(test)
@@ -41,7 +48,7 @@ async def create_test(test: Test):
     return jsonable_encoder(created_test)
 
 
-@app.get('/test/list', response_model=List[Test], status_code=201)
+@app.get('/test/list', response_model=List[Test], status_code=200)
 async def tests_list():
     tests = await engine.find(Test)
     return jsonable_encoder(tests)
@@ -95,9 +102,9 @@ async def modify_question(test_id, question_id, question: Question):
 
 
 @app.post('/test/answer', status_code=201)
-async def add_answer(test_id, answer: Answer):
+async def add_answer(test_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers.append(answer)
+    test.user_answers.append(user_answer)
     await engine.save(test)
     return {'message': 'answer added'}
 
@@ -111,11 +118,13 @@ async def delete_answer(test_id, answer_id):
 
 
 @app.patch('/test/answer', status_code=200)
-async def modify_answer(test_id, answer_id, answer: Answer):
+async def modify_answer(test_id, answer_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers[int(answer_id)] = answer
+    test.user_answers[int(answer_id)] = user_answer
     await engine.save(test)
     return {'message': 'answer modified'}
+
+
 
 
 if __name__ == '__main__':

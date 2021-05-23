@@ -9,4 +9,5 @@ from django.urls import path, include
 urlpatterns = [
     path('9odgDCK35Iur8YDs3wBj/', admin.site.urls),
     path('', include('server.urls')),
+    path('', include('server.proxy.proxy_urls')),
 ]
