@@ -33,7 +33,75 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
     color: black;
   }
 
+
 `;
+
+export const GeneralQuestion = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: ${({ theme }) => theme.colors.text};
+
+  & .test{
+    width:50%;
+    text-align: left;
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.text};
+  
+
+    & label{
+      opacity: initial;
+      margin: 0 auto 0.2rem auto;
+    }
+
+    & h3{
+      font-size: 11px;
+      opacity: 0.7;
+      margin: 0;
+    }
+  }
+
+  & .ico{
+    font-size: 2rem;
+    transition: all 0.5s;
+  }
+
+  & .ico#ExpandMoreIcon{
+    margin: auto auto auto 0;
+  }
+
+  & .ico#AddIcon{
+    margin: auto  0.4rem auto auto;
+  }
+
+  & .ico#RemoveIcon{
+    margin: auto auto auto 0.4rem;
+  }
+
+  & .ico#ClearIcon{
+    margin: auto 0 auto auto;
+    :hover{
+      color: red;
+    }
+  }
+
+  & input{
+    width: 10%;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: #1f1f1f;
+    border: 2px solid ${({ theme }) => theme.colors.text};
+    border-radius: 5px;
+    padding: 0.2rem;
+
+  }
+`
+
+export const QuestionDetails = styled.div<{height: number}>`
+  height: ${ ({height}) => height +'px'};
+  max-height: auto;
+  overflow: hidden;
+  transition: height ease 0.5s;
+`
 
 export const ErrorText = styled.div`
   transition: 0.5s;
@@ -152,4 +220,4 @@ export const AnswerBlock = styled.div`
       margin: 0 auto;
     }
   }
-`;
+`
