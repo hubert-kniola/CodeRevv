@@ -1,31 +1,47 @@
 import jwt
 import requests
 from django.conf import settings
+from jwt import ExpiredSignatureError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .proxy_decorators import session_authentication
+from ..models import AuthUser
 
 proxy = r'http://127.0.0.1:8080'
+
+
+def get_user_id(request):
+    token1 = request.COOKIES['access']
+    payload = jwt.decode(token1, settings.SECRET_KEY,
+                         settings.SIMPLE_JWT['ALGORITHM'])
+    return int(payload['user_id'])
+
+
+@api_view(['POST'])
+@session_authentication
+def test_link_generate(request):
+    response = request.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']))
+    return Response(response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_join(request):
-    token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, settings.SECRET_KEY, settings.SIMPLE_JWT['ALGORITHM'])
-    response = request.post(proxy + f"/test/{request.data['test_id']}/{payload['user_id']}")
+    user_id = get_user_id(request)
+    print(user_id)
+    response = request.post(proxy + f"/test/{request.data['test_id']}/{user_id}")
     return Response(response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_create(request):
-    x = request.data
-    x['creator'] = 696969696
-
-    print(x)
-    response = requests.post(proxy + '/test/create', json=x)
+    user_id = get_user_id(request)
+    request.data['creator'] = int(user_id)
+    request.data['is_link_generated'] = False
+    print(request.data)
+    response = requests.post(proxy + '/test/create', json=request.data)
     return Response(response, response.status_code)
 
 

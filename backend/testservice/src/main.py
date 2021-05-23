@@ -9,6 +9,7 @@ from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from .models import Test, Question, UserAnswer
+from datetime import datetime
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
@@ -16,6 +17,7 @@ app = FastAPI()
 client = AsyncIOMotorClient(MONGODB_URL)
 engine = AIOEngine(motor_client=client, database='testdb')
 
+prefix = r'http://127.0.0.1:8000/api/v1'
 
 @app.on_event("shutdown")
 def shutdown_event():
@@ -34,6 +36,14 @@ def shutdown_event():
 # modyfikacja odpowiedzi - done
 
 
+@app.post('/test/link', status_code=200)
+async def generate_test_link(test_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    test.is_link_generated = True
+    await engine.save(test)
+    return {'link': f'{prefix}/test/{test_id}'}
+
+
 @app.post('/test/{test_id}/{user_id}', status_code=200)
 async def join_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
@@ -43,6 +53,7 @@ async def join_test(test_id, user_id):
 
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
+    test.pub_test = str(datetime.now())
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
     return jsonable_encoder(created_test)
