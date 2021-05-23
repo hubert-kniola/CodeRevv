@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useState, useContext } from 'react';
 
 import {
   Container,
@@ -11,69 +11,43 @@ import {
   QuestionWithDelete,
   RemoveIcon,
   CenteringContainer,
-  DummyTest,
   InlineItem,
 } from './styles';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 
-import { MessageOverlay } from 'components';
-
-const schema = yup.object().shape({
-  testName: yup.string().required('Musisz wprowadzić nazwę testu').min(10, 'Nazwa musi mieć conajmniej 10 znaków'),
-});
-
-export type Question = {
-  text: string;
-  answers: string[];
-  lock: boolean;
-};
-
-export type EditorState = {
-  testName: string;
-  questions: Question[];
-};
+import { MessageOverlay, QuestionEditor } from 'components';
+import { TestEditorContext } from 'context';
+import { testEditorSchema } from 'const';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
   title: string;
   buttonText: string;
-  editorState: EditorState;
-  setEditorState: (state: EditorState) => void;
 };
 
-export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorState, setEditorState }) => {
+export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   const [currentDeleteTimeout, setCurrentDeleteTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { questions, setTestName, setSingleQuestion, addEmptyQuestion, removeSingleQuestion } = useContext(
+    TestEditorContext
+  );
+
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(testEditorSchema),
   });
 
-  const addEmptyQuestion = () => {
-    const { questions } = editorState;
-    setEditorState({ ...editorState, questions: [...questions, { text: 'TEST', answers: [], lock: false }] });
-  };
-
   const removeQuestion = (pos: number) => {
-    const { questions } = editorState;
-
-    if (questions[pos].lock && currentDeleteTimeout != null) {
+    if (questions.length > 1 && questions[pos].lock && currentDeleteTimeout != null) {
       clearTimeout(currentDeleteTimeout);
       setCurrentDeleteTimeout(null);
-      setEditorState({ ...editorState, questions: questions.filter((_, index) => index !== pos) });
+      removeSingleQuestion(pos);
     } else if (currentDeleteTimeout == null) {
-      setEditorState({
-        ...editorState,
-        questions: [...questions.slice(0, pos), { ...questions[pos], lock: true }, ...questions.slice(pos + 1)],
-      });
+      setSingleQuestion({ ...questions[pos], lock: true }, pos);
 
       setCurrentDeleteTimeout(
         setTimeout(() => {
-          setEditorState({
-            ...editorState,
-            questions: [...questions.slice(0, pos), { ...questions[pos], lock: false }, ...questions.slice(pos + 1)],
-          });
+          setSingleQuestion({ ...questions[pos], lock: false }, pos);
           setCurrentDeleteTimeout(null);
         }, 1000)
       );
@@ -91,7 +65,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
             type="text"
             placeholder="Nazwa testu..."
             ref={register}
-            onChange={(e) => setEditorState({ ...editorState, testName: e.target.value })}
+            onChange={(e) => setTestName(e.target.value)}
           />
         </CenteringContainer>
         <CenteringContainer>
@@ -102,14 +76,18 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText, editorS
 
         <Header>Pytania</Header>
 
-        {editorState.questions?.map((q, index) => (
+        {questions.map((q, index) => (
           <QuestionWithDelete>
             <MessageOverlay
-              active={editorState.questions[index].lock}
-              text="Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk."
+              active={q.lock}
+              text={
+                questions.length > 1
+                  ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
+                  : 'Test musi zawierać przynajmniej jedno pytanie!'
+              }
               noLogo
             >
-              <DummyTest key={index}>{q.text}</DummyTest>
+              <QuestionEditor key={q.id} index={index} question={q} />
             </MessageOverlay>
 
             <InlineItem onClick={() => removeQuestion(index)}>

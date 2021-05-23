@@ -4,12 +4,12 @@ import LoadingOverlay from 'react-loading-overlay-ts';
 import logo from 'images/logo.png';
 
 export const DummyContainer = styled.div`
-  display: grid;
+  display: block;
   height: 100px;
 `;
 
 export const InnerContainer = styled.div`
-  display: grid;
+  display: block;
   height: 200px;
 `;
 
@@ -19,6 +19,7 @@ export const Overlay = styled(LoadingOverlay)`
     border: 0 solid ${({ theme }) => theme.colors.alphabg};
     box-shadow: 0 0 50px 50px ${({ theme }) => theme.colors.alphabg};
   }
+  margin-bottom: 100px;
 `;
 
 export const Title = styled.h1`
@@ -35,6 +36,7 @@ export const Title = styled.h1`
 `;
 
 export const Body = styled.p`
+  white-space: pre-wrap;
   font-size: 20px;
   font-weight: normal;
   line-height: normal;
