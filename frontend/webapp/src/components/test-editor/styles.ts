@@ -72,6 +72,7 @@ export const Input = styled.input`
   border: 0px solid transparent;
   border-radius: 15px;
   background-color: ${({ theme }) => theme.colors.setting};
+  box-shadow: 0px 8px 14px 4px #000000;
 `;
 
 export const Error = styled.h3`
@@ -91,6 +92,7 @@ export const Button = styled.button`
   color: ${({ theme }) => theme.colors.text};
   font-size: 20px;
   cursor: pointer;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   &:hover {
     transition: all 0.5s ease-in-out;
@@ -104,11 +106,13 @@ export const NewQuestionButton = styled.div`
   background: ${({ theme }) => theme.colors.setting};
   color: ${({ theme }) => theme.colors.text};
   border-radius: 15px;
+  margin: 2rem auto 0;
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
   justify-content: center;
   text-align: center;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   &:hover {
     transition: all 0.5s ease-in-out;
@@ -117,72 +121,7 @@ export const NewQuestionButton = styled.div`
   }
 `;
 
-export const PlusIcon = styled.img`
-  filter: invert(1);
-  height: 20px;
-  display: inline-block;
-  user-select: none;
-
-  transition: all 0.1s ease-in-out;
-  margin-right: 15px;
-
-  ${({ theme }) =>
-    theme.name === 'light' &&
-    css`
-      filter: invert(0);
-    `}
-`;
-
-PlusIcon.defaultProps = {
-  alt: 'Add',
-  src: plusImg,
-};
-
-export const RemoveIcon = styled.img`
-  filter: invert(1);
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-
-  height: 30px;
-  position: sticky;
-  margin-top: 0;
-  margin-left: 50px;
-  display: inline-block;
-
-  ${({ theme }) =>
-    theme.name === 'light' &&
-    css`
-      filter: invert(0);
-    `}
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-RemoveIcon.defaultProps = {
-  alt: 'Remove',
-  src: plusImg,
-};
-
-export const QuestionWithDelete = styled.div`
-  margin: 40px;
-  display: flex;
-  justify-content: center;
-`;
-
-export const InlineItem = styled.div`
-  display: inline-block;
+export const QuestionContainer = styled.div`
   margin: 0;
-`;
-
-export const DummyTest = styled.div`
-  width: min(600px, 60vw);
-  height: 100px;
-  margin-inline: 20px;
-  background-color: yellow;
-  display: inline-block;
+  justify-content: center;
 `;

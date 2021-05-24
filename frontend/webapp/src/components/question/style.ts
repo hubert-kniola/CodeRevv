@@ -4,7 +4,7 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
   min-width: 500px;
   max-width: 900px;
   width: 95%;
-  margin: 2rem auto;
+  margin: 0.3rem auto;
   padding: 1rem;
   background-color: #1f1f1f;
   border-radius: 15px;
@@ -44,6 +44,14 @@ export const GeneralQuestion = styled.div<{ open: boolean }>`
     text-align: left;
     font-size: 12px;
     color: ${({ theme }) => theme.colors.text};
+
+    max-height: 40px;
+
+    & .deleteOverlay {
+      max-height: 30px;
+      font-size: 14px;
+      margin: auto;
+    }
 
     & label {
       opacity: initial;

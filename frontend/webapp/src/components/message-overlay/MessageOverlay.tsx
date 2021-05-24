@@ -8,6 +8,7 @@ type BaseProps = {
   title?: string;
   text?: string;
   noLogo?: boolean;
+  className?: string;
 };
 
 export const scrollIntoMessageOverlay = (messageRef: RefObject<HTMLDivElement>) => {
@@ -17,7 +18,7 @@ export const scrollIntoMessageOverlay = (messageRef: RefObject<HTMLDivElement>) 
 };
 
 export const MessageOverlay = forwardRef<HTMLDivElement, BaseProps>(
-  ({ children, active, text, title, noLogo }, ref) => {
+  ({ children, active, text, title, noLogo, className }, ref) => {
     const noChildren = () => React.Children.count(React.Children.toArray(children)) <= 0;
 
     return (
@@ -27,7 +28,7 @@ export const MessageOverlay = forwardRef<HTMLDivElement, BaseProps>(
           text={
             text != null ? (
               <>
-                <Body>{text}</Body>
+                <Body className={className}>{text}</Body>
                 {!noLogo && <Logo />}
               </>
             ) : (
@@ -36,6 +37,7 @@ export const MessageOverlay = forwardRef<HTMLDivElement, BaseProps>(
           }
           spinner={title != null && <Title>{title}</Title>}
           active={active}
+          className={className}
         >
           {noChildren() && active ? <InnerContainer /> : children}
         </Overlay>

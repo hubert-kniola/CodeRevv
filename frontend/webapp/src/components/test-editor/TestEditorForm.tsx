@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState, useContext } from 'react';
+import { FC, FormEvent, useState, useContext, useRef } from 'react';
 
 import {
   Container,
@@ -7,17 +7,14 @@ import {
   Header,
   Button,
   NewQuestionButton,
-  PlusIcon,
-  QuestionWithDelete,
-  RemoveIcon,
-  CenteringContainer,
-  InlineItem,
+  QuestionContainer,
+  CenteringContainer
 } from './styles';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { MessageOverlay, QuestionEditor } from 'components';
+import { QuestionEditor } from 'components';
 import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
 
@@ -33,6 +30,10 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
     TestEditorContext
   );
 
+  const questionsRef = useRef(questions);
+  questionsRef.current = questions;
+
+
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(testEditorSchema),
   });
@@ -47,7 +48,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
 
       setCurrentDeleteTimeout(
         setTimeout(() => {
-          setSingleQuestion({ ...questions[pos], lock: false }, pos);
+          setSingleQuestion({ ...questionsRef.current[pos], lock: false }, pos);
           setCurrentDeleteTimeout(null);
         }, 1000)
       );
@@ -72,20 +73,19 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
           <Error>{errors['testName']?.message}</Error>
         </CenteringContainer>
 
-        <hr />
+        <hr/>
 
         <Header>Pytania</Header>
 
         {questions.map((q, index) => (
-          <QuestionWithDelete>
+          <QuestionContainer>
             <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
-          </QuestionWithDelete>
+          </QuestionContainer>
         ))}
 
         <CenteringContainer>
           <NewQuestionButton onClick={addEmptyQuestion}>
-            <PlusIcon />
-            <InlineItem>Dodaj pytanie</InlineItem>
+            Dodaj pytanie
           </NewQuestionButton>
         </CenteringContainer>
 

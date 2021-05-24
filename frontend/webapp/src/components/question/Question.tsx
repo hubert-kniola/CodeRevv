@@ -99,16 +99,17 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
     <QuestionContainer error={question.error != null}>
       <GeneralQuestion open={open}>
         <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={showQuestionDetails} />
-        <MessageOverlay
-          active={question.lock}
-          text={
-            questions.length > 1
-              ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
-              : 'Test musi zawierać przynajmniej jedno pytanie!'
-          }
-          noLogo
-        >
-          <div className="test">
+        <div className="test">
+          <MessageOverlay
+            className="deleteOverlay"
+            active={question.lock}
+            text={
+              questions.length > 1
+                ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
+                : 'Test musi zawierać przynajmniej jedno pytanie!'
+            }
+            noLogo
+          >
             <label>Pytanie {index + 1}: </label>
             <h3>
               {question.value
@@ -117,8 +118,8 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
                 .replace(/(<([^>]+)>)/gi, '')
                 .replace(/&nbsp;/g, ' ') + '...'}
             </h3>
-          </div>
-        </MessageOverlay>
+          </MessageOverlay>
+        </div>
 
         <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
         <input value={question.maxScore} />
