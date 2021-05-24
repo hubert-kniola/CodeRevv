@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { LeftSidebar } from 'components';
 
-import { DashNavbar, TestEditor, UserFeed } from 'containers';
+import { DashNavbar, TestEditor, UserFeed, TestList } from 'containers';
 import { useParams } from 'react-router-dom';
 
 type RouteParams = {
@@ -25,7 +25,7 @@ export const UserDashboard: FC = () => {
       }
     } else if (verb === 'view') {
       if (resource === 'tests') {
-        //TODO
+        MainComponent = TestList;
       } else if (resource === 'groups') {
         //TODO
       }

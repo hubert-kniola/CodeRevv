@@ -1,6 +1,4 @@
-import styled, { css } from 'styled-components';
-
-import plusImg from 'images/open.png';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   width: min(80vw, 1000px);
