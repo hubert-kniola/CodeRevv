@@ -25,18 +25,6 @@ def shutdown_event():
     client.close()
 
 
-# tworzenie testu - do zmiany
-# usuwanie testu - done
-# dodawanie uzytkownika do testu - done
-# usuwanie uzytkownika z testu - done
-# dodawanie pytania - done
-# usuwanie pytania - done
-# modyfikacja pytania - done
-# dodawanie odpowiedzi - done
-# usuwanie odpowiedzi - done
-# modyfikacja odpowiedzi - done
-
-
 @app.post('/test/link', status_code=200)
 async def generate_test_link(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
@@ -51,7 +39,8 @@ async def generate_test_link(test_id, user_id):
 @app.post('/test/{test_id}/{user_id}', status_code=200)
 async def join_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.users.append(int(user_id))
+    if user_id not in test.users:
+        test.users.append(int(user_id))
     return {'name': test.name, 'creator': test.creator, 'questions': test.questions}
 
 
@@ -95,7 +84,7 @@ async def delete_user(test_id, user_id):
 @app.post('/test/question', status_code=200)
 async def add_question(test_id, question: Question):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.question.append(question)
+    test.questions.append(question)
     await engine.save(test)
     return {'message': 'question added'}
 
@@ -103,7 +92,7 @@ async def add_question(test_id, question: Question):
 @app.delete('/test/question', status_code=204)
 async def delete_question(test_id, question_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.question.pop(int(question_id))
+    test.questions.pop(int(question_id))
     await engine.save(test)
     return {'message': 'question deleted'}
 
@@ -111,33 +100,48 @@ async def delete_question(test_id, question_id):
 @app.patch('/test/question', status_code=200)
 async def modify_question(test_id, question_id, question: Question):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.question[int(question_id)] = question
+    test.questions[int(question_id)] = question
     await engine.save(test)
     return {'message': 'question modified'}
 
 
-@app.post('/test/answer', status_code=201)
-async def add_answer(test_id, user_answer: UserAnswer):
+@app.patch('/test/save', status_code=200)
+async def save_test(test_id, question_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers.append(user_answer)
+    answers = test.questions[question_id].user_answers
+    is_found = False
+    for x, answer in enumerate(answers):
+        if user_answer.user is answer.user:
+            answers[x] = user_answer
+            is_found = True
+            break
+    if not is_found:
+        answers.append(user_answer)
     await engine.save(test)
-    return {'message': 'answer added'}
 
 
-@app.delete('/test/answer', status_code=204)
-async def delete_answer(test_id, answer_id):
-    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers.pop(int(answer_id))
-    await engine.save(test)
-    return {'message': 'answer deleted'}
-
-
-@app.patch('/test/answer', status_code=200)
-async def modify_answer(test_id, answer_id, user_answer: UserAnswer):
-    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.user_answers[int(answer_id)] = user_answer
-    await engine.save(test)
-    return {'message': 'answer modified'}
+# @app.post('/test/answer', status_code=201)
+# async def add_answer(test_id, user_answer: UserAnswer):
+#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+#     test.user_answers.append(user_answer)
+#     await engine.save(test)
+#     return {'message': 'answer added'}
+#
+#
+# @app.delete('/test/answer', status_code=204)
+# async def delete_answer(test_id, answer_id):
+#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+#     test.user_answers.pop(int(answer_id))
+#     await engine.save(test)
+#     return {'message': 'answer deleted'}
+#
+#
+# @app.patch('/test/answer', status_code=200)
+# async def modify_answer(test_id, answer_id, user_answer: UserAnswer):
+#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+#     test.user_answers[int(answer_id)] = user_answer
+#     await engine.save(test)
+#     return {'message': 'answer modified'}
 
 
 if __name__ == '__main__':

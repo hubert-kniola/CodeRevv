@@ -21,7 +21,16 @@ def get_user_id(request):
 @api_view(['POST'])
 @session_authentication
 def test_link_generate(request):
-    response = requests.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']) + '&user_id=' + str(get_user_id(request)))
+    response = requests.post(f"{proxy}/test/link?test_id={str(request.data['test_id'])}&user_id={str(get_user_id(request))}")
+    return Response(response, response.status_code)
+
+
+@api_view(['PATCH'])
+@session_authentication
+def test_save(request):
+    response = requests.patch(
+        f"{proxy}/test/save?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}",
+        json=request.data['user_answer'])
     return Response(response, response.status_code)
 
 
@@ -29,7 +38,7 @@ def test_link_generate(request):
 @session_authentication
 def test_join(request):
     user_id = get_user_id(request)
-    response = requests.post(proxy + f"/test/{request.data['test_id']}/{user_id}")
+    response = requests.post(f"{proxy}/test/{str(request.data['test_id'])}/{str(user_id)}")
     return Response(response, response.status_code)
 
 
@@ -40,75 +49,79 @@ def test_create(request):
     request.data['creator'] = int(user_id)
     request.data['is_link_generated'] = False
     print(request.data)
-    response = requests.post(proxy + '/test/create', json=request.data)
+    response = requests.post(f"{proxy}/test/create", json=request.data)
     return Response(response, response.status_code)
 
 
 @api_view(['GET'])
 @session_authentication
 def test_list(request):
-    response = requests.get(proxy + '/test/list')
-    return Response({'tests':response.json()}, response.status_code)
+    response = requests.get(f"{proxy}/test/list")
+    return Response({'tests': response.json()}, response.status_code)
 
 
 @api_view(['DELETE'])
 @session_authentication
 def test_delete(request):
-    response = requests.delete(proxy + '/test/delete?test_id=' + str(request.data['test_id']))
+    response = requests.delete(f"{proxy}/test/delete?test_id={str(request.data['test_id'])}")
     return Response(response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_user(request):
-    response = requests.post(proxy + '/test/user', json=request.data)
+    response = requests.post(f"{proxy}/test/user", json=request.data)
     return Response(response, response.status_code)
 
 
 @api_view(['DELETE'])
 @session_authentication
 def test_user(request):
-    response = requests.delete(proxy + '/test/user?test_id=' + str(request.data['test_id']) + '&user_id=' + str(request.data['user_id']))
+    response = requests.delete(
+        f"{proxy}/test/user?test_id={str(request.data['test_id'])}&user_id={str(request.data['user_id'])}")
     return Response(response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_question(request):
-    response = requests.post(proxy + '/test/question?test_id=' + str(request.data['test_id']), json=request.data['data'])
+    response = requests.post(f"{proxy}/test/question?test_id={str(request.data['test_id'])}", json=request.data['data'])
     return Response(response, response.status_code)
 
 
 @api_view(['DELETE'])
 @session_authentication
 def test_question(request):
-    response = requests.delete(proxy + '/test/question?test_id=' + str(request.data['test_id']) + '&question_id=' + str(request.data['question_id']))
+    response = requests.delete(f"{proxy}/test/question?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}")
     return Response(response, response.status_code)
 
 
 @api_view(['PATCH'])
 @session_authentication
 def test_question(request):
-    response = requests.patch(proxy + '/test/question?test_id=' + str(request.data['test_id']) + '&question_id=' + str(request.data['question_id']), json=request.data['data'])
+    response = requests.patch(f"{proxy}/test/question?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}", json=request.data['data'])
     return Response(response, response.status_code)
 
 
-@api_view(['POST'])
-@session_authentication
-def test_answer(request):
-    response = requests.post(proxy + '/test/answer?test_id=' + str(request.data['test_id']), json=request.data['data'])
-    return Response(response, response.status_code)
-
-
-@api_view(['DELETE'])
-@session_authentication
-def test_answer(request):
-    response = requests.delete(proxy + '/test/answer?test_id=' + str(request.data['test_id']) + '&answer_id=' + str(request.data['answer_id']))
-    return Response(response, response.status_code)
-
-
-@api_view(['PATCH'])
-@session_authentication
-def test_answer(request):
-    response = requests.patch(proxy + '/test/answer?test_id=' + str(request.data['test_id']) + '&answer_id=' + str(request.data['answer_id']), json=request.data['data'])
-    return Response(response, response.status_code)
+# @api_view(['POST'])
+# @session_authentication
+# def test_answer(request):
+#     response = requests.post(f"{proxy}/test/answer?test_id={str(request.data['test_id'])}", json=request.data['data'])
+#     return Response(response, response.status_code)
+#
+#
+# @api_view(['DELETE'])
+# @session_authentication
+# def test_answer(request):
+#     response = requests.delete(
+#         f"{proxy}/test/answer?test_id={str(request.data['test_id'])}&answer_id={str(request.data['answer_id'])}")
+#     return Response(response, response.status_code)
+#
+#
+# @api_view(['PATCH'])
+# @session_authentication
+# def test_answer(request):
+#     response = requests.patch(
+#         f"{proxy}/test/answer?test_id={str(request.data['test_id'])}&answer_id={str(request.data['answer_id'])}",
+#         json=request.data['data'])
+#     return Response(response, response.status_code)

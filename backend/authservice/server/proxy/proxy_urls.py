@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/v1/test/delete', test_delete, name='test_delete'),
     path('api/v1/test/user', test_user, name='test_user'),
     path('api/v1/test/question', test_question, name='test_question'),
-    path('api/v1/test/answer', test_answer, name='test_answer'),
+    # path('api/v1/test/answer', test_answer, name='test_answer'),
     path('api/v1/test/link', test_link_generate, name='test_link_generate'),
+    path('api/v1/test/save', test_save, name='test_save'),
 ]
