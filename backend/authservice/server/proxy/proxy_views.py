@@ -48,7 +48,7 @@ def test_create(request):
 @session_authentication
 def test_list(request):
     response = requests.get(proxy + '/test/list')
-    return Response(response, response.status_code)
+    return Response({'tests':response.json()}, response.status_code)
 
 
 @api_view(['DELETE'])

@@ -19,6 +19,7 @@ engine = AIOEngine(motor_client=client, database='testdb')
 
 prefix = r'http://127.0.0.1:8000/api/v1'
 
+
 @app.on_event("shutdown")
 def shutdown_event():
     client.close()
@@ -62,7 +63,7 @@ async def create_test(test: Test):
 @app.get('/test/list', response_model=List[Test], status_code=200)
 async def tests_list():
     tests = await engine.find(Test)
-    return jsonable_encoder(tests)
+    return tests
 
 
 @app.delete('/test/delete', status_code=204)
@@ -136,7 +137,6 @@ async def modify_answer(test_id, answer_id, user_answer: UserAnswer):
     return {'message': 'answer modified'}
 
 
-
-
 if __name__ == '__main__':
-    uvicorn.run('src.main:app', host='0.0.0.0', port=8080, reload=True, debug=True)
+    uvicorn.run('src.main:app', host='0.0.0.0',
+                port=8080, reload=True, debug=True)

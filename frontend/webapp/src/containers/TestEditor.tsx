@@ -5,6 +5,7 @@ import { Question, TestEditorContext, TestEditorContextProvider } from 'context'
 
 import { EditorValue } from 'react-rte';
 import { apiAxios } from 'utility';
+import { useHistory } from 'react-router-dom';
 
 const MIN_QUESTION_BODY = 5;
 const MIN_ANSWER_BODY = 1;
@@ -23,6 +24,7 @@ const TestEditorIn: FC = () => {
   const [loading, setLoading] = useState(false);
   const { testName, questions, setSingleQuestion } = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
+  const history = useHistory();
 
   const getRawTestEditorData = () => ({
     name: testName,
@@ -98,13 +100,17 @@ const TestEditorIn: FC = () => {
 
     if (!editorHasErrors()) {
       try {
-        const raw = getRawTestEditorData();
-        console.log(raw)
-        const { data } = await apiAxios.post('/test/create', raw);
+        await apiAxios.post('/test/create', getRawTestEditorData());
+        history.push('/dashboard/view/tests');
 
-        console.log(data);
       } catch (err) {
-        console.log(err);
+        if (err.response) {
+          setError('Nie udało się stworzyć testu.\nSpróbuj ponownie po odświeżeniu strony.');
+        } else {
+          setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+        }
+
+        scrollIntoMessageOverlay(errorRef);
       }
     } else {
       setError('Formularz zawiera błędy.');

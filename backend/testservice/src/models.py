@@ -1,14 +1,13 @@
 from typing import Optional, List
 
 from odmantic import Model, EmbeddedModel
-from datetime import datetime
-from fastapi import Body
 
-class UserAnswer(EmbeddedModel):
-    question: int
+#ZMIANY MODELI!!
+
+class UserAnswer(EmbeddedModel):#!
     content: str
     user: int
-    comment: str
+    comment: Optional[str] #!
     score: float
 
 
@@ -16,6 +15,7 @@ class TestAnswer(EmbeddedModel):
     index: int
     content: str
     is_correct: bool
+    users_voted: Optional[List[int]] #!
 
 
 class Question(EmbeddedModel):
@@ -24,16 +24,16 @@ class Question(EmbeddedModel):
     content: str
     answers: List[TestAnswer]
     max_score: Optional[float]
+    user_answers: Optional[List[UserAnswer]]#!
 
 
-class Test(Model):
+class Test(Model):#!
     __test__ = False
     name: str
-    pub_test: str
+    pub_test: Optional[str]
     creator: int
     users: Optional[List[int]]
     questions: List[Question]
-    user_answers: Optional[List[UserAnswer]]
     is_link_generated: bool
 
 
