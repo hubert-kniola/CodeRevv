@@ -21,7 +21,7 @@ def get_user_id(request):
 @api_view(['POST'])
 @session_authentication
 def test_link_generate(request):
-    response = requests.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']))
+    response = requests.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']) + '&user_id=' + str(get_user_id(request)))
     return Response(response, response.status_code)
 
 

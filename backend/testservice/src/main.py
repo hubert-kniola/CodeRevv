@@ -38,11 +38,14 @@ def shutdown_event():
 
 
 @app.post('/test/link', status_code=200)
-async def generate_test_link(test_id):
+async def generate_test_link(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    test.is_link_generated = True
-    await engine.save(test)
-    return {'link': f'{prefix}/test/{test_id}'}
+    if test.creator is user_id:
+        test.is_link_generated = True
+        await engine.save(test)
+        return {'link': f'{prefix}/test/{test_id}'}
+    else:
+        return {'link': 'Request was not send by creator'}
 
 
 @app.post('/test/{test_id}/{user_id}', status_code=200)
