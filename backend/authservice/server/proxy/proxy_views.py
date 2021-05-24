@@ -21,7 +21,7 @@ def get_user_id(request):
 @api_view(['POST'])
 @session_authentication
 def test_link_generate(request):
-    response = request.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']))
+    response = requests.post(proxy + f"/test/link?test_id=" + str(request.data['test_id']))
     return Response(response, response.status_code)
 
 
@@ -29,8 +29,7 @@ def test_link_generate(request):
 @session_authentication
 def test_join(request):
     user_id = get_user_id(request)
-    print(user_id)
-    response = request.post(proxy + f"/test/{request.data['test_id']}/{user_id}")
+    response = requests.post(proxy + f"/test/{request.data['test_id']}/{user_id}")
     return Response(response, response.status_code)
 
 
