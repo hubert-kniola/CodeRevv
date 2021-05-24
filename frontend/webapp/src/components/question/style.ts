@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const QuestionContainer = styled.div<{ error: boolean }>`
   min-width: 500px;
@@ -29,62 +29,70 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
     background-color: ${({ theme }) => theme.colors.text};
   }
 
-  & select{
+  & select {
     color: black;
   }
-
-
 `;
 
-export const GeneralQuestion = styled.div`
+export const GeneralQuestion = styled.div<{ open: boolean }>`
   display: flex;
   justify-content: space-between;
   color: ${({ theme }) => theme.colors.text};
 
-  & .test{
-    width:50%;
+  & .test {
+    width: 50%;
     text-align: left;
     font-size: 12px;
     color: ${({ theme }) => theme.colors.text};
-  
 
-    & label{
+    & label {
       opacity: initial;
       margin: 0 auto 0.2rem auto;
     }
 
-    & h3{
+    & h3 {
       font-size: 11px;
       opacity: 0.7;
       margin: 0;
     }
   }
 
-  & .ico{
+  & .ico {
     font-size: 2rem;
     transition: all 0.5s;
+    cursor: pointer;
   }
 
-  & .ico#ExpandMoreIcon{
+  & .ico#ExpandMoreIcon {
     margin: auto auto auto 0;
+
+    ${({ open }) =>
+      open &&
+      css`
+        transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+      `}
   }
 
-  & .ico#AddIcon{
-    margin: auto  0.4rem auto auto;
+  & .ico#AddIcon {
+    margin: auto 0.4rem auto auto;
   }
 
-  & .ico#RemoveIcon{
+  & .ico#RemoveIcon {
     margin: auto auto auto 0.4rem;
   }
 
-  & .ico#ClearIcon{
+  & .ico#ClearIcon {
     margin: auto 0 auto auto;
-    :hover{
+    :hover {
       color: red;
     }
   }
 
-  & input{
+  & input {
     width: 10%;
     text-align: center;
     font-size: 1.5rem;
@@ -92,16 +100,8 @@ export const GeneralQuestion = styled.div`
     border: 2px solid ${({ theme }) => theme.colors.text};
     border-radius: 5px;
     padding: 0.2rem;
-
   }
-`
-
-export const QuestionDetails = styled.div<{height: number}>`
-  height: ${ ({height}) => height +'px'};
-  max-height: auto;
-  overflow: hidden;
-  transition: height ease 0.5s;
-`
+`;
 
 export const ErrorText = styled.div`
   transition: 0.5s;
@@ -167,7 +167,6 @@ export const AnswerBlock = styled.div`
     margin: 0 0 0;
     margin: 0 1rem 0 0;
     color: black;
-
   }
 
   .div2 {
@@ -219,4 +218,4 @@ export const AnswerBlock = styled.div`
       margin: 0 auto;
     }
   }
-`
+`;

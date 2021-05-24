@@ -5,37 +5,30 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ClearIcon from '@material-ui/icons/Clear';
 import Grow from '@material-ui/core/Grow';
+import Collapse from '@material-ui/core/Collapse';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import {
-  QuestionContainer,
-  GeneralQuestion,
-  QuestionDetails,
-  Button,
-  AnswerBlock,
-  AnswerContainer,
-  ErrorText,
-} from './style';
+import { QuestionContainer, GeneralQuestion, Button, AnswerBlock, AnswerContainer, ErrorText } from './style';
 import { Question, Answer, newAnswer, TestEditorContext } from 'context';
+import { MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
   index: number;
   question: Question;
+  onDelete: () => void;
 };
 
-export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => {
+export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDelete }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [grow, setGrow] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [questionHeight, setQuestionHeight] = useState(0);
-  const [questionHeightDiff, setQuestionHeightDiff] = useState({ change: true, diff: 0, answerCount: 0 });
+  const [open, setOpen] = useState(true);
+  const { questions, setSingleQuestion } = useContext(TestEditorContext);
 
-  const { setSingleQuestion } = useContext(TestEditorContext);
-  const questionDetailsRef = useRef<HTMLDivElement>(null);
   const questionRef = useRef(question);
   questionRef.current = question;
+
   const replaceAnswer = (pos: number, value: Answer) => {
     setSingleQuestion(
       {
@@ -88,83 +81,53 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
     }
   }, [question.value]);
 
-  const AddPoint = () => {
+  const addPoint = () => {
     if (question.maxScore < 10) {
       setSingleQuestion({ ...question, maxScore: question.maxScore + 0.5 }, index);
     }
   };
 
-  const RemovePoint = () => {
+  const removePoint = () => {
     if (question.maxScore > 1) {
       setSingleQuestion({ ...question, maxScore: question.maxScore - 0.5 }, index);
     }
   };
 
-  const ShowQuestionDetails = () => {
-    setOpen((open) => !open);
-
-    if (open) {
-      setQuestionHeight(questionDetailsRef.current!.scrollHeight);
-    } else {
-      setQuestionHeight(0);
-    }
-  };
-
-  const DefaultHeightDiff = () => {
-    setQuestionHeightDiff({
-      change: false,
-      diff: questionHeightDiff.diff,
-      answerCount: questionRef.current.answers.length,
-    });
-  }
-
-  useEffect(() => {
-    if (questionRef.current.answers.length > questionHeightDiff.answerCount) {
-      setQuestionHeight(questionDetailsRef.current!.scrollHeight);
-
-      if (questionHeightDiff.change && questionHeightDiff.diff === 0) {
-        setQuestionHeightDiff({
-          change: true,
-          diff: questionDetailsRef.current!.scrollHeight,
-          answerCount: questionRef.current.answers.length,
-        });
-      } else if (questionHeightDiff.change) {
-        setQuestionHeightDiff({
-          change: false,
-          diff: questionDetailsRef.current!.scrollHeight - questionHeightDiff.diff,
-          answerCount: questionRef.current.answers.length,
-        });
-      } else {
-        DefaultHeightDiff()
-      }
-    } else {
-      setQuestionHeight(questionDetailsRef.current!.scrollHeight - questionHeightDiff.diff);
-      DefaultHeightDiff()
-    }
-  }, [questionRef.current.answers.length]);
-
+  const showQuestionDetails = () => setOpen((open) => !open);
 
   return (
     <QuestionContainer error={question.error != null}>
-      <GeneralQuestion>
-        <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={ShowQuestionDetails} />
-        <div className="test">
-          <label>Pytanie {index + 1}: </label>
-          <h3>
-            {question.value
-              .toString('html')
-              .slice(0, 50)
-              .replace(/(<([^>]+)>)/gi, '')
-              .replace(/&nbsp;/g, ' ') + '...'}
-          </h3>
-        </div>
-        <AddIcon id="AddIcon" className="ico" onClick={AddPoint} />
+      <GeneralQuestion open={open}>
+        <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={showQuestionDetails} />
+        <MessageOverlay
+          active={question.lock}
+          text={
+            questions.length > 1
+              ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
+              : 'Test musi zawierać przynajmniej jedno pytanie!'
+          }
+          noLogo
+        >
+          <div className="test">
+            <label>Pytanie {index + 1}: </label>
+            <h3>
+              {question.value
+                .toString('html')
+                .slice(0, 50)
+                .replace(/(<([^>]+)>)/gi, '')
+                .replace(/&nbsp;/g, ' ') + '...'}
+            </h3>
+          </div>
+        </MessageOverlay>
+
+        <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
         <input value={question.maxScore} />
-        <RemoveIcon id="RemoveIcon" className="ico" onClick={RemovePoint} />
-        <ClearIcon id="ClearIcon" className="ico" />
+
+        <RemoveIcon id="RemoveIcon" className="ico" onClick={removePoint} />
+        <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
       </GeneralQuestion>
 
-      <QuestionDetails height={questionHeight} ref={questionDetailsRef}>
+      <Collapse in={open} timeout={500}>
         <Grow in={grow} timeout={500}>
           <ErrorText>{question.error}</ErrorText>
         </Grow>
@@ -184,12 +147,16 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question }) => 
             answersCount={question.answers.length}
           />
         ))}
-        { buttonDisabled && <p>Każde pytanie może mieć tylko 10 odpowiedzi <HighlightOffIcon className="icon" />{' '}</p>}
+        {buttonDisabled && (
+          <p>
+            Każde pytanie może mieć tylko 10 odpowiedzi <HighlightOffIcon className="icon" />{' '}
+          </p>
+        )}
 
         <Button onClick={addAnswer} disabled={buttonDisabled}>
           Dodaj odpowiedź
         </Button>
-      </QuestionDetails>
+      </Collapse>
     </QuestionContainer>
   );
 };

@@ -78,21 +78,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
 
         {questions.map((q, index) => (
           <QuestionWithDelete>
-            <MessageOverlay
-              active={q.lock}
-              text={
-                questions.length > 1
-                  ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
-                  : 'Test musi zawierać przynajmniej jedno pytanie!'
-              }
-              noLogo
-            >
-              <QuestionEditor index={index} question={q} />
-            </MessageOverlay>
-
-            <InlineItem>
-              <RemoveIcon onClick={() => removeQuestion(index)} />
-            </InlineItem>
+            <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
           </QuestionWithDelete>
         ))}
 
