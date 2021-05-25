@@ -3,6 +3,10 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
 
+// TUTAJ SĄ MOJE
+import { Container, Toolbar } from './TestListStyle'
+//KONIEC
+
 import { DataGrid, GridColDef, GridLocaleText } from '@material-ui/data-grid';
 
 type UserAnswer = {
@@ -165,33 +169,54 @@ export const TestList: FC = () => {
   const [tests, setTests] = useState([] as Test[]);
   const errorRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchAndUpdate = async () => {
-      try {
-        const { data } = await apiAxios.get('/test/list');
 
-        setTests(testsFromResponse(data));
-      } catch (err) {
-        if (err.response) {
-          setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
-        } else {
-          setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
-        }
+//#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // useEffect(() => {
+    //   const fetchAndUpdate = async () => {
+    //     try {
+    //       const { data } = await apiAxios.get('/test/list');
 
-        scrollIntoMessageOverlay(errorRef);
-      }
-    };
+    //       setTests(testsFromResponse(data));
+    //     } catch (err) {
+    //       if (err.response) {
+    //         setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
+    //       } else {
+    //         setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+    //       }
 
-    fetchAndUpdate();
-  }, []);
+    //       scrollIntoMessageOverlay(errorRef);
+    //     }
+    //   };
+
+    //   fetchAndUpdate();
+    // }, []);
+//#endregion
+
 
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
+      <DataGridList/>
 
-      <div style={{ backgroundColor: 'white', height: '500px', width: '800px' }}>
-        <DataGrid rows={tests} columns={columns} pageSize={10} localeText={locale} checkboxSelection />
-      </div>
     </>
   );
 };
+
+const DataGridList = () =>{
+
+  return(
+    <Container>
+      <Toolbar >
+        <input type="checkbox"/> 
+        <p>Nazwa testu</p>
+        <p>Data testu</p>
+        <p>Ilośc punktów</p>
+        <p>Czas:</p>
+        <p>Link:</p>
+        <button>Szczegóły</button>
+        <button>Usuń</button>
+      </Toolbar>
+    </Container>
+  )
+
+}
