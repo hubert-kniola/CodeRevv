@@ -5,61 +5,7 @@ import { apiAxios } from 'utility';
 
 import { DataGrid, GridColDef, GridLocaleText } from '@material-ui/data-grid';
 
-type UserAnswer = {
-  content: string;
-  user: number;
-  comment?: string;
-  score: number;
-};
-
-type Answer = {
-  index: number;
-  content: string;
-  isCorrect: boolean;
-  usersVoted?: number[];
-};
-
-type Question = {
-  answers: Answer[];
-  content: string;
-  index: number;
-  maxScore: number;
-  questionType: string;
-  userAnswers?: UserAnswer[];
-};
-
-type Test = {
-  id: string;
-  creatorId: number;
-  testName: string;
-  isLinkGenerated: boolean;
-  creationDate: Date;
-  questions: Question[];
-  userIds: number[];
-};
-
-const testsFromResponse = (data: any): Test[] =>
-  data.tests.map((t: any) => ({
-    id: t.id,
-    creatorId: t.creator,
-    testName: t.name,
-    isLinkGenerated: t.is_link_generated,
-    creationDate: new Date(t.pub_test).toLocaleString(),
-    userIds: t.users,
-    questions: t.questions.map((q: any) => ({
-      content: q.content,
-      index: q.index,
-      questionType: q.question_type,
-      maxScore: q.max_score,
-      userAnswers: null,
-      answers: q.answers.map((a: any) => ({
-        index: a.index,
-        content: a.content,
-        isCorrect: a.is_correct,
-        usersVoted: a.users_voted,
-      })),
-    })),
-  }));
+import { Test, testsFromResponse } from 'const';
 
 const columns: GridColDef[] = [
   { field: 'testName', headerName: 'Nazwa testu', width: 250 },
@@ -166,7 +112,7 @@ export const TestList: FC = () => {
   const errorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchAndUpdate = async () => {
+    const fetch = async () => {
       try {
         const { data } = await apiAxios.get('/test/list');
 
@@ -182,7 +128,7 @@ export const TestList: FC = () => {
       }
     };
 
-    fetchAndUpdate();
+    fetch();
   }, []);
 
   return (
