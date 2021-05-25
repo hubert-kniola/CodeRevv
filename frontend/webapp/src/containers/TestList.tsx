@@ -4,10 +4,11 @@ import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
 
 // TUTAJ SĄ MOJE
-import { Container, Toolbar } from './TestListStyle'
+import { Container, TableFormat, HeaderTool, Pagin } from './TestListStyle';
 //KONIEC
 
 import { DataGrid, GridColDef, GridLocaleText } from '@material-ui/data-grid';
+import { Backdrop } from '@material-ui/core';
 
 type UserAnswer = {
   content: string;
@@ -121,8 +122,8 @@ const locale: GridLocaleText = {
   // Filter operators text
   filterOperatorContains: 'contains',
   filterOperatorEquals: 'equals',
-  filterOperatorStartsWith: 'starts with',
-  filterOperatorEndsWith: 'ends with',
+  filterOperatorStartsWith: 'starts widiv',
+  filterOperatorEndsWith: 'ends widiv',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is not',
   filterOperatorAfter: 'is after',
@@ -169,54 +170,81 @@ export const TestList: FC = () => {
   const [tests, setTests] = useState([] as Test[]);
   const errorRef = useRef<HTMLDivElement>(null);
 
+  //#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // useEffect(() => {
+  //   const fetchAndUpdate = async () => {
+  //     try {
+  //       const { data } = await apiAxios.get('/test/list');
 
-//#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // useEffect(() => {
-    //   const fetchAndUpdate = async () => {
-    //     try {
-    //       const { data } = await apiAxios.get('/test/list');
+  //       setTests(testsFromResponse(data));
+  //     } catch (err) {
+  //       if (err.response) {
+  //         setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
+  //       } else {
+  //         setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+  //       }
 
-    //       setTests(testsFromResponse(data));
-    //     } catch (err) {
-    //       if (err.response) {
-    //         setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
-    //       } else {
-    //         setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
-    //       }
+  //       scrollIntoMessageOverlay(errorRef);
+  //     }
+  //   };
 
-    //       scrollIntoMessageOverlay(errorRef);
-    //     }
-    //   };
-
-    //   fetchAndUpdate();
-    // }, []);
-//#endregion
-
+  //   fetchAndUpdate();
+  // }, []);
+  //#endregion
 
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
-      <DataGridList/>
-
+      <DataGridList />
     </>
   );
 };
 
-const DataGridList = () =>{
-
-  return(
+const DataGridList = () => {
+  return (
     <Container>
-      <Toolbar >
-        <input type="checkbox"/> 
-        <p>Nazwa testu</p>
-        <p>Data testu</p>
-        <p>Ilośc punktów</p>
-        <p>Czas:</p>
-        <p>Link:</p>
-        <button>Szczegóły</button>
-        <button>Usuń</button>
-      </Toolbar>
+      <HeaderTool>
+        <div>
+          <h3>Liczba twoich testów: 35</h3>
+          <p>Nadchodzący test: Gabriella_Grzmot_PZ_DESTRUKTOR</p>
+          <p>Data: 31/05/2021</p>
+        </div>
+        <input type="text" value="Wyszukaj..." />
+        <button>Widok</button>
+        <button>Filtry</button>
+      </HeaderTool>
+      <TableFormat id="header">
+        <input type="checkbox" />
+        <div id="name">Nazwa testu</div>
+        <div>Data testu</div>
+        <div>Punkty</div>
+        <div>Czas:</div>
+        <div>Link:</div>
+        <div>Szczegóły</div>
+        <div>Usuń</div>
+      </TableFormat>
+      <RowItem />
+      <RowItem />
+      <RowItem />
+      <RowItem />
+      <RowItem />
+      <RowItem />
+      <Pagin> - 1 2 3 ... 50 +</Pagin>
     </Container>
-  )
+  );
+};
 
-}
+const RowItem = () => {
+  return (
+    <TableFormat  className='header'>
+      <input type="checkbox" />
+      <div id="name">Gabriella_Grzmot_PZ_DESTRUKTOR</div>
+      <div  className='header' >31/05/2021</div>
+      <div>5</div>
+      <div>25 min</div>
+      <div>zOOm</div>
+      <div>GB</div>
+      <div>Usuń</div>
+    </TableFormat>
+  );
+};
