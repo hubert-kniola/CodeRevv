@@ -6,6 +6,27 @@ import { apiAxios } from 'utility';
 import { Test, testFromResponse } from 'const';
 import { TestFillForm } from 'containers';
 
+/* Randomize array with deepcopy using Durstenfeld shuffle algorithm */
+const shuffleArray = (array: any[]): any[] => {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+
+  return JSON.parse(JSON.stringify(array));
+};
+
+const shuffleTest = (t: Test): Test => {
+  const questions = t.questions.map((q) => ({
+    ...q,
+    answers: shuffleArray(q.answers),
+  }));
+
+  return { ...t, questions: shuffleArray(questions) };
+};
+
 type RouteParams = {
   id: string;
 };
@@ -16,13 +37,28 @@ const TestingForm: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const errorRef = useRef<HTMLDivElement>(null);
+  const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const onSubmit = async () => {
+    clearTimeout(currentTimeout!);
+    setCurrentTimeout((_) => null);
+  };
+
+  const onPartialSubmit = async () => {};
 
   useEffect(() => {
     const fetchTest = async () => {
       try {
         const { data } = await apiAxios.get(`/test/${id}`);
 
-        setTest(testFromResponse(data));
+        const rawTest = testFromResponse(data);
+        setTest(shuffleTest(rawTest));
+        setLoading(false);
+
+        if (currentTimeout == null) {
+          setCurrentTimeout((_) => setTimeout(() => onPartialSubmit(), 10000));
+        }
+        
       } catch (err) {
         if (err.response) {
           if (err.response.status_code === 403) {
@@ -36,23 +72,17 @@ const TestingForm: FC = () => {
 
         scrollIntoMessageOverlay(errorRef);
       }
-
-      setLoading(false);
     };
 
     fetchTest();
   }, []);
-
-  const onSubmit = async () => {};
-
-  const onPartialSubmit = async () => {};
 
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Mamy problem..." text={error!} noLogo />
 
       <LoadingOverlay active={loading} text="Pobieramy test..." logo>
-        <TestFillForm test={test} setTest={setTest} onSubmit={onSubmit} onPartialSubmit={onPartialSubmit} />
+        <TestFillForm test={test} setTest={setTest} onSubmit={onSubmit} />
       </LoadingOverlay>
     </>
   );

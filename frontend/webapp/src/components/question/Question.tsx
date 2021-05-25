@@ -10,13 +10,13 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { QuestionContainer, GeneralQuestion, Button, AnswerBlock, AnswerContainer, ErrorText } from './style';
-import { Question, Answer, newAnswer, TestEditorContext } from 'context';
+import { EditorQuestion, EditorAnswer, newAnswer, TestEditorContext } from 'context';
 import { MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
   index: number;
-  question: Question;
+  question: EditorQuestion;
   onDelete: () => void;
 };
 
@@ -29,7 +29,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
   const questionRef = useRef(question);
   questionRef.current = question;
 
-  const replaceAnswer = (pos: number, value: Answer) => {
+  const replaceAnswer = (pos: number, value: EditorAnswer) => {
     setSingleQuestion(
       {
         ...question,
@@ -163,8 +163,8 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
 };
 
 type AnswerEditorProps = {
-  answer: Answer;
-  setAnswerState: (value: Answer) => void;
+  answer: EditorAnswer;
+  setAnswerState: (value: EditorAnswer) => void;
   onDelete: () => void;
   answersCount: number;
 };

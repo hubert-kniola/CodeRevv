@@ -1,7 +1,7 @@
 import { FC, useRef, useState, useContext } from 'react';
 
 import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorForm } from 'components';
-import { Question, TestEditorContext, TestEditorContextProvider } from 'context';
+import { EditorQuestion, TestEditorContext, TestEditorContextProvider } from 'context';
 
 import { EditorValue } from 'react-rte';
 import { apiAxios } from 'utility';
@@ -53,7 +53,7 @@ const TestEditorIn: FC = () => {
         errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
       }
 
-      let tempQuestion: Question | null = null;
+      let tempQuestion: EditorQuestion | null = null;
 
       q.answers.forEach((a, iAnswer) => {
         if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
@@ -70,7 +70,7 @@ const TestEditorIn: FC = () => {
               { ...a, error },
               ...tempQuestion.answers.slice(iAnswer + 1),
             ],
-          } as Question;
+          } as EditorQuestion;
 
           hadErrors = true;
         }
@@ -80,7 +80,7 @@ const TestEditorIn: FC = () => {
         hadErrors = true;
 
         if (tempQuestion != null) {
-          setSingleQuestion({ ...(tempQuestion as Question), error: errorMessage }, iQuestion);
+          setSingleQuestion({ ...(tempQuestion as EditorQuestion), error: errorMessage }, iQuestion);
         } else {
           setSingleQuestion({ ...q, error: errorMessage }, iQuestion);
         }
