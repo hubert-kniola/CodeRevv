@@ -236,10 +236,10 @@ const DataGridList = () => {
 
 const RowItem = () => {
   return (
-    <TableFormat  className='header'>
+    <TableFormat >
       <input type="checkbox" />
       <div id="name">Gabriella_Grzmot_PZ_DESTRUKTOR</div>
-      <div  className='header' >31/05/2021</div>
+      <div >31/05/2021</div>
       <div>5</div>
       <div>25 min</div>
       <div>zOOm</div>
