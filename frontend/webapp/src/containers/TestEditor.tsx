@@ -31,8 +31,9 @@ const TestEditorIn: FC = () => {
     questions: questions.map((q, iQuestion) => ({
       index: iQuestion,
       content: q.value.toString('html'),
+      question_type: q.type,
       max_score: q.maxScore,
-      answers: q.answers.map((a, iAnswer) => ({
+      answers: q.answers?.map((a, iAnswer) => ({
         index: iAnswer,
         content: a.value.toString('html'),
         is_correct: a.isCorrect,
@@ -49,32 +50,34 @@ const TestEditorIn: FC = () => {
         errorMessage += `Zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_QUESTION_BODY}.\n`;
       }
 
-      if (q.answers.filter((a) => a.isCorrect).length < 1) {
-        errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
-      }
-
       let tempQuestion: EditorQuestion | null = null;
 
-      q.answers.forEach((a, iAnswer) => {
-        if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
-          const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
-
-          if (tempQuestion == null) {
-            tempQuestion = { ...q };
-          }
-
-          tempQuestion = {
-            ...tempQuestion,
-            answers: [
-              ...tempQuestion.answers.slice(0, iAnswer),
-              { ...a, error },
-              ...tempQuestion.answers.slice(iAnswer + 1),
-            ],
-          } as EditorQuestion;
-
-          hadErrors = true;
+      if (q.answers !== undefined) {
+        if (q.answers.filter((a) => a.isCorrect).length < 1) {
+          errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
         }
-      });
+
+        q.answers.forEach((a, iAnswer) => {
+          if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
+            const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
+
+            if (tempQuestion === null) {
+              tempQuestion = { ...q };
+            }
+
+            tempQuestion = {
+              ...tempQuestion,
+              answers: [
+                ...tempQuestion.answers!.slice(0, iAnswer),
+                { ...a, error },
+                ...tempQuestion.answers!.slice(iAnswer + 1),
+              ],
+            } as EditorQuestion;
+
+            hadErrors = true;
+          }
+        });
+      }
 
       if (errorMessage.length !== 0) {
         hadErrors = true;

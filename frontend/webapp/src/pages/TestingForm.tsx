@@ -55,7 +55,7 @@ const TestingForm: FC = () => {
       try {
         const { data } = await apiAxios.get('/test/list');
 
-        const rawTest = testsFromResponse(data)[2];
+        const rawTest = testsFromResponse(data)[5];
         console.log(rawTest);
 
         //const { data } = await apiAxios.get(`/test/${id}`);

@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
-
-import { TestDetails, QuestionChooser, ClosedQuestionFill, TestFillButtonGroup, QuestionFillContainer } from 'components';
-import { Answer, Question, Test } from 'const';
 import { Grid } from '@material-ui/core';
+
+import { TestDetails, QuestionChooser, QuestionFill, TestFillButtonGroup, QuestionFillContainer } from 'components';
+import { Test } from 'const';
 
 type Props = {
   test: Test;
@@ -24,12 +24,12 @@ export const TestFillForm: FC<Props> = ({ test, setTest, onSubmit }) => {
   };
 
   const toggleAnswer = (answerIndex: number) => {
-    let voted = [] as number[];
+    let voted = [] as number[] | null;
 
     // MARKING
     let usersVotedLen = test.questions[activeIndex].answers[answerIndex].usersVoted?.length;
     if (usersVotedLen != null && usersVotedLen > 0) {
-      voted = [];
+      voted = null;
     } else {
       voted = [1];
     }
@@ -41,7 +41,7 @@ export const TestFillForm: FC<Props> = ({ test, setTest, onSubmit }) => {
         {
           ...test.questions[activeIndex],
           answers: test.questions[activeIndex].answers.map((a, i) => {
-            if (i == answerIndex) {
+            if (i === answerIndex) {
               return { ...a, usersVoted: voted };
             } else {
               return a;
@@ -71,7 +71,7 @@ export const TestFillForm: FC<Props> = ({ test, setTest, onSubmit }) => {
         ))}
       </Grid>
 
-      <ClosedQuestionFill question={test.questions[activeIndex]} toggleVote={toggleAnswer} />
+      <QuestionFill question={test.questions[activeIndex]} toggleVote={toggleAnswer} />
 
       <TestFillButtonGroup
         onSubmit={onSubmit}

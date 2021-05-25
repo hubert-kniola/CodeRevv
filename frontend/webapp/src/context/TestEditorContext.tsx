@@ -12,7 +12,8 @@ export type EditorAnswer = {
 export type EditorQuestion = {
   id: string;
   value: EditorValue;
-  answers: EditorAnswer[];
+  type: string;
+  answers?: EditorAnswer[];
   maxScore: number;
   lock: boolean;
   error: string | null;
@@ -45,6 +46,7 @@ export const newQuestion = () =>
     value: RichTextEditor.createEmptyValue(),
     answers: [newAnswer(), newAnswer()],
     maxScore: 1,
+    type: 'closed',
     lock: false,
     error: null,
   } as EditorQuestion);

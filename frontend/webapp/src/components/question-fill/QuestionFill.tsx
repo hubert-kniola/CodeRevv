@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react';
-import { Collapse, Grid, Checkbox, Avatar } from '@material-ui/core';
+import { FC } from 'react';
+import { Grid, Checkbox, Avatar } from '@material-ui/core';
 import RichTextEditor from 'react-rte';
 
 import { Question, Test } from 'const';
@@ -15,7 +15,6 @@ import {
   ChooserText,
   AnswerContainer,
 } from './styles';
-import { QuestionAnswer } from '@material-ui/icons';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -72,7 +71,7 @@ type QFProps = {
   toggleVote: (answer: number) => void;
 };
 
-export const ClosedQuestionFill: FC<QFProps> = ({ question, toggleVote }) => {
+export const QuestionFill: FC<QFProps> = ({ question, toggleVote }) => {
   const isAnswerChecked = (pos: number) => {
     return question.answers[pos].usersVoted && question.answers[pos].usersVoted!.length >= 1;
   };
@@ -84,9 +83,7 @@ export const ClosedQuestionFill: FC<QFProps> = ({ question, toggleVote }) => {
         <RichTextEditor value={RichTextEditor.createValueFromString(question.content, 'html')} readOnly />
 
         <Grid alignItems="center" container spacing={1}>
-          <Grid item xs={10}>
-            <SmallText>Wybór wielokrotny.</SmallText>
-          </Grid>
+          <Grid item xs={10} />
           <Grid item xs={2}>
             <SmallText>{question.maxScore} pkt</SmallText>
           </Grid>
@@ -94,21 +91,21 @@ export const ClosedQuestionFill: FC<QFProps> = ({ question, toggleVote }) => {
 
         <AnswerContainer>
           <Grid alignItems="center" container spacing={1}>
-            {question.answers.map((a, i) => (
-              <>
-                <Grid item xs={2}>
-                  <Checkbox
-                    checked={isAnswerChecked(i)}
-                    onChange={() => toggleVote(i)}
-                    icon={<Avatar style={{ backgroundColor: 'grey' }}>{LETTERS[i]}</Avatar>}
-                    checkedIcon={<Avatar style={{ backgroundColor: 'green' }}>{LETTERS[i]}</Avatar>}
-                  />
-                </Grid>
-                <Grid item xs={10}>
-                  <RichTextEditor value={RichTextEditor.createValueFromString(a.content, 'html')} readOnly />
-                </Grid>
-              </>
-            ))}
+            {question.questionType === 'closed' && question.answers.map((a, i) => (
+                <>
+                  <Grid item xs={2}>
+                    <Checkbox
+                      checked={isAnswerChecked(i)}
+                      onChange={() => toggleVote(i)}
+                      icon={<Avatar style={{ backgroundColor: 'grey' }}>{LETTERS[i]}</Avatar>}
+                      checkedIcon={<Avatar style={{ backgroundColor: 'green' }}>{LETTERS[i]}</Avatar>}
+                    />
+                  </Grid>
+                  <Grid item xs={10}>
+                    <RichTextEditor value={RichTextEditor.createValueFromString(a.content, 'html')} readOnly />
+                  </Grid>
+                </>
+              ))}
           </Grid>
         </AnswerContainer>
       </FillContainer>
