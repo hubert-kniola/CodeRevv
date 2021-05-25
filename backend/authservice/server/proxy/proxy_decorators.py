@@ -21,15 +21,15 @@ def refresh_token(request):
 
 
 def session_authentication(function, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
-    def wrap(request):
+    def wrap(request, *args, **kwargs):
         try:
             token1 = request.COOKIES['access']
             payload = jwt.decode(token1, settings.SECRET_KEY,
                                  settings.SIMPLE_JWT['ALGORITHM'])
             user = AuthUser.objects.get(pk=payload['user_id'])
             if payload['email'] == user.email:
-                return function(request)
+                return function(request, *args, **kwargs)
         except ExpiredSignatureError:
             refresh_token(request)
-            return function(request)
+            return function(request, *args, **kwargs)
     return wrap

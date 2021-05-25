@@ -1,6 +1,7 @@
 import jwt
 import requests
 from django.conf import settings
+from django.utils.http import urlsafe_base64_decode
 from jwt import ExpiredSignatureError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -36,10 +37,16 @@ def test_save(request):
 
 @api_view(['POST'])
 @session_authentication
-def test_join(request):
+def test(request, test_id):
     user_id = get_user_id(request)
-    response = requests.post(f"{proxy}/test/{str(request.data['test_id'])}/{str(user_id)}")
-    return Response(response, response.status_code)
+    response = requests.post(f"{proxy}/test/{test_id}/{str(user_id)}")
+    print(user_id)
+    if response.status_code == 403 or 'creator_id' not in response.json():
+        return Response(response, response.status_code)
+    creator = AuthUser.objects.get(pk=response.json()['creator_id'])
+    new_response = response.json()
+    new_response['creator'] = {'first_name': creator.first_name, 'last_name': creator.last_name, 'email': creator.email}
+    return Response(new_response, response.status_code)
 
 
 @api_view(['POST'])

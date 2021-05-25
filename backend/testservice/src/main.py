@@ -3,8 +3,9 @@ import uvicorn
 from typing import List
 
 from bson import ObjectId
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -28,7 +29,7 @@ def shutdown_event():
 @app.post('/test/link', status_code=200)
 async def generate_test_link(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    if test.creator is user_id:
+    if test.creator is int(user_id):
         test.is_link_generated = True
         await engine.save(test)
         return {'link': f'{prefix}/test/{test_id}'}
@@ -37,11 +38,20 @@ async def generate_test_link(test_id, user_id):
 
 
 @app.post('/test/{test_id}/{user_id}', status_code=200)
-async def join_test(test_id, user_id):
+async def test(test_id, user_id):
+    user_id = int(user_id)
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    if user_id not in test.users:
-        test.users.append(int(user_id))
-    return {'name': test.name, 'creator': test.creator, 'questions': test.questions}
+    if test.creator == user_id:
+        return test
+    elif test.is_link_generated:
+        if user_id not in test.users:
+            test.users.append(user_id)
+            await engine.save(test)
+        return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+    elif not test.is_link_generated:
+        if user_id in test.users:
+            return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
 
 @app.post('/test/create', response_model=Test, status_code=201)
@@ -108,15 +118,19 @@ async def modify_question(test_id, question_id, question: Question):
 @app.patch('/test/save', status_code=200)
 async def save_test(test_id, question_id, user_answer: UserAnswer):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    answers = test.questions[question_id].user_answers
+    answers = test.questions[int(question_id)].user_answers
     is_found = False
-    for x, answer in enumerate(answers):
-        if user_answer.user is answer.user:
-            answers[x] = user_answer
-            is_found = True
-            break
+    if answers:
+        for x, answer in enumerate(answers):
+            if user_answer.user is answer.user:
+                answers[x] = user_answer
+                is_found = True
+                break
+    else:
+        answers = []
     if not is_found:
         answers.append(user_answer)
+    test.questions[int(question_id)].user_answers = answers
     await engine.save(test)
 
 
