@@ -102,7 +102,6 @@ const TestEditorIn: FC = () => {
       try {
         await apiAxios.post('/test/create', getRawTestEditorData());
         history.push('/dashboard/view/tests');
-
       } catch (err) {
         if (err.response) {
           setError('Nie udało się stworzyć testu.\nSpróbuj ponownie po odświeżeniu strony.');

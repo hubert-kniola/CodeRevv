@@ -117,6 +117,7 @@ export const TestList: FC = () => {
         const { data } = await apiAxios.get('/test/list');
 
         setTests(testsFromResponse(data));
+        console.log(tests);
       } catch (err) {
         if (err.response) {
           setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');

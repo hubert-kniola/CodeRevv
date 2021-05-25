@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
-import { Test, testFromResponse } from 'const';
+import { Test, testFromResponse, testsFromResponse } from 'const';
 import { TestFillForm } from 'containers';
 
 /* Randomize array with deepcopy using Durstenfeld shuffle algorithm */
@@ -33,15 +33,19 @@ type RouteParams = {
 
 const TestingForm: FC = () => {
   const { id } = useParams<RouteParams>();
-  const [test, setTest] = useState({} as Test);
-  const [loading, setLoading] = useState(true);
+
+  const [test, setTest] = useState<Test | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const errorRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
   const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const errorRef = useRef<HTMLDivElement>(null);
 
   const onSubmit = async () => {
     clearTimeout(currentTimeout!);
     setCurrentTimeout((_) => null);
+
+    console.log(test);
   };
 
   const onPartialSubmit = async () => {};
@@ -49,16 +53,20 @@ const TestingForm: FC = () => {
   useEffect(() => {
     const fetchTest = async () => {
       try {
-        const { data } = await apiAxios.get(`/test/${id}`);
+        const { data } = await apiAxios.get('/test/list');
 
-        const rawTest = testFromResponse(data);
+        const rawTest = testsFromResponse(data)[2];
+        console.log(rawTest);
+
+        //const { data } = await apiAxios.get(`/test/${id}`);
+        //const rawTest = testFromResponse(data);
+
         setTest(shuffleTest(rawTest));
         setLoading(false);
 
         if (currentTimeout == null) {
           setCurrentTimeout((_) => setTimeout(() => onPartialSubmit(), 10000));
         }
-        
       } catch (err) {
         if (err.response) {
           if (err.response.status_code === 403) {
@@ -72,6 +80,8 @@ const TestingForm: FC = () => {
 
         scrollIntoMessageOverlay(errorRef);
       }
+
+      setLoading(false);
     };
 
     fetchTest();
@@ -82,7 +92,7 @@ const TestingForm: FC = () => {
       <MessageOverlay ref={errorRef} active={error != null} title="Mamy problem..." text={error!} noLogo />
 
       <LoadingOverlay active={loading} text="Pobieramy test..." logo>
-        <TestFillForm test={test} setTest={setTest} onSubmit={onSubmit} />
+        {test != null && <TestFillForm test={test} setTest={setTest} onSubmit={onSubmit} />}
       </LoadingOverlay>
     </>
   );
