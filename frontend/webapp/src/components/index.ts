@@ -16,3 +16,4 @@ export * from './code-editor/PythonEditor';
 export * from './test-editor/TestEditorForm';
 export * from './question/Question';
 export * from './test-view/TestView';
+export * from './popup-dialog/PopupDialog';
