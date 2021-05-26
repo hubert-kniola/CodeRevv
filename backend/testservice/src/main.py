@@ -44,13 +44,38 @@ async def test(test_id, user_id):
     if test.creator == user_id:
         return test
     elif test.is_link_generated:
+        if not test.users:
+            test.users = []
         if user_id not in test.users:
             test.users.append(user_id)
             await engine.save(test)
         return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
     elif not test.is_link_generated:
+        if test.users:
+            if user_id in test.users:
+                return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+
+@app.patch('/test/finish/{test_id}', status_code=200)
+async def finish_test(test_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    if not test.is_finished:
+        test.is_finished = True
+        if test.users:
+            return 'dupa'
+        await engine.save(test)
+        return {'status': 'the test has just finished'}
+    else:
+        return {'status': 'the test is already finished'}
+
+
+@app.get('/test/result/{test_id}/{user_id}', status_code=200)
+async def result_test(test_id, user_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    if test.users and test.is_finished:
         if user_id in test.users:
-            return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+            return 'dupa'
     return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
 
