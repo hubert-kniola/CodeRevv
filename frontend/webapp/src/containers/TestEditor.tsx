@@ -13,7 +13,7 @@ const MIN_ANSWER_BODY = 1;
 const validateEditorValue = (e: EditorValue, min: number) => {
   const body = e.toString('markdown');
 
-  if (body.trim().length <= min) {
+  if (body.trim().length < min) {
     return true;
   }
   return false;
