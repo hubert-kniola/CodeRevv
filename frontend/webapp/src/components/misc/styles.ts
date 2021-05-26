@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const CenteredContainer = styled.div`
@@ -6,12 +6,19 @@ export const CenteredContainer = styled.div`
   place-items: center;
 `;
 
-export const StyledLink = styled(Link)`
+export const StyledLink = styled(Link)<{ big?: boolean }>`
   color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
   padding: 0 1rem;
   height: 100%;
   cursor: pointer;
+
+  ${({ big }) =>
+    big != null &&
+    big &&
+    css`
+      font-size: 2rem;
+    `}
 
   &:hover {
     transition: all 0.2s ease-in-out;

@@ -2,6 +2,7 @@ import { useState, useContext, createContext, FC } from 'react';
 import { Container, Frame, Title, Item, Inner, Header, Body } from './styles';
 
 import open from 'images/open.png';
+import { Grid } from '@material-ui/core';
 
 export const Accordion: FC = ({ children, ...restProps }) => (
   <Container>
@@ -39,8 +40,14 @@ export const AccordionHeader: FC = ({ children, ...restProps }) => {
 
   return (
     <Header show={show} onClick={() => setShow(!show)} {...restProps}>
-      {children}
-      <img src={open} alt="Open" />
+      <Grid container>
+        <Grid item xs={11}>
+          {children}
+        </Grid>
+        <Grid style={{textAlign: 'right'}} item xs={1}>
+          <img src={open} alt="Open" />
+        </Grid>
+      </Grid>
     </Header>
   );
 };
