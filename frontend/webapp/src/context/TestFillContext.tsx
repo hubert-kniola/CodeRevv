@@ -75,24 +75,19 @@ export const TestFillContextProvider: FC = ({ children }) => {
       voted = [1];
     }
 
-    setTest(
-      (test) =>
-        ({
-          ...test,
-          questions: [
-            ...test!.questions.slice(0, activeIndex),
-            {
-              ...test!.questions[activeIndex],
-              answers: [
-                test!.questions[activeIndex].answers.slice(0, answerIndex),
-                { ...test!.questions[activeIndex].answers[answerIndex], usersVoted: voted },
-                test!.questions[activeIndex].answers.slice(answerIndex + 1),
-              ],
-            },
-            ...test!.questions.slice(activeIndex + 1),
-          ],
-        } as Test)
-    );
+    setTest({
+      ...test,
+      questions: [
+        ...test!.questions.slice(0, activeIndex),
+        {
+          ...test!.questions[activeIndex],
+          answers: test!.questions[activeIndex].answers.map((a, i) =>
+            i === answerIndex ? { ...a, usersVoted: voted } : a
+          ),
+        },
+        ...test!.questions.slice(activeIndex + 1),
+      ],
+    } as Test);
   };
 
   const onTestInit = async () => {
