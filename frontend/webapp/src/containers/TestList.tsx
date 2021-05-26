@@ -166,8 +166,6 @@ export const TestList: FC = () => {
   const [tests, setTests] = useState(TempTest as Test[]);
  
   const errorRef = useRef<HTMLDivElement>(null);
-  const [filteredTests, setFilteredTest] = useState(tests);
-  const [desc, setDesc] = useState(false);
 
   //#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // useEffect(() => {
@@ -190,8 +188,45 @@ export const TestList: FC = () => {
   //   fetchAndUpdate();
   // }, []);
   //#endregion
-  
 
+  return (
+    <>
+      <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
+      <DataGridList tests={tests} />
+    </>
+  );
+};
+
+type DataGridListProps = {
+  tests: Test[];
+
+};
+ 
+
+const DataGridList: FC<DataGridListProps> = ({ tests }) => {
+  const [filteredTests, setFilteredTest] = useState(tests);
+  const [nextTest, setNextTests] = useState( {} as Test);
+  
+  useEffect(() => {
+    let tempTest = {} as Test;
+    let time = -1 as number;
+
+    tests.forEach((test) => {
+      let currentDate = new Date().getDate().valueOf();
+      let testTime = test.creationDate.getDate().valueOf() - currentDate;
+
+      if (time < 0) {
+        time = testTime;
+        tempTest = test;
+      }
+
+      if (testTime < time && testTime >=0) {
+        time = testTime;
+        tempTest = test;
+      }
+    });
+    setNextTests(tempTest);
+  }, [tests.length]);
 
   const searchItemHandler = (value: string) => {
     if (value === '') {
@@ -220,49 +255,9 @@ export const TestList: FC = () => {
           }
         }),
       ]);
-      setDesc(false);
     }
   };
 
-  return (
-    <>
-      <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
-      <DataGridList tests={filteredTests} searchTest={searchItemHandler} sortItem={sort} />
-    </>
-  );
-};
-
-type DataGridListProps = {
-  tests: Test[];
-  searchTest: (item: string) => void;
-  sortItem: (type: string) => void;
-};
- 
-
-const DataGridList: FC<DataGridListProps> = ({ tests, searchTest, sortItem }) => {
-  const [nextTest, setNextTests] = useState( {} as Test);
-  
-  
-  useEffect(() => {
-    let tempTest = {} as Test;
-    let time = -1 as number;
-
-    tests.forEach((test) => {
-      let currentDate = new Date().getDate().valueOf();
-      let testTime = test.creationDate.getDate().valueOf() - currentDate;
-
-      if (time < 0) {
-        time = testTime;
-        tempTest = test;
-      }
-
-      if (testTime < time && testTime >=0) {
-        time = testTime;
-        tempTest = test;
-      }
-    });
-    setNextTests(tempTest);
-  }, [tests.length]);
   
   return (
     <TestViewContainer>
@@ -270,9 +265,9 @@ const DataGridList: FC<DataGridListProps> = ({ tests, searchTest, sortItem }) =>
         numberOfTest={tests.length}
         nextTestName={nextTest.testName ? nextTest.testName : '---'}
         nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
-        searchTest={searchTest}
+        searchTest={searchItemHandler}
         changeView={() => {}}
-        sort={sortItem}
+        sort={sort}
       />
 
       <RowItem
@@ -286,7 +281,7 @@ const DataGridList: FC<DataGridListProps> = ({ tests, searchTest, sortItem }) =>
         details={header.details}
         deleteItem={header.deleteItem}
       />
-      {tests.map((item) => {
+      {filteredTests.map((item) => {
         return (
           <RowItem
             key={item.id}
