@@ -124,7 +124,18 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
         </div>
 
         <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
-        <input value={question.maxScore} />
+        <input
+          value={question.maxScore}
+          min={0}
+          max={10}
+          step={0.5}
+          onChange={(e) => {
+            const val = +e.target.value;
+            if (val <= 10 && val >= 0.5) {
+              setSingleQuestion({ ...question, maxScore: +e.target.value }, index);
+            }
+          }}
+        />
 
         <RemoveIcon id="RemoveIcon" className="ico" onClick={removePoint} />
         <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
