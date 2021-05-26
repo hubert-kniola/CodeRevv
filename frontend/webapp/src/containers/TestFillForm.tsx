@@ -1,82 +1,21 @@
-import { FC, useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { FC } from 'react';
 
-import { TestDetails, QuestionChooser, QuestionFill, TestFillButtonGroup, QuestionFillContainer } from 'components';
-import { Test } from 'const';
+import { TestDetails, QuestionMenu, QuestionFill, TestFillButtonGroup, QuestionFillContainer } from 'components';
 
 type Props = {
-  test: Test;
-  setTest: (t: Test) => void;
   onSubmit: () => void;
 };
 
-export const TestFillForm: FC<Props> = ({ test, setTest, onSubmit }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const switchQuestion = (pos: number) => {
-    if (pos >= test.questions.length) {
-      setActiveIndex((_) => 0);
-    } else if (pos < 0) {
-      setActiveIndex((_) => test.questions.length - 1);
-    } else {
-      setActiveIndex((_) => pos);
-    }
-  };
-
-  const toggleAnswer = (answerIndex: number) => {
-    let voted = [] as number[] | null;
-
-    // MARKING
-    let usersVotedLen = test.questions[activeIndex].answers[answerIndex].usersVoted?.length;
-    if (usersVotedLen != null && usersVotedLen > 0) {
-      voted = null;
-    } else {
-      voted = [1];
-    }
-
-    setTest({
-      ...test,
-      questions: [
-        ...test.questions.slice(0, activeIndex),
-        {
-          ...test.questions[activeIndex],
-          answers: test.questions[activeIndex].answers.map((a, i) => {
-            if (i === answerIndex) {
-              return { ...a, usersVoted: voted };
-            } else {
-              return a;
-            }
-          }),
-        },
-        ...test.questions.slice(activeIndex + 1),
-      ],
-    } as Test);
-  };
-
+export const TestFillForm: FC<Props> = ({ onSubmit }) => {
   return (
     <QuestionFillContainer>
-      <TestDetails test={test} />
+      <TestDetails />
 
-      <Grid container spacing={2}>
-        {test.questions.map((q, i) => (
-          <Grid item xs={4} md={3}>
-            <QuestionChooser
-              key={q.index}
-              active={activeIndex === i}
-              index={i}
-              question={q}
-              onClick={() => switchQuestion(i)}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <QuestionMenu />
 
-      <QuestionFill question={test.questions[activeIndex]} toggleVote={toggleAnswer} />
+      <QuestionFill />
 
-      <TestFillButtonGroup
-        onSubmit={onSubmit}
-        onOptionClick={(next) => switchQuestion(activeIndex + (next ? 1 : -1))}
-      />
+      <TestFillButtonGroup onSubmit={onSubmit} />
     </QuestionFillContainer>
   );
 };
