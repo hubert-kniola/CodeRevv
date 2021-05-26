@@ -1,14 +1,11 @@
-import { MessageOverlay, TestView } from 'components';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
 import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
-
-// TUTAJ SĄ MOJE
-import { Container, TableFormat, HeaderTool, Pagin } from './TestListStyle';
-//KONIEC
-
-import { DataGrid, GridColDef, GridLocaleText } from '@material-ui/data-grid';
-import { Backdrop } from '@material-ui/core';
+import type { RowProps } from 'components';
+import { testEditorSchema } from 'const';
+import { string } from 'yup/lib/locale';
+import { truncate } from 'fs/promises';
 
 type UserAnswer = {
   content: string;
@@ -66,109 +63,111 @@ const testsFromResponse = (data: any): Test[] =>
     })),
   }));
 
-const columns: GridColDef[] = [
-  { field: 'testName', headerName: 'Nazwa testu', width: 250 },
-  { field: 'creationDate', headerName: 'Data utworzenia', width: 250 },
-  { field: 'isLinkGenerated', headerName: 'Zaproszenia z linku?', width: 250 },
-];
+const header = {
+  id: 'header',
+  testName: 'Nazwa testu',
+  testDate: 'Data',
+  points: 'Punkty',
+  time: 'Czas',
+  link: 'Link',
+  details: 'Szczegóły',
+  deleteItem: 'Usuń',
+} as RowProps;
 
-const locale: GridLocaleText = {
-  // Root
-  rootGridLabel: 'Siatka',
-  noRowsLabel: 'Brak danych',
-  noResultsOverlayLabel: 'Brak danych',
-  errorOverlayDefaultLabel: 'Wystąpił błąd',
+const row = {
+  testName: 'Gabriella_Grzmot_PZ_DESTRUKTOR',
+  testDate: '31/05/2021',
+  points: '5',
+  time: '25min',
+  link: 'zOOm',
+  details: 'GB',
+  deleteItem: 'Usuń',
+} as RowProps;
 
-  // Density selector toolbar button text
-  toolbarDensity: 'Density',
-  toolbarDensityLabel: 'Density',
-  toolbarDensityCompact: 'Compact',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comfortable',
-
-  // Columns selector toolbar button text
-  toolbarColumns: 'Columns',
-  toolbarColumnsLabel: 'Wybierz kolumny',
-
-  // Filters toolbar button text
-  toolbarFilters: 'Filters',
-  toolbarFiltersLabel: 'Show filters',
-  toolbarFiltersTooltipHide: 'Hide filters',
-  toolbarFiltersTooltipShow: 'Show filters',
-  toolbarFiltersTooltipActive: (count) => (count !== 1 ? `${count} active filters` : `${count} active filter`),
-
-  // Export selector toolbar button text
-  toolbarExport: 'Export',
-  toolbarExportLabel: 'Export',
-  toolbarExportCSV: 'Download as CSV',
-
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Find column',
-  columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder column',
-  columnsPanelShowAllButton: 'Show all',
-  columnsPanelHideAllButton: 'Hide all',
-
-  // Filter panel text
-  filterPanelAddFilter: 'Add filter',
-  filterPanelDeleteIconLabel: 'Delete',
-  filterPanelOperators: 'Operators',
-  filterPanelOperatorAnd: 'And',
-  filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'Columns',
-  filterPanelInputLabel: 'Value',
-  filterPanelInputPlaceholder: 'Filter value',
-
-  // Filter operators text
-  filterOperatorContains: 'contains',
-  filterOperatorEquals: 'equals',
-  filterOperatorStartsWith: 'starts widiv',
-  filterOperatorEndsWith: 'ends widiv',
-  filterOperatorIs: 'is',
-  filterOperatorNot: 'is not',
-  filterOperatorAfter: 'is after',
-  filterOperatorOnOrAfter: 'is on or after',
-  filterOperatorBefore: 'is before',
-  filterOperatorOnOrBefore: 'is on or before',
-
-  // Filter values text
-  filterValueAny: 'Dowolnie',
-  filterValueTrue: 'Tak',
-  filterValueFalse: 'Nie',
-
-  // Column menu text
-  columnMenuLabel: 'Menu',
-  columnMenuShowColumns: 'Pokaż kolumny',
-  columnMenuFilter: 'Filtruj',
-  columnMenuHideColumn: 'Schowaj',
-  columnMenuUnsort: 'Anuluj sortowanie',
-  columnMenuSortAsc: 'Sortuj rosnąco',
-  columnMenuSortDesc: 'Sortuj malejąco',
-
-  // Column header text
-  columnHeaderFiltersTooltipActive: (count) => (count !== 1 ? `${count} aktywne filtry` : `${count} aktywny filtr`),
-  columnHeaderFiltersLabel: 'Pokaż filtry',
-  columnHeaderSortIconLabel: 'Sortuj',
-
-  // Rows selected footer text
-  footerRowSelected: (count) =>
-    count !== 1 ? `Wybrano ${count.toLocaleString()} wiersze` : `${count.toLocaleString()} wybrany wiersz`,
-
-  // Total rows footer text
-  footerTotalRows: 'Suma wierszy:',
-
-  // Checkbox selection text
-  checkboxSelectionHeaderName: 'Wybór wielokrotny',
-
-  // Boolean cell text
-  booleanCellTrueLabel: 'Tak',
-  booleanCellFalseLabel: 'Nie',
-};
+//#region JAKIEŚ_RaNDOMOWE_TESTY
+const TempTest = [
+  {
+    id: '#1',
+    creatorId: 997,
+    testName: 'Gabriella Grzmot',
+    isLinkGenerated: true,
+    creationDate: new Date('05/31/2021'),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#2',
+    creatorId: 12,
+    testName: 'Totalne zniszczenie',
+    isLinkGenerated: true,
+    creationDate: new Date('05/27/2021'),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#3',
+    creatorId: 52,
+    testName: 'Bąk ląduje na słoneczniku',
+    isLinkGenerated: true,
+    creationDate: new Date('10/01/2021'),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#4',
+    creatorId: 985,
+    testName: 'Szybkie kładzenie kostki',
+    isLinkGenerated: true,
+    creationDate: new Date('07/01/2021'),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#5',
+    creatorId: 1324,
+    testName: 'Jakiś random test',
+    isLinkGenerated: true,
+    creationDate: new Date('02/15/2021'),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#6',
+    creatorId: 997,
+    testName: 'Gabriella Grzmot 2',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#7',
+    creatorId: 52,
+    testName: 'Bąk Gucio',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+  },
+  {
+    id: '#8',
+    creatorId: 52,
+    testName: 'Gitara Siema',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+  },
+] as Test[];
+//#endregion
 
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
-  const [tests, setTests] = useState([] as Test[]);
+  const [tests, setTests] = useState(TempTest as Test[]);
+ 
   const errorRef = useRef<HTMLDivElement>(null);
+  const [filteredTests, setFilteredTest] = useState(tests);
+  const [desc, setDesc] = useState(false);
 
   //#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // useEffect(() => {
@@ -191,60 +190,116 @@ export const TestList: FC = () => {
   //   fetchAndUpdate();
   // }, []);
   //#endregion
+  
+
+
+  const searchItemHandler = (value: string) => {
+    if (value === '') {
+      setFilteredTest(tests);
+    } else if (tests.length > 0) {
+      setFilteredTest((tests) =>
+        tests.filter((test) => {
+          return test.testName.toLowerCase().trim().includes(value);
+        })
+      );
+    }
+  };
+
+  const sort = (type: string) => {
+    if (tests.length > 0 && type.length > 2) {
+      setFilteredTest((tests) => [
+        ...tests.sort((a, b) => {
+          if (type == 'DATE_DESC') {
+            return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+          } else if (type === 'DATE_ASC') {
+            return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+          } else if (type === 'A_Z') {
+            return a.testName > b.testName ? 1 : -1;
+          } else {
+            return a.testName < b.testName ? 1 : -1;
+          }
+        }),
+      ]);
+      setDesc(false);
+    }
+  };
 
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
-      <DataGridList />
+      <DataGridList tests={filteredTests} searchTest={searchItemHandler} sortItem={sort} />
     </>
   );
 };
 
-const DataGridList = () => {
-  return (
-    <Container>
-      <HeaderTool>
-        <div>
-          <h3>Liczba twoich testów: 35</h3>
-          <p>Nadchodzący test: Gabriella_Grzmot_PZ_DESTRUKTOR</p>
-          <p>Data: 31/05/2021</p>
-        </div>
-        <input type="text" value="Wyszukaj..." />
-        <button>Widok</button>
-        <button>Filtry</button>
-      </HeaderTool>
-      <TableFormat id="header">
-        <input type="checkbox" />
-        <div id="name">Nazwa testu</div>
-        <div>Data testu</div>
-        <div>Punkty</div>
-        <div>Czas:</div>
-        <div>Link:</div>
-        <div>Szczegóły</div>
-        <div>Usuń</div>
-      </TableFormat>
-      <RowItem />
-      <RowItem />
-      <RowItem />
-      <RowItem />
-      <RowItem />
-      <RowItem />
-      <Pagin> - 1 2 3 ... 50 +</Pagin>
-    </Container>
-  );
+type DataGridListProps = {
+  tests: Test[];
+  searchTest: (item: string) => void;
+  sortItem: (type: string) => void;
 };
+ 
 
-const RowItem = () => {
+const DataGridList: FC<DataGridListProps> = ({ tests, searchTest, sortItem }) => {
+  const [nextTest, setNextTests] = useState( {} as Test);
+  
+  
+  useEffect(() => {
+    let tempTest = {} as Test;
+    let time = -1 as number;
+
+    tests.forEach((test) => {
+      let currentDate = new Date().getDate().valueOf();
+      let testTime = test.creationDate.getDate().valueOf() - currentDate;
+
+      if (time < 0) {
+        time = testTime;
+        tempTest = test;
+      }
+
+      if (testTime < time && testTime >=0) {
+        time = testTime;
+        tempTest = test;
+      }
+    });
+    setNextTests(tempTest);
+  }, [tests.length]);
+  
   return (
-    <TableFormat >
-      <input type="checkbox" />
-      <div id="name">Gabriella_Grzmot_PZ_DESTRUKTOR</div>
-      <div >31/05/2021</div>
-      <div>5</div>
-      <div>25 min</div>
-      <div>zOOm</div>
-      <div>GB</div>
-      <div>Usuń</div>
-    </TableFormat>
+    <TestViewContainer>
+      <HeaderToolBar
+        numberOfTest={tests.length}
+        nextTestName={nextTest.testName ? nextTest.testName : '---'}
+        nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
+        searchTest={searchTest}
+        changeView={() => {}}
+        sort={sortItem}
+      />
+
+      <RowItem
+        id={header.id}
+        header={true}
+        testName={header.testName}
+        testDate={header.testDate}
+        points={header.points}
+        time={header.time}
+        link={header.link}
+        details={header.details}
+        deleteItem={header.deleteItem}
+      />
+      {tests.map((item) => {
+        return (
+          <RowItem
+            key={item.id}
+            testName={item.testName}
+            testDate={item.creationDate.toLocaleDateString()}
+            points={item.creatorId.toString()}
+            time={'25 min'}
+            link={item.isLinkGenerated.toString()}
+            details={'FAKERS'}
+            deleteItem={'Usuń'}
+          />
+        );
+      })}
+    </TestViewContainer>
   );
 };
