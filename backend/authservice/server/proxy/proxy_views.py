@@ -1,3 +1,4 @@
+from django.http import response
 import jwt
 import requests
 from django.conf import settings
@@ -111,6 +112,19 @@ def test_question(request):
     return Response(response, response.status_code)
 
 
+@api_view(['POST'])
+@session_authentication
+def test_submit(request):
+    data = request.data['test']
+
+    # {user_id, {}, test_id}
+
+    response = requests.patch(f"{proxy}/test/save?test_id={str(request.data['test_id'])}", data=request.data['test'])
+
+    return Response(response, response.status_code)
+
+
+
 # @api_view(['POST'])
 # @session_authentication
 # def test_answer(request):
@@ -133,3 +147,4 @@ def test_question(request):
 #         f"{proxy}/test/answer?test_id={str(request.data['test_id'])}&answer_id={str(request.data['answer_id'])}",
 #         json=request.data['data'])
 #     return Response(response, response.status_code)
+

@@ -1,4 +1,4 @@
-import { Question, Test, testsFromResponse } from 'const';
+import { Question, Test, testFromResponse, testToResponse } from 'const';
 import { createContext, FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { apiAxios } from 'utility';
@@ -51,7 +51,6 @@ export const TestFillContextProvider: FC = ({ children }) => {
   const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const history = useHistory();
   const { id } = useParams<RouteParams>();
 
   const switchQuestion = (pos: number) => {
@@ -91,12 +90,9 @@ export const TestFillContextProvider: FC = ({ children }) => {
   };
 
   const onTestInit = async () => {
-    const { data } = await apiAxios.get('/test/list');
-
-    const rawTest = testsFromResponse(data)[0];
-
-    //const { data } = await apiAxios.get(`/test/${id}`);
-    //const rawTest = testFromResponse(data);
+    const { data } = await apiAxios.post(`/test/join/${id}`);
+    const rawTest = testFromResponse(data);
+    rawTest.id = id;
 
     setTest(shuffleTest(rawTest));
   };
@@ -119,11 +115,7 @@ export const TestFillContextProvider: FC = ({ children }) => {
     setCurrentTimeout((_) => null);
     setHasEnded(true);
 
-    console.log(test);
-
-    setTimeout(() => {
-      history.push('/dashboard');
-    }, 3000);
+    await apiAxios.post(`/test/submit`, {test_id: id, test: testToResponse(test!) });
   };
 
   const getActiveQuestion = () => test!.questions[activeIndex];

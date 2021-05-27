@@ -4,7 +4,7 @@ from odmantic import Model, EmbeddedModel
 
 
 class UserAnswer(EmbeddedModel):
-    content: str
+    content: Optional[str]
     user: int
     comment: Optional[str]
     score: float
@@ -34,7 +34,8 @@ class Test(Model):
     users: Optional[List[int]]
     questions: List[Question]
     is_link_generated: bool
-    start_time: Optional[str]  # pozniej usunac stary test i dodac nowy, usunac optional!
+    # pozniej usunac stary test i dodac nowy, usunac optional!
+    start_time: Optional[str]
     stop_time: Optional[str]  # !
     is_visible: Optional[bool]  # !
     is_finished: Optional[bool]  # !

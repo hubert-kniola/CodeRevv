@@ -1,3 +1,4 @@
+from src.functions import check_answers
 import uvicorn
 
 from typing import List
@@ -62,8 +63,10 @@ async def finish_test(test_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if not test.is_finished:
         test.is_finished = True
+
         if test.users:
-            return 'dupa'
+            test = check_answers(test)
+
         await engine.save(test)
         return {'status': 'the test has just finished'}
     else:
@@ -141,22 +144,10 @@ async def modify_question(test_id, question_id, question: Question):
 
 
 @app.patch('/test/save', status_code=200)
-async def save_test(test_id, question_id, user_answer: UserAnswer):
+async def save_test(test_id, test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    answers = test.questions[int(question_id)].user_answers
-    is_found = False
-    if answers:
-        for x, answer in enumerate(answers):
-            if user_answer.user is answer.user:
-                answers[x] = user_answer
-                is_found = True
-                break
-    else:
-        answers = []
-    if not is_found:
-        answers.append(user_answer)
-    test.questions[int(question_id)].user_answers = answers
-    await engine.save(test)
+
+    print(test)
 
 
 # @app.post('/test/answer', status_code=201)
