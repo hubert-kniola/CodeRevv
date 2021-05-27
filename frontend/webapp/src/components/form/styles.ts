@@ -75,6 +75,7 @@ export const Input = styled.input`
   border: 0px solid transparent;
   background-color: ${({ theme }) => theme.colors.setting};
 
+  outline: none;
   border-radius: 15px;
 `;
 

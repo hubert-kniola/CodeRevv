@@ -16,3 +16,7 @@ export * from './code-editor/PythonEditor';
 export * from './test-editor/TestEditorForm';
 export * from './question/Question';
 export * from './test-view/TestView';
+export * from './test-fill/Components';
+export * from './dialogs/TestStartDialog';
+export * from './dialogs/TestEndDialog';
+export * from './test-fill/QuestionFill';

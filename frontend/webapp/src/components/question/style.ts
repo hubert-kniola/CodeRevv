@@ -124,7 +124,7 @@ export const Button = styled.button`
   border-radius: 15px;
   border: 0px;
   font-size: 22px;
-  background-color: ${({ theme }) => theme.colors.lighterBackgound};
+  background-color: ${({ theme }) => theme.colors.lighterBackground};
   color: ${({ theme }) => theme.colors.text};
   transition: 0.5s;
   box-shadow: 0px 8px 14px 4px #000000;
@@ -135,7 +135,7 @@ export const Button = styled.button`
 
   :disabled {
     :hover {
-      background-color: ${({ theme }) => theme.colors.lighterBackgound};
+      background-color: ${({ theme }) => theme.colors.lighterBackground};
     }
   }
 `;

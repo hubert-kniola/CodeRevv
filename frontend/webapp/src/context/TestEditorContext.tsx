@@ -2,17 +2,18 @@ import { createContext, useState, FC } from 'react';
 import RichTextEditor, { EditorValue } from 'react-rte';
 import { nanoid } from 'nanoid';
 
-export type Answer = {
+export type EditorAnswer = {
   id: string;
   value: EditorValue;
   isCorrect: boolean;
   error: string | null;
 };
 
-export type Question = {
+export type EditorQuestion = {
   id: string;
   value: EditorValue;
-  answers: Answer[];
+  type: string;
+  answers?: EditorAnswer[];
   maxScore: number;
   lock: boolean;
   error: string | null;
@@ -22,10 +23,10 @@ export type SetTestNameDispatch = (s: string) => string;
 
 export interface ITestEditorContext {
   testName: string;
-  questions: Question[];
+  questions: EditorQuestion[];
   setTestName: (t: string | SetTestNameDispatch) => void;
   addEmptyQuestion: () => void;
-  setSingleQuestion: (q: Question, i: number) => void;
+  setSingleQuestion: (q: EditorQuestion, i: number) => void;
   removeSingleQuestion: (i: number) => void;
 }
 
@@ -37,7 +38,7 @@ export const newAnswer = () =>
     value: RichTextEditor.createEmptyValue(),
     isCorrect: false,
     error: null,
-  } as Answer);
+  } as EditorAnswer);
 
 export const newQuestion = () =>
   ({
@@ -45,19 +46,20 @@ export const newQuestion = () =>
     value: RichTextEditor.createEmptyValue(),
     answers: [newAnswer(), newAnswer()],
     maxScore: 1,
+    type: 'closed',
     lock: false,
     error: null,
-  } as Question);
+  } as EditorQuestion);
 
 export const TestEditorContextProvider: FC = ({ children }) => {
   const [testName, setTestName] = useState('');
-  const [questions, setQuestions] = useState([newQuestion()] as Question[]);
+  const [questions, setQuestions] = useState([newQuestion()] as EditorQuestion[]);
 
   const addEmptyQuestion = () => {
     setQuestions((questions) => [...questions, newQuestion()]);
   };
 
-  const setSingleQuestion = (q: Question, pos: number) => {
+  const setSingleQuestion = (q: EditorQuestion, pos: number) => {
     setQuestions((questions) => [...questions.slice(0, pos), q, ...questions.slice(pos + 1)]);
   };
 
