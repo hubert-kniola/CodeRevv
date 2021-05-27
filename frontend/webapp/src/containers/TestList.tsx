@@ -1,4 +1,4 @@
-import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem} from 'components';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem, PopupDialog, PopupDialogButton } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
 import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
@@ -71,16 +71,6 @@ const header = {
   time: 'Czas',
   link: 'Link',
   details: 'Szczegóły',
-  deleteItem: 'Usuń',
-} as RowProps;
-
-const row = {
-  testName: 'Gabriella_Grzmot_PZ_DESTRUKTOR',
-  testDate: '31/05/2021',
-  points: '5',
-  time: '25min',
-  link: 'zOOm',
-  details: 'GB',
   deleteItem: 'Usuń',
 } as RowProps;
 
@@ -164,7 +154,7 @@ const TempTest = [
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [tests, setTests] = useState(TempTest as Test[]);
- 
+
   const errorRef = useRef<HTMLDivElement>(null);
 
   //#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -199,14 +189,12 @@ export const TestList: FC = () => {
 
 type DataGridListProps = {
   tests: Test[];
-
 };
- 
 
 const DataGridList: FC<DataGridListProps> = ({ tests }) => {
   const [filteredTests, setFilteredTest] = useState(tests);
-  const [nextTest, setNextTests] = useState( {} as Test);
-  
+  const [nextTest, setNextTests] = useState({} as Test);
+
   useEffect(() => {
     let tempTest = {} as Test;
     let time = -1 as number;
@@ -220,7 +208,7 @@ const DataGridList: FC<DataGridListProps> = ({ tests }) => {
         tempTest = test;
       }
 
-      if (testTime < time && testTime >=0) {
+      if (testTime < time && testTime >= 0) {
         time = testTime;
         tempTest = test;
       }
@@ -258,12 +246,8 @@ const DataGridList: FC<DataGridListProps> = ({ tests }) => {
     }
   };
 
-
-
-
   return (
     <TestViewContainer>
-     
       <HeaderToolBar
         numberOfTest={tests.length}
         nextTestName={nextTest.testName ? nextTest.testName : '---'}
@@ -272,7 +256,7 @@ const DataGridList: FC<DataGridListProps> = ({ tests }) => {
         changeView={() => {}}
         sort={sort}
       />
-      <button >POP UP</button>
+
       <RowItem
         id={header.id}
         header={true}
