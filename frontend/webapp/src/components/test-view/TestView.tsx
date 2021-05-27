@@ -1,16 +1,14 @@
-import { FC, useState, useEffect } from 'react';
-import { TableFormat, HeaderTool, Container, Pagination} from './styles';
+import { FC, useState, useEffect, Children } from 'react';
+import { TableFormat, HeaderTool, Container, Pagination, TestDetails } from './styles';
 import TextField from '@material-ui/core/TextField';
-
-
+import Collapse from '@material-ui/core/Collapse';
+import { opendirSync } from 'node:fs';
 
 export const TestViewContainer: FC = ({ children }) => {
   return (
     <Container>
       {children}
-      <Pagination >
-          1 2 3 ... 99
-        </Pagination>
+      <Pagination>1 2 3 ... 99</Pagination>
     </Container>
   );
 };
@@ -52,28 +50,6 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
       </select>
       <button>Widok</button>
     </HeaderTool>
-  );
-};
-
-export type HeaderProps = {
-  deleteItem: () => void;
-  setCheckedAll: () => void;
-};
-
-export const HeaderItem: FC<HeaderProps> = ({ deleteItem, setCheckedAll }) => {
-  const [checked, setChecked] = useState(false);
-
-  return (
-    <TableFormat id={'header'}>
-      <input type="checkbox" onClick={() => setCheckedAll()} checked={checked} />
-      <div id="name">Nazwa testu</div>
-      <div>Data</div>
-      <div>Punkty</div>
-      <div>Czas</div>
-      <div>Link</div>
-      <div>Szczegóły</div>
-      <div onClick={() => deleteItem()}>Usuń</div>
-    </TableFormat>
   );
 };
 
@@ -125,13 +101,13 @@ type Test = {
 };
 //DO WYJEBANIA
 
-export type RowProps = {
+export type HeaderProp = {
   tests: Test[];
   deleteItem: (id: string) => void;
   setChecked: (id: string) => void;
 };
 
-export const RowItem: FC<RowProps> = ({ tests, deleteItem, setChecked }) => {
+export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
   const [headerChecked, setHeaderChecked] = useState(false);
 
   const selectAll = () => {
@@ -152,17 +128,35 @@ export const RowItem: FC<RowProps> = ({ tests, deleteItem, setChecked }) => {
         <div onClick={() => deleteItem(header.id)}>Usuń</div>
       </TableFormat>
       {tests.map((test) => (
-        <TableFormat>
-          <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
-          <div id="name">{test.testName}</div>
-          <div>{test.creationDate.toLocaleDateString()}</div>
-          <div>{test.creatorId.toString()}</div>
-          <div>25 min</div>
-          <div>{test.isLinkGenerated.toString()}</div>
-          <div>FAKERS</div>
-          <div onClick={() => deleteItem(test.id)}>Usuń</div>
-        </TableFormat>
+        <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
       ))}
+    </>
+  );
+};
+
+export type RowTableProp = {
+  test: Test;
+  deleteItem: (id: string) => void;
+  setChecked: (id: string) => void;
+};
+
+export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <TableFormat>
+        <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
+        <div id="name" onClick={() => setOpen((open) => !open)}>
+          {test.testName}
+        </div>
+        <div>{test.creationDate.toLocaleDateString()}</div>
+        <div>{test.creatorId.toString()}</div>
+        <div>25 min</div>
+        <div>{test.isLinkGenerated.toString()}</div>
+        <div>FAKERS</div>
+        <div onClick={() => deleteItem(test.id)}>Usuń</div>
+      </TableFormat>
     </>
   );
 };

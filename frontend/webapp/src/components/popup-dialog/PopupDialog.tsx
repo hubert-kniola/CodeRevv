@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Fade, Grow } from '@material-ui/core';
 
-import { Backdrop, Overlay, MainButton, MinorButton, Title, Body } from './style';
+import { BackdropElement, Overlay, MainButton, MinorButton, Title, Body } from './style';
 import { useTransState } from 'hooks';
 
 type PopupDialogProps = {
@@ -10,6 +10,13 @@ type PopupDialogProps = {
   title: string;
   body: string;
 };
+
+export const  Backdrop: FC = ({children}) => {
+  return(
+    <BackdropElement>{children}</BackdropElement>
+  )
+}
+
 
 export const PopupDialog: FC<PopupDialogProps> = ({ open, title, body, children }) => {
   const [ref, trans, trigger] = useTransState(open, false, false);

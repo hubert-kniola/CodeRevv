@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 80%;
-  height: 500px;
   background-color: #1f1f1f;
   margin: 1rem auto;
   padding: 0.5rem;
@@ -22,24 +21,13 @@ export const Container = styled.div`
     }
   }
 
-  .pagination{
-    color: blue;
-  }
-`;
-// TO WYLECI
-export const Pagination = styled.div`
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
+
 `;
 
-export const Page = styled.div`
-  width: 1%;
-  text-align: center;
-  border: 1px solid white;
-  border-radius: 20%;
-`
-//KONIEC
+export const Pagination = styled.div`
+  margin: 0.5rem 0.5rem 0.5rem auto;
+`;
+
 export const HeaderTool = styled.div`
   width: 100%;
   display: fixed;
@@ -110,4 +98,9 @@ export const TableFormat = styled.div`
   }
 `;
 
+export const TestDetails = styled.div`
+  width: 100%;
+  background-color: #5f5f5f;
+  margin: 0 0 0 auto;
+`
 

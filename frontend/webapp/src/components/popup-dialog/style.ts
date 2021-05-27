@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Backdrop = styled.div`
+export const BackdropElement = styled.div`
   display: -webkit-flexbox;
   display: -ms-flexbox;
   display: -webkit-flex;

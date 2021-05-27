@@ -1,14 +1,6 @@
-
-import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem, PopupDialog, PopupDialogButton } from 'components';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
-import { scrollIntoMessageOverlay } from 'components';
-import { apiAxios } from 'utility';
-import type { RowProps } from 'components';
-import { testEditorSchema } from 'const';
-import { string } from 'yup/lib/locale';
-import { truncate } from 'fs/promises';
-import { couldStartTrivia } from 'typescript';
-import { check } from 'prettier';
+
 
 type UserAnswer = {
   content: string;
@@ -173,7 +165,6 @@ export const TestList: FC = () => {
   const [nextTest, setNextTests] = useState({} as Test);
   const [checkedAll, setCheckedAll] = useState(false);
 
-
   const testsRef = useRef(tests);
   testsRef.current = tests;
   const filteredTestsRef = useRef(filteredTests);
@@ -234,7 +225,7 @@ export const TestList: FC = () => {
       setFilteredTest(testsRef.current);
       setFilteredTest((tests) =>
         tests.filter((test) => {
-          return test.testName.toLowerCase().trim().includes(value);
+          return test.testName.toLowerCase().trim().includes(value.toLowerCase());
         })
       );
     }
@@ -270,7 +261,8 @@ export const TestList: FC = () => {
       setTests((tests) =>
         tests.filter((test) => {
           return test.isChecked !== true;
-        }));
+        })
+      );
     }
   };
 
@@ -282,13 +274,12 @@ export const TestList: FC = () => {
         { ...tests[index], isChecked: !tests[index].isChecked },
         ...tests.slice(index + 1),
       ]);
-    }
-    else{
+    } else {
       const tempTests = testsRef.current;
-      tempTests.forEach(test =>{
+      tempTests.forEach((test) => {
         test.isChecked = checkedAll ? false : true;
-      })
-      setCheckedAll(state => !state);
+      });
+      setCheckedAll((state) => !state);
       setTests(tempTests);
     }
   };
@@ -305,13 +296,8 @@ export const TestList: FC = () => {
           changeView={() => {}}
           sort={sort}
         />
-        <RowItem
-          tests= {filteredTestsRef.current}
-          deleteItem = {deleteTestsHandler}
-          setChecked = {selectCheckbox}
-        />
+        <Table tests={filteredTestsRef.current} deleteItem={deleteTestsHandler} setChecked={selectCheckbox} />
       </TestViewContainer>
     </>
-
   );
 };
