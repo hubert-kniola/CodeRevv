@@ -144,10 +144,24 @@ async def modify_question(test_id, question_id, question: Question):
 
 
 @app.patch('/test/save', status_code=200)
-async def save_test(test_id, test: Test):
+async def save_test(test_id, user_id, modified_test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-
-    print(test)
+    # for question in modified_test.questions:
+    #     for answer in question.answers:
+    #         if answer.users_voted: # sprawdzenie czy dany użytkownik dał odpowiedź
+    #             for og_question in test.questions:
+    #                 if question.index == og_question.index:
+    #                     for og_answer in og_question.answers:
+    #                         if answer.index == og_answer.index:
+    #                             og_answer.users_voted[user_id] = answer.users_voted[0]
+    #                             break
+    #                     break
+    for question in modified_test.questions:
+        for answer in question.answers:
+            if answer.users_voted:
+                test.questions[question.index].answers[answer.index].users_voted[user_id] = answer.users_voted[0]
+    await engine.save(test)
+    return {'test': test}
 
 
 # @app.post('/test/answer', status_code=201)

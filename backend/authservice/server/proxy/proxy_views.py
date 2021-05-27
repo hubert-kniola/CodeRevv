@@ -116,13 +116,10 @@ def test_question(request):
 @session_authentication
 def test_submit(request):
     data = request.data['test']
-
     # {user_id, {}, test_id}
-
-    response = requests.patch(f"{proxy}/test/save?test_id={str(request.data['test_id'])}", data=request.data['test'])
-
+    user_id = get_user_id(request)
+    response = requests.patch(f"{proxy}/test/save?test_id={str(request.data['test_id'])}&user_id={str(user_id)}", data=request.data['test'])
     return Response(response, response.status_code)
-
 
 
 # @api_view(['POST'])
