@@ -17,3 +17,4 @@ export * from './test-editor/TestEditorForm';
 export * from './question/Question';
 export * from './test-view/TestView';
 export * from './popup-dialog/PopupDialog';
+export * from './sliding-panel/SlidingPanel'

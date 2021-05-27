@@ -1,16 +1,26 @@
-import { FC } from "react";
-import { Backdrop } from 'components'
+import { FC, useRef } from 'react';
+import { Backdrop } from 'components';
+import { Panel } from './style';
+import { useOnClickOutside } from '../../hooks/index'
 
-type sliderProps={
-    show:boolean;
-}
+import CloseIcon from '@material-ui/icons/Close';
 
-const SlidingPanel:FC<sliderProps> = ({show}) =>{
-    return(
-        <>
-            test
-        </>
-    )
-}
+type sliderProps = {
+  show: boolean;
+  close: () => void;
+};
 
-export default SlidingPanel;
+export const SlidingPanel: FC<sliderProps> = ({ show, close, children }) => {
+  // const ref = useRef<HTMLDivElement>(null);
+
+  // useOnClickOutside( ref, close);
+  
+  return (
+    <>
+      <Panel  show={show}>
+        <CloseIcon onClick={() => close()} className="ico"/>
+        {children}
+      </Panel>
+    </>
+  );
+};

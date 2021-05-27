@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const BackdropElement = styled.div`
+export const BackdropElement = styled.div<{show?:boolean}>`
   display: -webkit-flexbox;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -10,13 +10,12 @@ export const BackdropElement = styled.div`
   -webkit-align-items: center;
   align-items: center;
   justify-content: center;
-
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 99998;
+  z-index: 99997;
   background-color: rgba(0, 0, 0, 0.7);
 `;
 

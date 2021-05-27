@@ -11,9 +11,13 @@ type PopupDialogProps = {
   body: string;
 };
 
-export const  Backdrop: FC = ({children}) => {
+type BackdropProps ={
+  show?: boolean;
+}
+
+export const  Backdrop: FC<BackdropProps> = ({show, children}) => {
   return(
-    <BackdropElement>{children}</BackdropElement>
+    <BackdropElement show={show}>{children}</BackdropElement>
   )
 }
 

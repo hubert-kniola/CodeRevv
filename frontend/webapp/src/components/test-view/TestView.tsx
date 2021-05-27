@@ -1,8 +1,7 @@
-import { FC, useState, useEffect, Children } from 'react';
-import { TableFormat, HeaderTool, Container, Pagination, TestDetails } from './styles';
+import { FC, useRef, useState } from 'react';
+import { TableFormat, HeaderTool, Container, Pagination} from './styles';
 import TextField from '@material-ui/core/TextField';
-import Collapse from '@material-ui/core/Collapse';
-import { opendirSync } from 'node:fs';
+import { SlidingPanel } from 'components';
 
 export const TestViewContainer: FC = ({ children }) => {
   return (
@@ -114,6 +113,7 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
     setChecked(header.id);
     setHeaderChecked((state) => !state);
   };
+  
 
   return (
     <>
@@ -142,9 +142,14 @@ export type RowTableProp = {
 
 export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef();
+
 
   return (
     <>
+      <SlidingPanel show={open} close={() => setOpen(state => !state)}>
+        test
+      </SlidingPanel>
       <TableFormat>
         <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
