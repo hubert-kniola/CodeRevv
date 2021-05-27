@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const BackdropElement = styled.div<{show?:boolean}>`
+export const BackdropElement = styled.div`
   display: -webkit-flexbox;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -103,3 +103,5 @@ export const Body = styled.p`
     line-height: 22px;
   }
 `;
+
+

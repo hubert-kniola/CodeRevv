@@ -20,8 +20,6 @@ export const Container = styled.div`
       border-bottom: 0;
     }
   }
-
-
 `;
 
 export const Pagination = styled.div`
@@ -102,5 +100,49 @@ export const TestDetails = styled.div`
   width: 100%;
   background-color: #5f5f5f;
   margin: 0 0 0 auto;
-`
+`;
 
+export const TestName_detail = styled.label`
+  display: block;
+  font-size: 28px;
+  margin: 2rem auto;
+  width: 100%;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0px 7px 15px 3px #000000;
+  padding: 0.5rem;
+`;
+export const Container_details = styled.div`
+  display: fixed;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem;
+`;
+
+export const Menu_details = styled.div`
+  width: 20%;
+  box-shadow: 0px 7px 15px 3px #000000;
+  border-radius: 15px;
+
+  button {
+    background-color: #5f5f5f;
+    font-size: 16px;
+    width: 100%;
+    height: 35px;
+    border: 0px;
+    color: #ebebeb
+  }
+
+  button#first{
+    border-radius: 15px 15px 0 0;
+  }
+
+  button#last{
+    border-radius:  0 0 15px 15px;
+  }
+`;
+
+export const Setting_details = styled.div`
+  background-color: blue;
+  width: 75%;
+`;

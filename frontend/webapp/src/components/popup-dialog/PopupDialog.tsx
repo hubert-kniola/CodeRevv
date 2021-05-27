@@ -11,16 +11,17 @@ type PopupDialogProps = {
   body: string;
 };
 
-type BackdropProps ={
-  show?: boolean;
-}
+type BackdropProps = {
+  show: boolean;
+};
 
-export const  Backdrop: FC<BackdropProps> = ({show, children}) => {
-  return(
-    <BackdropElement show={show}>{children}</BackdropElement>
-  )
-}
-
+export const Backdrop: FC<BackdropProps> = ({ show, children }) => {
+  return (
+    <Fade in={show}>
+      <BackdropElement>{children}</BackdropElement>
+    </Fade>
+  );
+};
 
 export const PopupDialog: FC<PopupDialogProps> = ({ open, title, body, children }) => {
   const [ref, trans, trigger] = useTransState(open, false, false);
@@ -33,21 +34,20 @@ export const PopupDialog: FC<PopupDialogProps> = ({ open, title, body, children 
     <>
       {(ref.current || trans) &&
         ReactDOM.createPortal(
-          <Fade in={trans}>
-            <Backdrop>
-              <Grow in={trans} appear>
-                <Overlay>
-                  <Title>{title}</Title>
+          <Backdrop show={trans}>
+            <Grow in={trans} appear>
+              <Overlay>
+                <Title>{title}</Title>
 
-                  <hr />
+                <hr />
 
-                  <Body>{body}</Body>
+                <Body>{body}</Body>
 
-                  <div style={{ width: '100%', textAlign: 'center' }}>{children}</div>
-                </Overlay>
-              </Grow>
-            </Backdrop>
-          </Fade>,
+                <div style={{ width: '100%', textAlign: 'center' }}>{children}</div>
+              </Overlay>
+            </Grow>
+          </Backdrop>,
+
           document.getElementById('messageOverlay') as HTMLElement
         )}
     </>

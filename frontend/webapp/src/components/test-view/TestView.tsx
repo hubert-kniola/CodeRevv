@@ -1,5 +1,14 @@
 import { FC, useRef, useState } from 'react';
-import { TableFormat, HeaderTool, Container, Pagination} from './styles';
+import {
+  TableFormat,
+  HeaderTool,
+  Container,
+  Pagination,
+  TestName_detail,
+  Container_details,
+  Menu_details,
+  Setting_details
+} from './styles';
 import TextField from '@material-ui/core/TextField';
 import { SlidingPanel } from 'components';
 
@@ -113,7 +122,6 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
     setChecked(header.id);
     setHeaderChecked((state) => !state);
   };
-  
 
   return (
     <>
@@ -142,13 +150,11 @@ export type RowTableProp = {
 
 export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef();
-
 
   return (
     <>
-      <SlidingPanel show={open} close={() => setOpen(state => !state)}>
-        test
+      <SlidingPanel show={open} close={() => setOpen((state) => false)}>
+        <TestDetails />
       </SlidingPanel>
       <TableFormat>
         <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
@@ -162,6 +168,23 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
         <div>FAKERS</div>
         <div onClick={() => deleteItem(test.id)}>Usuń</div>
       </TableFormat>
+    </>
+  );
+};
+
+const TestDetails: FC = () => {
+  return (
+    <>
+      <TestName_detail> Nazwa testu: Bąk Gucio grzmoci studentów </TestName_detail>
+      <Container_details>
+        <Menu_details>
+          <button id="first">Ustawienia</button>
+          <button>Dodaj użytkowników</button>
+          <button>Edytuj</button>
+          <button id="last">Usuń</button>
+        </Menu_details>
+        <Setting_details> ustawienia </Setting_details>
+      </Container_details>
     </>
   );
 };

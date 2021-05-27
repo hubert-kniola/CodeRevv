@@ -17,7 +17,7 @@ export const useOnClickOutside = (ref: RefObject<HTMLDivElement>, handler: () =>
       document.removeEventListener('mousedown', listener);
       document.removeEventListener('touchstart', listener);
     };
-  }, [ref, handler]);
+  }, [ref.current, handler]);
 };
 
 export function useTransState<T>(
