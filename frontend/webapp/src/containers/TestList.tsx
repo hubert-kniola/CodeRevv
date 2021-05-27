@@ -1,5 +1,6 @@
-import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem } from 'components';
-import { FC, useEffect, useRef, useState, VoidFunctionComponent } from 'react';
+
+import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem, PopupDialog, PopupDialogButton } from 'components';
+import { FC, useEffect, useRef, useState } from 'react';
 import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
 import type { RowProps } from 'components';
@@ -172,6 +173,7 @@ export const TestList: FC = () => {
   const [nextTest, setNextTests] = useState({} as Test);
   const [checkedAll, setCheckedAll] = useState(false);
 
+
   const testsRef = useRef(tests);
   testsRef.current = tests;
   const filteredTestsRef = useRef(filteredTests);
@@ -197,6 +199,7 @@ export const TestList: FC = () => {
   }, []);
 
   //Efekt wyszukuje najbliższy test (póki)
+
   useEffect(() => {
     let tempTest = {} as Test;
     let time = -1 as number;
@@ -309,5 +312,6 @@ export const TestList: FC = () => {
         />
       </TestViewContainer>
     </>
+
   );
 };

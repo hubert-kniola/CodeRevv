@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react';
+import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 
 export const useOnClickOutside = (ref: RefObject<HTMLDivElement>, handler: () => void) => {
   useEffect(() => {
@@ -19,3 +19,34 @@ export const useOnClickOutside = (ref: RefObject<HTMLDivElement>, handler: () =>
     };
   }, [ref, handler]);
 };
+
+export function useTransState<T>(
+  state: T,
+  transStart: boolean = false,
+  autoReappear: boolean = true,
+  timeout: number = 500
+): [MutableRefObject<T>, boolean, () => void] {
+  const [lastState, setLastState] = useState(state);
+  const [trans, setTrans] = useState(transStart);
+  const ref = useRef(state);
+
+  ref.current = trans ? state : lastState;
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLastState((_: any) => state);
+    }, timeout);
+  }, [ref.current]);
+
+  const trigger = () => {
+    setTrans((t) => !t);
+
+    if (autoReappear) {
+      setTimeout(() => {
+        setTrans((t) => !t);
+      }, timeout);
+    }
+  };
+
+  return [ref, trans, trigger];
+}
