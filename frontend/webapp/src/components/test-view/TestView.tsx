@@ -1,12 +1,14 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { TableFormat, HeaderTool, Container, Pagin } from './styles';
 import TextField from '@material-ui/core/TextField';
+import Pagination from '@material-ui/lab/Pagination';
+
 
 export const TestViewContainer: FC = ({ children }) => {
   return (
     <Container>
       {children}
-      <Pagin> - 1 2 3 ... 50 +</Pagin>
+      <Pagination count={10} color="primary" />
     </Container>
   );
 };
@@ -42,31 +44,121 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({ numberOfTest, nextTestNa
   );
 };
 
-export type RowProps = {
-  testId: string;
-  testName: string;
-  testDate: string;
-  points: string;
-  time: string;
-  link: string;
-  details: string;
-  deleteItem: (id:string) => void;
+
+
+export type HeaderProps = {
+  deleteItem: () => void;
+  setCheckedAll: () => void;
 };
 
-export const RowItem: FC<RowProps> = ({testId, testName, testDate, points, time, link, details, deleteItem}) => {
-  const isHeader = (testId === 'header');
-  
+
+export const HeaderItem: FC<HeaderProps> = ({ deleteItem, setCheckedAll}) => {
+  const [checked, setChecked] = useState(false);
+
+
   return (
-    <TableFormat id={isHeader ?'header' : testId}>
-      <input type="checkbox" onChange={isHeader ? ()=>{console.log('select all')} : ()=>{console.log('select one') }}/>
-      { isHeader ?  <div id="name">{testName}</div> : <div id="name">{testName}</div>}
-      <div>{testDate}</div>
-      <div>{points}</div>
-      <div>{time}</div>
-      <div>{link}</div>
-      <div>{details}</div>
-      <div onClick={() => deleteItem(testId)}>Usuń</div>
+    <TableFormat id={'header'}>
+      <input type="checkbox" onClick={() => setCheckedAll()} checked={checked}/>
+      <div id="name">Nazwa testu</div> 
+      <div>Data</div>
+      <div>Punkty</div>
+      <div>Czas</div>
+      <div>Link</div>
+      <div>Szczegóły</div>
+      <div onClick={() => deleteItem()}>Usuń</div>
     </TableFormat>
   );
+};
+
+const header = {
+  id: 'header',
+  isChecked: false,
+  testName: 'Nazwa testu',
+  testDate: 'Data',
+  points: 'Punkty',
+  time: 'Czas',
+  link: 'Link',
+  details: 'Szczegóły',
+  deleteItem: 'Usuń',
+};
+
+//DO WYJEBANIA
+type UserAnswer = {
+  content: string;
+  user: number;
+  comment?: string;
+  score: number;
+};
+
+type Answer = {
+  index: number;
+  content: string;
+  isCorrect: boolean;
+  usersVoted?: number[];
+};
+
+type Question = {
+  answers: Answer[];
+  content: string;
+  index: number;
+  maxScore: number;
+  questionType: string;
+  userAnswers?: UserAnswer[];
+};
+
+type Test = {
+  id: string;
+  creatorId: number;
+  testName: string;
+  isLinkGenerated: boolean;
+  creationDate: Date;
+  questions: Question[];
+  userIds: number[];
+  isChecked: boolean;
+};
+//DO WYJEBANIA
+
+export type RowProps = {
+  tests: Test[]
+  deleteItem: (id:string) => void;
+  setChecked: (id:string) => void;
+};
+
+export const RowItem: FC<RowProps> = ({tests,  deleteItem, setChecked}) => {
+  const [headerChecked, setHeaderChecked] = useState(false);
+
+  const selectAll = () =>{
+    setChecked(header.id);
+    setHeaderChecked(state => !state);
+  }
+
+  return (
+    <>
+    <TableFormat id={header.id}>
+      <input type="checkbox" onClick={selectAll} checked={headerChecked}/>
+      <div id="name">{header.testName}</div>
+      <div>{header.testDate}</div>
+      <div>{header.points}</div>
+      <div>{header.time}</div>
+      <div>{header.link}</div>
+      <div>{header.details}</div>
+      <div onClick={() => deleteItem(header.id)}>Usuń</div>
+    </TableFormat>
+    {tests.map(test => (
+      <TableFormat>
+        <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked}/>
+        <div id="name">{test.testName}</div>
+        <div>{test.creationDate.toLocaleDateString()}</div>
+        <div>{test.creatorId.toString()}</div>
+        <div>25 min</div>
+        <div>{test.isLinkGenerated.toString()}</div>
+        <div>FAKERS</div>
+        <div onClick={() => deleteItem(test.id)}>Usuń</div>
+      </TableFormat>
+    ))}
+
+    </>
+  );
+
 };
 

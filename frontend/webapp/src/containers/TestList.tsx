@@ -6,6 +6,8 @@ import type { RowProps } from 'components';
 import { testEditorSchema } from 'const';
 import { string } from 'yup/lib/locale';
 import { truncate } from 'fs/promises';
+import { couldStartTrivia } from 'typescript';
+import { check } from 'prettier';
 
 type UserAnswer = {
   content: string;
@@ -38,6 +40,7 @@ type Test = {
   creationDate: Date;
   questions: Question[];
   userIds: number[];
+  isChecked: boolean;
 };
 
 const testsFromResponse = (data: any): Test[] =>
@@ -65,6 +68,7 @@ const testsFromResponse = (data: any): Test[] =>
 
 const header = {
   id: 'header',
+  isChecked: false,
   testName: 'Nazwa testu',
   testDate: 'Data',
   points: 'Punkty',
@@ -84,6 +88,7 @@ const TempTest = [
     creationDate: new Date('05/31/2021'),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#2',
@@ -93,6 +98,7 @@ const TempTest = [
     creationDate: new Date('05/27/2021'),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#3',
@@ -102,6 +108,7 @@ const TempTest = [
     creationDate: new Date('10/01/2021'),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#4',
@@ -111,6 +118,7 @@ const TempTest = [
     creationDate: new Date('07/01/2021'),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#5',
@@ -120,6 +128,7 @@ const TempTest = [
     creationDate: new Date('02/15/2021'),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#6',
@@ -129,6 +138,7 @@ const TempTest = [
     creationDate: new Date(),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#7',
@@ -138,6 +148,7 @@ const TempTest = [
     creationDate: new Date(),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
   {
     id: '#8',
@@ -147,6 +158,7 @@ const TempTest = [
     creationDate: new Date(),
     questions: [],
     userIds: [],
+    isChecked: false,
   },
 ] as Test[];
 //#endregion
@@ -158,12 +170,14 @@ export const TestList: FC = () => {
   const errorRef = useRef<HTMLDivElement>(null);
   const [filteredTests, setFilteredTest] = useState(tests);
   const [nextTest, setNextTests] = useState({} as Test);
-  
+  const [checkedAll, setCheckedAll] = useState(false);
+
   const testsRef = useRef(tests);
   testsRef.current = tests;
   const filteredTestsRef = useRef(filteredTests);
   filteredTestsRef.current = filteredTests;
-
+  const checkedAllRef = useRef(checkedAll);
+  checkedAllRef.current = checkedAll;
 
   useEffect(() => {
     // const fetchAndUpdate = async () => {
@@ -184,7 +198,6 @@ export const TestList: FC = () => {
 
   //Efekt wyszukuje najbliższy test (póki)
   useEffect(() => {
-    setFilteredTest(tests);
     let tempTest = {} as Test;
     let time = -1 as number;
 
@@ -205,14 +218,19 @@ export const TestList: FC = () => {
     setNextTests(tempTest);
   }, [testsRef.current.length]);
 
+  //Aktualizuje filreredTest przy każdej zmianie tests
+  useEffect(() => {
+    setFilteredTest(tests);
+  }, [testsRef.current, checkedAll]);
+
   //Wyszukuje testy po nazwie
   const searchItemHandler = (value: string) => {
     if (value === '') {
       setFilteredTest(testsRef.current);
     } else if (testsRef.current.length > 0) {
       setFilteredTest(testsRef.current);
-      setFilteredTest(tests =>
-        tests.filter(test => {
+      setFilteredTest((tests) =>
+        tests.filter((test) => {
           return test.testName.toLowerCase().trim().includes(value);
         })
       );
@@ -224,7 +242,7 @@ export const TestList: FC = () => {
     if (testsRef.current.length > 0 && type.length > 2) {
       setFilteredTest((tests) => [
         ...tests.sort((a, b) => {
-          if (type == 'DATE_DESC') {
+          if (type === 'DATE_DESC') {
             return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
           } else if (type === 'DATE_ASC') {
             return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
@@ -240,12 +258,35 @@ export const TestList: FC = () => {
 
   const deleteTestsHandler = (id: string) => {
     if (id !== 'header') {
-      setTests(tests =>
-        tests.filter(test => {
+      setTests((tests) =>
+        tests.filter((test) => {
           return test.id !== id;
         })
       );
+    } else {
+      setTests((tests) =>
+        tests.filter((test) => {
+          return test.isChecked !== true;
+        }));
+    }
+  };
 
+  const selectCheckbox = (id: string) => {
+    if (id !== 'header') {
+      const index = testsRef.current.findIndex((test) => test.id === id);
+      setTests((tests) => [
+        ...tests.slice(0, index),
+        { ...tests[index], isChecked: !tests[index].isChecked },
+        ...tests.slice(index + 1),
+      ]);
+    }
+    else{
+      const tempTests = testsRef.current;
+      tempTests.forEach(test =>{
+        test.isChecked = checkedAll ? false : true;
+      })
+      setCheckedAll(state => !state);
+      setTests(tempTests);
     }
   };
 
@@ -262,30 +303,10 @@ export const TestList: FC = () => {
           sort={sort}
         />
         <RowItem
-          testId={header.id}
-          testName={header.testName}
-          testDate={header.testDate}
-          points={header.points}
-          time={header.time}
-          link={header.link}
-          details={header.details}
-          deleteItem={deleteTestsHandler}
+          tests= {filteredTestsRef.current}
+          deleteItem = {deleteTestsHandler}
+          setChecked = {selectCheckbox}
         />
-        {filteredTests.map((item) => {
-          return (
-            <RowItem
-              key={item.id}
-              testId={item.id}
-              testName={item.testName}
-              testDate={item.creationDate.toLocaleDateString()}
-              points={item.creatorId.toString()}
-              time={'25 min'}
-              link={item.isLinkGenerated.toString()}
-              details={'FAKERS'}
-              deleteItem={deleteTestsHandler}
-            />
-          );
-        })}
       </TestViewContainer>
     </>
   );
