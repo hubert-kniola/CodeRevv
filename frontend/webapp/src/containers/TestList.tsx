@@ -1,5 +1,5 @@
-import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem} from 'components';
-import { FC, useEffect, useRef, useState } from 'react';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, RowItem } from 'components';
+import { FC, useEffect, useRef, useState, VoidFunctionComponent } from 'react';
 import { scrollIntoMessageOverlay } from 'components';
 import { apiAxios } from 'utility';
 import type { RowProps } from 'components';
@@ -72,17 +72,7 @@ const header = {
   link: 'Link',
   details: 'Szczegóły',
   deleteItem: 'Usuń',
-} as RowProps;
-
-const row = {
-  testName: 'Gabriella_Grzmot_PZ_DESTRUKTOR',
-  testDate: '31/05/2021',
-  points: '5',
-  time: '25min',
-  link: 'zOOm',
-  details: 'GB',
-  deleteItem: 'Usuń',
-} as RowProps;
+};
 
 //#region JAKIEŚ_RaNDOMOWE_TESTY
 const TempTest = [
@@ -164,54 +154,41 @@ const TempTest = [
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [tests, setTests] = useState(TempTest as Test[]);
- 
+
   const errorRef = useRef<HTMLDivElement>(null);
-
-  //#region  TEN_REGION_MUSI_WRÓCIĆ_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // useEffect(() => {
-  //   const fetchAndUpdate = async () => {
-  //     try {
-  //       const { data } = await apiAxios.get('/test/list');
-
-  //       setTests(testsFromResponse(data));
-  //     } catch (err) {
-  //       if (err.response) {
-  //         setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
-  //       } else {
-  //         setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
-  //       }
-
-  //       scrollIntoMessageOverlay(errorRef);
-  //     }
-  //   };
-
-  //   fetchAndUpdate();
-  // }, []);
-  //#endregion
-
-  return (
-    <>
-      <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
-      <DataGridList tests={tests} />
-    </>
-  );
-};
-
-type DataGridListProps = {
-  tests: Test[];
-
-};
- 
-
-const DataGridList: FC<DataGridListProps> = ({ tests }) => {
   const [filteredTests, setFilteredTest] = useState(tests);
-  const [nextTest, setNextTests] = useState( {} as Test);
+  const [nextTest, setNextTests] = useState({} as Test);
   
+  const testsRef = useRef(tests);
+  testsRef.current = tests;
+  const filteredTestsRef = useRef(filteredTests);
+  filteredTestsRef.current = filteredTests;
+
+
   useEffect(() => {
+    // const fetchAndUpdate = async () => {
+    //   try {
+    //     const { data } = await apiAxios.get('/test/list');
+    //     setTests(testsFromResponse(data));
+    //   } catch (err) {
+    //     if (err.response) {
+    //       setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
+    //     } else {
+    //       setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+    //     }
+    //     scrollIntoMessageOverlay(errorRef);
+    //   }
+    // };
+    // fetchAndUpdate();
+  }, []);
+
+  //Efekt wyszukuje najbliższy test (póki)
+  useEffect(() => {
+    setFilteredTest(tests);
     let tempTest = {} as Test;
     let time = -1 as number;
 
-    tests.forEach((test) => {
+    testsRef.current.forEach((test) => {
       let currentDate = new Date().getDate().valueOf();
       let testTime = test.creationDate.getDate().valueOf() - currentDate;
 
@@ -220,28 +197,31 @@ const DataGridList: FC<DataGridListProps> = ({ tests }) => {
         tempTest = test;
       }
 
-      if (testTime < time && testTime >=0) {
+      if (testTime < time && testTime >= 0) {
         time = testTime;
         tempTest = test;
       }
     });
     setNextTests(tempTest);
-  }, [tests.length]);
+  }, [testsRef.current.length]);
 
+  //Wyszukuje testy po nazwie
   const searchItemHandler = (value: string) => {
     if (value === '') {
-      setFilteredTest(tests);
-    } else if (tests.length > 0) {
-      setFilteredTest((tests) =>
-        tests.filter((test) => {
+      setFilteredTest(testsRef.current);
+    } else if (testsRef.current.length > 0) {
+      setFilteredTest(testsRef.current);
+      setFilteredTest(tests =>
+        tests.filter(test => {
           return test.testName.toLowerCase().trim().includes(value);
         })
       );
     }
   };
 
+  //Sortuje według wyzanczonego kryterium
   const sort = (type: string) => {
-    if (tests.length > 0 && type.length > 2) {
+    if (testsRef.current.length > 0 && type.length > 2) {
       setFilteredTest((tests) => [
         ...tests.sort((a, b) => {
           if (type == 'DATE_DESC') {
@@ -258,46 +238,55 @@ const DataGridList: FC<DataGridListProps> = ({ tests }) => {
     }
   };
 
+  const deleteTestsHandler = (id: string) => {
+    if (id !== 'header') {
+      setTests(tests =>
+        tests.filter(test => {
+          return test.id !== id;
+        })
+      );
 
-
+    }
+  };
 
   return (
-    <TestViewContainer>
-     
-      <HeaderToolBar
-        numberOfTest={tests.length}
-        nextTestName={nextTest.testName ? nextTest.testName : '---'}
-        nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
-        searchTest={searchItemHandler}
-        changeView={() => {}}
-        sort={sort}
-      />
-      <button >POP UP</button>
-      <RowItem
-        id={header.id}
-        header={true}
-        testName={header.testName}
-        testDate={header.testDate}
-        points={header.points}
-        time={header.time}
-        link={header.link}
-        details={header.details}
-        deleteItem={header.deleteItem}
-      />
-      {filteredTests.map((item) => {
-        return (
-          <RowItem
-            key={item.id}
-            testName={item.testName}
-            testDate={item.creationDate.toLocaleDateString()}
-            points={item.creatorId.toString()}
-            time={'25 min'}
-            link={item.isLinkGenerated.toString()}
-            details={'FAKERS'}
-            deleteItem={'Usuń'}
-          />
-        );
-      })}
-    </TestViewContainer>
+    <>
+      <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
+      <TestViewContainer>
+        <HeaderToolBar
+          numberOfTest={tests.length}
+          nextTestName={nextTest.testName ? nextTest.testName : '---'}
+          nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
+          searchTest={searchItemHandler}
+          changeView={() => {}}
+          sort={sort}
+        />
+        <RowItem
+          testId={header.id}
+          testName={header.testName}
+          testDate={header.testDate}
+          points={header.points}
+          time={header.time}
+          link={header.link}
+          details={header.details}
+          deleteItem={deleteTestsHandler}
+        />
+        {filteredTests.map((item) => {
+          return (
+            <RowItem
+              key={item.id}
+              testId={item.id}
+              testName={item.testName}
+              testDate={item.creationDate.toLocaleDateString()}
+              points={item.creatorId.toString()}
+              time={'25 min'}
+              link={item.isLinkGenerated.toString()}
+              details={'FAKERS'}
+              deleteItem={deleteTestsHandler}
+            />
+          );
+        })}
+      </TestViewContainer>
+    </>
   );
 };

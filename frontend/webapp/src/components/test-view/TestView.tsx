@@ -43,28 +43,29 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({ numberOfTest, nextTestNa
 };
 
 export type RowProps = {
-  id?: string;
-  header?: boolean;
+  testId: string;
   testName: string;
   testDate: string;
   points: string;
   time: string;
   link: string;
   details: string;
-  deleteItem: string;
+  deleteItem: (id:string) => void;
 };
 
-export const RowItem: FC<RowProps> = ({id, header, testName, testDate, points, time, link, details, deleteItem}) => {
+export const RowItem: FC<RowProps> = ({testId, testName, testDate, points, time, link, details, deleteItem}) => {
+  const isHeader = (testId === 'header');
+  
   return (
-    <TableFormat id={id} >
-      <input type="checkbox" onChange={id ? ()=>{console.log('select all')} : ()=>{console.log('select one') }}/>
-      {header ?  <div id="name">{testName}</div> : <div id="name">{testName}</div>}
+    <TableFormat id={isHeader ?'header' : testId}>
+      <input type="checkbox" onChange={isHeader ? ()=>{console.log('select all')} : ()=>{console.log('select one') }}/>
+      { isHeader ?  <div id="name">{testName}</div> : <div id="name">{testName}</div>}
       <div>{testDate}</div>
       <div>{points}</div>
       <div>{time}</div>
       <div>{link}</div>
       <div>{details}</div>
-      <div>{deleteItem}</div>
+      <div onClick={() => deleteItem(testId)}>Usuń</div>
     </TableFormat>
   );
 };
