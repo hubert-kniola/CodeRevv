@@ -55,8 +55,9 @@ def test_create(request):
     user_id = get_user_id(request)
     request.data['creator'] = int(user_id)
     request.data['is_link_generated'] = False
-    print(request.data)
+
     response = requests.post(f"{proxy}/test/create", json=request.data)
+    print(request.data)
     return Response(response, response.status_code)
 
 

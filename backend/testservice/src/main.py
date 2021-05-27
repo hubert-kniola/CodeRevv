@@ -42,7 +42,7 @@ async def test(test_id, user_id):
     user_id = int(user_id)
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
-        return test
+        return {'test': test}
     elif test.is_link_generated:
         if not test.users:
             test.users = []
@@ -84,7 +84,7 @@ async def create_test(test: Test):
     test.pub_test = str(datetime.now())
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
-    return jsonable_encoder(created_test)
+    return {'test': created_test}
 
 
 @app.get('/test/list', response_model=List[Test], status_code=200)
