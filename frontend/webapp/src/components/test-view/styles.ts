@@ -21,14 +21,25 @@ export const Container = styled.div`
       border-bottom: 0;
     }
   }
-`;
 
-export const Pagin = styled.div`
+  .pagination{
+    color: blue;
+  }
+`;
+// TO WYLECI
+export const Pagination = styled.div`
   position: absolute;
   right: 0.5rem;
   bottom: 0.5rem;
 `;
 
+export const Page = styled.div`
+  width: 1%;
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 20%;
+`
+//KONIEC
 export const HeaderTool = styled.div`
   width: 100%;
   display: fixed;
@@ -64,7 +75,7 @@ export const HeaderTool = styled.div`
   }
 `;
 
-export const TableFormat = styled.div<{ header?: boolean }>`
+export const TableFormat = styled.div`
   width: 100%;
   background-color: #5f5f5f;
   margin: 0 auto;
@@ -98,3 +109,5 @@ export const TableFormat = styled.div<{ header?: boolean }>`
     margin: auto auto auto 3%;
   }
 `;
+
+

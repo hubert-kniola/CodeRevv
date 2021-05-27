@@ -1,14 +1,16 @@
-import { FC, useState } from 'react';
-import { TableFormat, HeaderTool, Container, Pagin } from './styles';
+import { FC, useState, useEffect } from 'react';
+import { TableFormat, HeaderTool, Container, Pagination} from './styles';
 import TextField from '@material-ui/core/TextField';
-import Pagination from '@material-ui/lab/Pagination';
+
 
 
 export const TestViewContainer: FC = ({ children }) => {
   return (
     <Container>
       {children}
-      <Pagination count={10} color="primary" />
+      <Pagination >
+          1 2 3 ... 99
+        </Pagination>
     </Container>
   );
 };
@@ -22,9 +24,13 @@ type HeaderToolBarProps = {
   sort: (type: string) => void;
 };
 
-
-
-export const HeaderToolBar: FC<HeaderToolBarProps> = ({ numberOfTest, nextTestName, nextTestDate, searchTest,  sort}) => {
+export const HeaderToolBar: FC<HeaderToolBarProps> = ({
+  numberOfTest,
+  nextTestName,
+  nextTestDate,
+  searchTest,
+  sort,
+}) => {
   return (
     <HeaderTool>
       <div>
@@ -32,34 +38,35 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({ numberOfTest, nextTestNa
         <p>Nadchodzący test: {nextTestName}</p>
         <p>Data: {nextTestDate}</p>
       </div>
-      <TextField id="outlined-basic" label="Wyszukaj..." variant="outlined" onChange={(e) => searchTest(e.target.value)}/>
+      <TextField
+        id="outlined-basic"
+        label="Wyszukaj..."
+        variant="outlined"
+        onChange={(e) => searchTest(e.target.value)}
+      />
       <select onChange={(e) => sort(e.target.value)}>
-        <option value='DATE_DESC'> Data malejaco</option>
-        <option value='DATE_ASC'> Data rosnąco</option>
-        <option value='A_Z'> A..Z</option>
-        <option value='Z_A'> Z..A</option>
+        <option value="DATE_DESC"> Data malejaco</option>
+        <option value="DATE_ASC"> Data rosnąco</option>
+        <option value="A_Z"> A..Z</option>
+        <option value="Z_A"> Z..A</option>
       </select>
       <button>Widok</button>
     </HeaderTool>
   );
 };
 
-
-
 export type HeaderProps = {
   deleteItem: () => void;
   setCheckedAll: () => void;
 };
 
-
-export const HeaderItem: FC<HeaderProps> = ({ deleteItem, setCheckedAll}) => {
+export const HeaderItem: FC<HeaderProps> = ({ deleteItem, setCheckedAll }) => {
   const [checked, setChecked] = useState(false);
-
 
   return (
     <TableFormat id={'header'}>
-      <input type="checkbox" onClick={() => setCheckedAll()} checked={checked}/>
-      <div id="name">Nazwa testu</div> 
+      <input type="checkbox" onClick={() => setCheckedAll()} checked={checked} />
+      <div id="name">Nazwa testu</div>
       <div>Data</div>
       <div>Punkty</div>
       <div>Czas</div>
@@ -119,46 +126,43 @@ type Test = {
 //DO WYJEBANIA
 
 export type RowProps = {
-  tests: Test[]
-  deleteItem: (id:string) => void;
-  setChecked: (id:string) => void;
+  tests: Test[];
+  deleteItem: (id: string) => void;
+  setChecked: (id: string) => void;
 };
 
-export const RowItem: FC<RowProps> = ({tests,  deleteItem, setChecked}) => {
+export const RowItem: FC<RowProps> = ({ tests, deleteItem, setChecked }) => {
   const [headerChecked, setHeaderChecked] = useState(false);
 
-  const selectAll = () =>{
+  const selectAll = () => {
     setChecked(header.id);
-    setHeaderChecked(state => !state);
-  }
+    setHeaderChecked((state) => !state);
+  };
 
   return (
     <>
-    <TableFormat id={header.id}>
-      <input type="checkbox" onClick={selectAll} checked={headerChecked}/>
-      <div id="name">{header.testName}</div>
-      <div>{header.testDate}</div>
-      <div>{header.points}</div>
-      <div>{header.time}</div>
-      <div>{header.link}</div>
-      <div>{header.details}</div>
-      <div onClick={() => deleteItem(header.id)}>Usuń</div>
-    </TableFormat>
-    {tests.map(test => (
-      <TableFormat>
-        <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked}/>
-        <div id="name">{test.testName}</div>
-        <div>{test.creationDate.toLocaleDateString()}</div>
-        <div>{test.creatorId.toString()}</div>
-        <div>25 min</div>
-        <div>{test.isLinkGenerated.toString()}</div>
-        <div>FAKERS</div>
-        <div onClick={() => deleteItem(test.id)}>Usuń</div>
+      <TableFormat id={header.id}>
+        <input type="checkbox" onClick={selectAll} checked={headerChecked} />
+        <div id="name">{header.testName}</div>
+        <div>{header.testDate}</div>
+        <div>{header.points}</div>
+        <div>{header.time}</div>
+        <div>{header.link}</div>
+        <div>{header.details}</div>
+        <div onClick={() => deleteItem(header.id)}>Usuń</div>
       </TableFormat>
-    ))}
-
+      {tests.map((test) => (
+        <TableFormat>
+          <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
+          <div id="name">{test.testName}</div>
+          <div>{test.creationDate.toLocaleDateString()}</div>
+          <div>{test.creatorId.toString()}</div>
+          <div>25 min</div>
+          <div>{test.isLinkGenerated.toString()}</div>
+          <div>FAKERS</div>
+          <div onClick={() => deleteItem(test.id)}>Usuń</div>
+        </TableFormat>
+      ))}
     </>
   );
-
 };
-
