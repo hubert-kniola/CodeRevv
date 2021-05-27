@@ -189,9 +189,6 @@ export const TestList: FC = () => {
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
 
-      <div style={{ backgroundColor: 'white', height: '500px', width: '800px' }}>
-        <DataGrid rows={tests} columns={columns} pageSize={10} localeText={locale} checkboxSelection />
-      </div>
     </>
   );
 };
