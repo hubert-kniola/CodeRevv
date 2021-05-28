@@ -1,141 +1,249 @@
-import { MessageOverlay, TestView } from 'components';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
-import { scrollIntoMessageOverlay } from 'components';
-import { apiAxios } from 'utility';
-
-import { DataGrid, GridColDef, GridLocaleText } from '@material-ui/data-grid';
-
 import { Test, testsFromResponse } from 'const';
 
-const columns: GridColDef[] = [
-  { field: 'testName', headerName: 'Nazwa testu', width: 250 },
-  { field: 'creationDate', headerName: 'Data utworzenia', width: 250 },
-  { field: 'isLinkGenerated', headerName: 'Zaproszenia z linku?', width: 250 },
-];
 
-const locale: GridLocaleText = {
-  // Root
-  rootGridLabel: 'Siatka',
-  noRowsLabel: 'Brak danych',
-  noResultsOverlayLabel: 'Brak danych',
-  errorOverlayDefaultLabel: 'Wystąpił błąd',
-
-  // Density selector toolbar button text
-  toolbarDensity: 'Density',
-  toolbarDensityLabel: 'Density',
-  toolbarDensityCompact: 'Compact',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comfortable',
-
-  // Columns selector toolbar button text
-  toolbarColumns: 'Columns',
-  toolbarColumnsLabel: 'Wybierz kolumny',
-
-  // Filters toolbar button text
-  toolbarFilters: 'Filters',
-  toolbarFiltersLabel: 'Show filters',
-  toolbarFiltersTooltipHide: 'Hide filters',
-  toolbarFiltersTooltipShow: 'Show filters',
-  toolbarFiltersTooltipActive: (count) => (count !== 1 ? `${count} active filters` : `${count} active filter`),
-
-  // Export selector toolbar button text
-  toolbarExport: 'Export',
-  toolbarExportLabel: 'Export',
-  toolbarExportCSV: 'Download as CSV',
-
-  // Columns panel text
-  columnsPanelTextFieldLabel: 'Find column',
-  columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder column',
-  columnsPanelShowAllButton: 'Show all',
-  columnsPanelHideAllButton: 'Hide all',
-
-  // Filter panel text
-  filterPanelAddFilter: 'Add filter',
-  filterPanelDeleteIconLabel: 'Delete',
-  filterPanelOperators: 'Operators',
-  filterPanelOperatorAnd: 'And',
-  filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'Columns',
-  filterPanelInputLabel: 'Value',
-  filterPanelInputPlaceholder: 'Filter value',
-
-  // Filter operators text
-  filterOperatorContains: 'contains',
-  filterOperatorEquals: 'equals',
-  filterOperatorStartsWith: 'starts with',
-  filterOperatorEndsWith: 'ends with',
-  filterOperatorIs: 'is',
-  filterOperatorNot: 'is not',
-  filterOperatorAfter: 'is after',
-  filterOperatorOnOrAfter: 'is on or after',
-  filterOperatorBefore: 'is before',
-  filterOperatorOnOrBefore: 'is on or before',
-
-  // Filter values text
-  filterValueAny: 'Dowolnie',
-  filterValueTrue: 'Tak',
-  filterValueFalse: 'Nie',
-
-  // Column menu text
-  columnMenuLabel: 'Menu',
-  columnMenuShowColumns: 'Pokaż kolumny',
-  columnMenuFilter: 'Filtruj',
-  columnMenuHideColumn: 'Schowaj',
-  columnMenuUnsort: 'Anuluj sortowanie',
-  columnMenuSortAsc: 'Sortuj rosnąco',
-  columnMenuSortDesc: 'Sortuj malejąco',
-
-  // Column header text
-  columnHeaderFiltersTooltipActive: (count) => (count !== 1 ? `${count} aktywne filtry` : `${count} aktywny filtr`),
-  columnHeaderFiltersLabel: 'Pokaż filtry',
-  columnHeaderSortIconLabel: 'Sortuj',
-
-  // Rows selected footer text
-  footerRowSelected: (count) =>
-    count !== 1 ? `Wybrano ${count.toLocaleString()} wiersze` : `${count.toLocaleString()} wybrany wiersz`,
-
-  // Total rows footer text
-  footerTotalRows: 'Suma wierszy:',
-
-  // Checkbox selection text
-  checkboxSelectionHeaderName: 'Wybór wielokrotny',
-
-  // Boolean cell text
-  booleanCellTrueLabel: 'Tak',
-  booleanCellFalseLabel: 'Nie',
+const header = {
+  id: 'header',
+  isChecked: false,
+  testName: 'Nazwa testu',
+  testDate: 'Data',
+  points: 'Punkty',
+  time: 'Czas',
+  link: 'Link',
+  details: 'Szczegóły',
+  deleteItem: 'Usuń',
 };
+
+//#region JAKIEŚ_RaNDOMOWE_TESTY
+const TempTest = [
+  {
+    id: '#1',
+    creatorId: 997,
+    testName: 'Gabriella Grzmot',
+    isLinkGenerated: true,
+    creationDate: new Date('05/31/2021'),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#2',
+    creatorId: 12,
+    testName: 'Totalne zniszczenie',
+    isLinkGenerated: true,
+    creationDate: new Date('05/27/2021'),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#3',
+    creatorId: 52,
+    testName: 'Bąk ląduje na słoneczniku',
+    isLinkGenerated: true,
+    creationDate: new Date('10/01/2021'),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#4',
+    creatorId: 985,
+    testName: 'Szybkie kładzenie kostki',
+    isLinkGenerated: true,
+    creationDate: new Date('07/01/2021'),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#5',
+    creatorId: 1324,
+    testName: 'Jakiś random test',
+    isLinkGenerated: true,
+    creationDate: new Date('02/15/2021'),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#6',
+    creatorId: 997,
+    testName: 'Gabriella Grzmot 2',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#7',
+    creatorId: 52,
+    testName: 'Bąk Gucio',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+  {
+    id: '#8',
+    creatorId: 52,
+    testName: 'Gitara Siema',
+    isLinkGenerated: true,
+    creationDate: new Date(),
+    questions: [],
+    userIds: [],
+    isChecked: false,
+  },
+] as Test[];
+//#endregion
 
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
-  const [tests, setTests] = useState([] as Test[]);
+  const [tests, setTests] = useState(TempTest as Test[]);
+
   const errorRef = useRef<HTMLDivElement>(null);
+  const [filteredTests, setFilteredTest] = useState(tests);
+  const [nextTest, setNextTests] = useState({} as Test);
+  const [checkedAll, setCheckedAll] = useState(false);
+
+  const testsRef = useRef(tests);
+  testsRef.current = tests;
+  const filteredTestsRef = useRef(filteredTests);
+  filteredTestsRef.current = filteredTests;
+  const checkedAllRef = useRef(checkedAll);
+  checkedAllRef.current = checkedAll;
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const { data } = await apiAxios.get('/test/list');
-
-        setTests(testsFromResponse(data));
-        console.log(tests);
-      } catch (err) {
-        if (err.response) {
-          setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
-        } else {
-          setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
-        }
-
-        scrollIntoMessageOverlay(errorRef);
-      }
-    };
-
-    fetch();
+    // const fetchAndUpdate = async () => {
+    //   try {
+    //     const { data } = await apiAxios.get('/test/list');
+    //     setTests(testsFromResponse(data));
+    //   } catch (err) {
+    //     if (err.response) {
+    //       setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
+    //     } else {
+    //       setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+    //     }
+    //     scrollIntoMessageOverlay(errorRef);
+    //   }
+    // };
+    // fetchAndUpdate();
   }, []);
+
+  //Efekt wyszukuje najbliższy test (póki)
+
+  useEffect(() => {
+    let tempTest = {} as Test;
+    let time = -1 as number;
+
+    testsRef.current.forEach((test) => {
+      let currentDate = new Date().getDate().valueOf();
+      let testTime = test.creationDate.getDate().valueOf() - currentDate;
+
+      if (time < 0) {
+        time = testTime;
+        tempTest = test;
+      }
+
+      if (testTime < time && testTime >= 0) {
+        time = testTime;
+        tempTest = test;
+      }
+    });
+    setNextTests(tempTest);
+  }, [testsRef.current.length]);
+
+  //Aktualizuje filreredTest przy każdej zmianie tests
+  useEffect(() => {
+    setFilteredTest(tests);
+  }, [testsRef.current, checkedAll]);
+
+  //Wyszukuje testy po nazwie
+  const searchItemHandler = (value: string) => {
+    if (value === '') {
+      setFilteredTest(testsRef.current);
+    } else if (testsRef.current.length > 0) {
+      setFilteredTest(testsRef.current);
+      setFilteredTest((tests) =>
+        tests.filter((test) => {
+          return test.testName.toLowerCase().trim().includes(value.toLowerCase());
+        })
+      );
+    }
+  };
+
+  //Sortuje według wyzanczonego kryterium
+  const sort = (type: string) => {
+    if (testsRef.current.length > 0 && type.length > 2) {
+      setFilteredTest((tests) => [
+        ...tests.sort((a, b) => {
+          if (type === 'DATE_DESC') {
+            return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+          } else if (type === 'DATE_ASC') {
+            return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+          } else if (type === 'A_Z') {
+            return a.testName > b.testName ? 1 : -1;
+          } else {
+            return a.testName < b.testName ? 1 : -1;
+          }
+        }),
+      ]);
+    }
+  };
+
+  const deleteTestsHandler = (id: string) => {
+    if (id !== 'header') {
+      setTests((tests) =>
+        tests.filter((test) => {
+          return test.id !== id;
+        })
+      );
+    } else {
+      setTests((tests) =>
+        tests.filter((test) => {
+          return test.isChecked !== true;
+        })
+      );
+    }
+  };
+
+  const selectCheckbox = (id: string) => {
+    if (id !== 'header') {
+      const index = testsRef.current.findIndex((test) => test.id === id);
+      setTests((tests) => [
+        ...tests.slice(0, index),
+        { ...tests[index], isChecked: !tests[index].isChecked },
+        ...tests.slice(index + 1),
+      ]);
+    } else {
+      const tempTests = testsRef.current;
+      tempTests.forEach((test) => {
+        test.isChecked = checkedAll ? false : true;
+      });
+      setCheckedAll((state) => !state);
+      setTests(tempTests);
+    }
+  };
+
 
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
 
+      <TestViewContainer>
+        <HeaderToolBar
+          numberOfTest={tests.length}
+          nextTestName={nextTest.testName ? nextTest.testName : '---'}
+          nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
+          searchTest={searchItemHandler}
+          changeView={() => {}}
+          sort={sort}
+        />
+        <Table tests={filteredTestsRef.current} deleteItem={deleteTestsHandler} setChecked={selectCheckbox} />
+      </TestViewContainer>
     </>
   );
 };

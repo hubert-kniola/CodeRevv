@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Home, NotFound, Loading } from 'pages';
 import { ProtectedRoute } from 'components';
+import { TestEditor, TestList } from 'containers';
+
 
 const Login = lazy(() => import('pages/Login'));
 const Signup = lazy(() => import('pages/Signup'));
@@ -21,6 +23,7 @@ const App = () => (
         <Route exact path="/recover/:uid?/:token?" component={PasswordRecover} />
         <Route exact path="/activate/:uid/:token" component={AccountActivate} />
         <ProtectedRoute exact path="/dashboard/:verb?/:resource?/:id?" For={Dashboard} fallbackPath="/signin" />
+        <Route exact path="/dashboardTestList" component={TestList} />
         <ProtectedRoute exact path="/test/:id" For={TestingForm} fallbackPath="/signin" />
         <Route component={NotFound} />
         <Route exact path="/dashboardTest" component={Dashboard} />
