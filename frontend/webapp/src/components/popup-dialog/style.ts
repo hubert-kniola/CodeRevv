@@ -79,8 +79,8 @@ export const MinorButton = styled.button`
   }
 `;
 
-export const Title = styled.h1`
-  font-size: 50px;
+export const Title = styled.div`
+  font-size: 30px;
   margin-top: 10px;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;
