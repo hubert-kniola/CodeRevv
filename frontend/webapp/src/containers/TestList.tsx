@@ -1,63 +1,7 @@
 import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
+import { Test, testsFromResponse } from 'const';
 
-
-type UserAnswer = {
-  content: string;
-  user: number;
-  comment?: string;
-  score: number;
-};
-
-type Answer = {
-  index: number;
-  content: string;
-  isCorrect: boolean;
-  usersVoted?: number[];
-};
-
-type Question = {
-  answers: Answer[];
-  content: string;
-  index: number;
-  maxScore: number;
-  questionType: string;
-  userAnswers?: UserAnswer[];
-};
-
-type Test = {
-  id: string;
-  creatorId: number;
-  testName: string;
-  isLinkGenerated: boolean;
-  creationDate: Date;
-  questions: Question[];
-  userIds: number[];
-  isChecked: boolean;
-};
-
-const testsFromResponse = (data: any): Test[] =>
-  data.tests.map((t: any) => ({
-    id: t.id,
-    creatorId: t.creator,
-    testName: t.name,
-    isLinkGenerated: t.is_link_generated,
-    creationDate: new Date(t.pub_test).toLocaleString(),
-    userIds: t.users,
-    questions: t.questions.map((q: any) => ({
-      content: q.content,
-      index: q.index,
-      questionType: q.question_type,
-      maxScore: q.max_score,
-      userAnswers: null,
-      answers: q.answers.map((a: any) => ({
-        index: a.index,
-        content: a.content,
-        isCorrect: a.is_correct,
-        usersVoted: a.users_voted,
-      })),
-    })),
-  }));
 
 const header = {
   id: 'header',
@@ -284,9 +228,11 @@ export const TestList: FC = () => {
     }
   };
 
+
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
+
       <TestViewContainer>
         <HeaderToolBar
           numberOfTest={tests.length}

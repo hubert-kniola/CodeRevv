@@ -50,11 +50,12 @@ export const Header = styled.div<{ show: boolean }>`
   margin-bottom: 1px;
   font-size: 26px;
   font-weight: normal;
-  background: ${({ theme }) => theme.colors.setting};
+  background: ${({ theme }) => theme.colors.lighterBackground};
   padding: 0.8em 1.2em 0.8em 1.2em;
   user-select: none;
   align-items: center;
   border-radius: 15px;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   img {
     margin-left: 10px;
@@ -93,11 +94,12 @@ export const Body = styled.div<{ show: boolean }>`
   font-size: 26px;
   font-weight: normal;
   line-height: normal;
-  background: ${({ theme }) => theme.colors.setting};
+  background: ${({ theme }) => theme.colors.lighterBackground};
   white-space: pre-wrap;
   user-select: none;
   overflow: hidden;
   border-radius: 15px;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   ${({ show }) =>
     (show &&

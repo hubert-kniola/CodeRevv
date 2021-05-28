@@ -5,6 +5,7 @@ import { NavBarUser, ButtonSpace, Row, Icon, TitleRow, DropDown } from './styles
 import { NavBarData, userNavBarData } from 'const';
 import { AuthContext, DashContext } from 'context';
 import { useOnClickOutside } from 'hooks';
+import { Collapse } from '@material-ui/core';
 
 export const List: FC = () => {
   const { authState } = useContext(AuthContext);
@@ -27,7 +28,8 @@ export const List: FC = () => {
 
   return (
     <DropDown ref={dropDownRef} onClick={toggleOpen} open={navbarOpen}>
-      {navbarOpen ? userNavBarData.map((item) => dataToItem(item)) : dataToItem(userNavBarData[0])}
+      {dataToItem(userNavBarData[0])}
+      <Collapse in={navbarOpen}>{userNavBarData.slice(1).map((item) => dataToItem(item))}</Collapse>
     </DropDown>
   );
 };

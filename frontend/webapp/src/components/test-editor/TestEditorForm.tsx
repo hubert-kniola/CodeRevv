@@ -8,7 +8,7 @@ import {
   Button,
   NewQuestionButton,
   QuestionContainer,
-  CenteringContainer
+  CenteringContainer,
 } from './styles';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -32,7 +32,6 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
 
   const questionsRef = useRef(questions);
   questionsRef.current = questions;
-
 
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(testEditorSchema),
@@ -73,7 +72,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
           <Error>{errors['testName']?.message}</Error>
         </CenteringContainer>
 
-        <hr/>
+        <hr />
 
         <Header>Pytania</Header>
 
@@ -84,9 +83,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
         ))}
 
         <CenteringContainer>
-          <NewQuestionButton onClick={addEmptyQuestion}>
-            Dodaj pytanie
-          </NewQuestionButton>
+          <NewQuestionButton onClick={addEmptyQuestion}>Dodaj pytanie</NewQuestionButton>
         </CenteringContainer>
 
         <hr />

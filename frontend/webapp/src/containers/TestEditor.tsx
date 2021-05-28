@@ -1,7 +1,7 @@
 import { FC, useRef, useState, useContext } from 'react';
 
 import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorForm } from 'components';
-import { Question, TestEditorContext, TestEditorContextProvider } from 'context';
+import { EditorQuestion, TestEditorContext, TestEditorContextProvider } from 'context';
 
 import { EditorValue } from 'react-rte';
 import { apiAxios } from 'utility';
@@ -13,7 +13,7 @@ const MIN_ANSWER_BODY = 1;
 const validateEditorValue = (e: EditorValue, min: number) => {
   const body = e.toString('markdown');
 
-  if (body.trim().length <= min) {
+  if (body.trim().length < min) {
     return true;
   }
   return false;
@@ -31,8 +31,9 @@ const TestEditorIn: FC = () => {
     questions: questions.map((q, iQuestion) => ({
       index: iQuestion,
       content: q.value.toString('html'),
+      question_type: q.type,
       max_score: q.maxScore,
-      answers: q.answers.map((a, iAnswer) => ({
+      answers: q.answers?.map((a, iAnswer) => ({
         index: iAnswer,
         content: a.value.toString('html'),
         is_correct: a.isCorrect,
@@ -49,38 +50,40 @@ const TestEditorIn: FC = () => {
         errorMessage += `Zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_QUESTION_BODY}.\n`;
       }
 
-      if (q.answers.filter((a) => a.isCorrect).length < 1) {
-        errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
-      }
+      let tempQuestion: EditorQuestion | null = null;
 
-      let tempQuestion: Question | null = null;
-
-      q.answers.forEach((a, iAnswer) => {
-        if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
-          const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
-
-          if (tempQuestion == null) {
-            tempQuestion = { ...q };
-          }
-
-          tempQuestion = {
-            ...tempQuestion,
-            answers: [
-              ...tempQuestion.answers.slice(0, iAnswer),
-              { ...a, error },
-              ...tempQuestion.answers.slice(iAnswer + 1),
-            ],
-          } as Question;
-
-          hadErrors = true;
+      if (q.answers !== undefined) {
+        if (q.answers.filter((a) => a.isCorrect).length < 1) {
+          errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
         }
-      });
+
+        q.answers.forEach((a, iAnswer) => {
+          if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
+            const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
+
+            if (tempQuestion === null) {
+              tempQuestion = { ...q };
+            }
+
+            tempQuestion = {
+              ...tempQuestion,
+              answers: [
+                ...tempQuestion.answers!.slice(0, iAnswer),
+                { ...a, error },
+                ...tempQuestion.answers!.slice(iAnswer + 1),
+              ],
+            } as EditorQuestion;
+
+            hadErrors = true;
+          }
+        });
+      }
 
       if (errorMessage.length !== 0) {
         hadErrors = true;
 
         if (tempQuestion != null) {
-          setSingleQuestion({ ...(tempQuestion as Question), error: errorMessage }, iQuestion);
+          setSingleQuestion({ ...(tempQuestion as EditorQuestion), error: errorMessage }, iQuestion);
         } else {
           setSingleQuestion({ ...q, error: errorMessage }, iQuestion);
         }
@@ -102,7 +105,6 @@ const TestEditorIn: FC = () => {
       try {
         await apiAxios.post('/test/create', getRawTestEditorData());
         history.push('/dashboard/view/tests');
-
       } catch (err) {
         if (err.response) {
           setError('Nie udało się stworzyć testu.\nSpróbuj ponownie po odświeżeniu strony.');

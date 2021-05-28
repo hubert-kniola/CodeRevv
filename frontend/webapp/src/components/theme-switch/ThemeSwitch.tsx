@@ -8,7 +8,7 @@ export const ThemeSwitch: FunctionComponent = () => {
 
   return (
     <Container>
-      <CheckBox checked={theme.name === 'light'} onChange={() => {}} onClick={switchTheme} />
+      <CheckBox disabled={true} checked={theme.name === 'light'} onChange={() => {}} onClick={switchTheme} />
       <Label />
     </Container>
   );

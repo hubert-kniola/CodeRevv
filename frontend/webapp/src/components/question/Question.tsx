@@ -10,13 +10,14 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { QuestionContainer, GeneralQuestion, Button, AnswerBlock, AnswerContainer, ErrorText } from './style';
-import { Question, Answer, newAnswer, TestEditorContext } from 'context';
+
+import { EditorQuestion, EditorAnswer, newAnswer, TestEditorContext } from 'context';
 import { MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
   index: number;
-  question: Question;
+  question: EditorQuestion;
   onDelete: () => void;
 };
 
@@ -29,22 +30,22 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
   const questionRef = useRef(question);
   questionRef.current = question;
 
-  const replaceAnswer = (pos: number, value: Answer) => {
+  const replaceAnswer = (pos: number, value: EditorAnswer) => {
     setSingleQuestion(
       {
         ...question,
-        answers: [...question.answers.slice(0, pos), value, ...question.answers.slice(pos + 1)],
+        answers: [...question.answers!.slice(0, pos), value, ...question.answers!.slice(pos + 1)],
       },
       index
     );
   };
 
   const removeAnswer = (pos: number) => {
-    if (question.answers.length > 2) {
+    if (question.answers!.length > 2) {
       setSingleQuestion(
         {
           ...question,
-          answers: question.answers.filter((_, index) => index !== pos),
+          answers: question.answers!.filter((_, index) => index !== pos),
         },
         index
       );
@@ -55,11 +56,11 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
   const addAnswer = (e: MouseEvent) => {
     e.preventDefault();
 
-    if (question.answers.length < 10) {
+    if (question.answers!.length < 10) {
       setSingleQuestion(
         {
           ...question,
-          answers: [...question.answers, newAnswer()],
+          answers: [...question.answers!, newAnswer()],
         },
         index
       );
@@ -114,15 +115,27 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
             <h3>
               {question.value
                 .toString('html')
-                .slice(0, 50)
                 .replace(/(<([^>]+)>)/gi, '')
-                .replace(/&nbsp;/g, ' ') + '...'}
+                .replace(/&nbsp;/g, ' ')
+                .trimRight()
+                .slice(0, 50) + '...'}
             </h3>
           </MessageOverlay>
         </div>
 
         <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
-        <input value={question.maxScore} />
+        <input
+          value={question.maxScore}
+          min={0}
+          max={10}
+          step={0.5}
+          onChange={(e) => {
+            const val = +e.target.value;
+            if (val <= 10 && val >= 0.5) {
+              setSingleQuestion({ ...question, maxScore: +e.target.value }, index);
+            }
+          }}
+        />
 
         <RemoveIcon id="RemoveIcon" className="ico" onClick={removePoint} />
         <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
@@ -132,6 +145,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
         <Grow in={grow} timeout={500}>
           <ErrorText>{question.error}</ErrorText>
         </Grow>
+
         <RichTextEditor
           toolbarConfig={toolbarConfig}
           className="text-editor"
@@ -139,13 +153,13 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
           onChange={(value) => setSingleQuestion({ ...question, value }, index)}
         />
 
-        {question.answers.map((item, index) => (
+        {question.answers!.map((item, index) => (
           <AnswerEditor
             key={item.id}
             answer={item}
             setAnswerState={(state) => replaceAnswer(index, state)}
             onDelete={() => removeAnswer(index)}
-            answersCount={question.answers.length}
+            answersCount={question.answers!.length}
           />
         ))}
         {buttonDisabled && (
@@ -163,8 +177,8 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
 };
 
 type AnswerEditorProps = {
-  answer: Answer;
-  setAnswerState: (value: Answer) => void;
+  answer: EditorAnswer;
+  setAnswerState: (value: EditorAnswer) => void;
   onDelete: () => void;
   answersCount: number;
 };

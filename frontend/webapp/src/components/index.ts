@@ -18,3 +18,7 @@ export * from './question/Question';
 export * from './test-view/TestView';
 export * from './popup-dialog/PopupDialog';
 export * from './sliding-panel/SlidingPanel'
+export * from './test-fill/Components';
+export * from './dialogs/TestStartDialog';
+export * from './dialogs/TestEndDialog';
+export * from './test-fill/QuestionFill';

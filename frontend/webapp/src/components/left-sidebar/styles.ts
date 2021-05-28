@@ -93,7 +93,7 @@ export const SubRow = styled(NavLink)`
   border-left: 5px ${({ theme }) => theme.colors.setting};
   flex-direction: row;
   color: ${({ theme }) => theme.colors.text};
-  background-color: ${({ theme }) => theme.colors.lighterBackgound};
+  background-color: ${({ theme }) => theme.colors.lighterBackground};
   justify-content: left;
   align-items: center;
   font-size: 15px;
