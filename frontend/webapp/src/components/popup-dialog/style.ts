@@ -21,7 +21,7 @@ export const BackdropElement = styled.div`
 
 export const Overlay = styled.div`
   max-width: 800px;
-  background-color: ${({ theme }) => theme.colors.lighterBackgound};
+  background-color: ${({ theme }) => theme.colors.lighterBackground};
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0px 8px 14px 4px #000000;

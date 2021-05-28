@@ -24,7 +24,7 @@ export const Backdrop: FC<BackdropProps> = ({ show, children }) => {
 };
 
 export const PopupDialog: FC<PopupDialogProps> = ({ open, title, body, children }) => {
-  const [ref, trans, trigger] = useTransState(open, false, false);
+  const [ref, trans, trigger] = useTransState(open, true, false);
 
   useEffect(() => {
     trigger();

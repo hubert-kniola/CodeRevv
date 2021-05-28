@@ -7,6 +7,8 @@ from jwt import ExpiredSignatureError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from pprint import pprint
+
 from .proxy_decorators import session_authentication
 from ..models import AuthUser
 
@@ -41,12 +43,15 @@ def test_save(request):
 def test(request, test_id):
     user_id = get_user_id(request)
     response = requests.post(f"{proxy}/test/{test_id}/{str(user_id)}")
-    print(user_id)
-    if response.status_code == 403 or 'creator_id' not in response.json():
+    print(response.json())
+    if response.status_code == 403 or 'creator' not in response.json():
         return Response(response, response.status_code)
-    creator = AuthUser.objects.get(pk=response.json()['creator_id'])
+
+    creator = AuthUser.objects.get(pk=response.json()['creator'])
     new_response = response.json()
+    new_response['creator_id'] = new_response['creator']
     new_response['creator'] = {'first_name': creator.first_name, 'last_name': creator.last_name, 'email': creator.email}
+    print(new_response)
     return Response(new_response, response.status_code)
 
 
@@ -57,8 +62,9 @@ def test_create(request):
     request.data['creator'] = int(user_id)
     request.data['is_link_generated'] = False
 
+    pprint(request.data)
+
     response = requests.post(f"{proxy}/test/create", json=request.data)
-    print(request.data)
     return Response(response, response.status_code)
 
 
@@ -115,11 +121,28 @@ def test_question(request):
 @api_view(['POST'])
 @session_authentication
 def test_submit(request):
-    data = request.data['test']
-    # {user_id, {}, test_id}
     user_id = get_user_id(request)
-    response = requests.patch(f"{proxy}/test/save?test_id={str(request.data['test_id'])}&user_id={str(user_id)}", data=request.data['test'])
+    test_id = request.data['test_id']
+
+    response = requests.post(f"{proxy}/test/save?test_id={str(test_id)}&user_id={str(user_id)}", json=request.data['test'])
+
     return Response(response, response.status_code)
+
+
+@api_view(['GET'])
+@session_authentication
+def test_results(request, test_id):
+    print('xd' * 100)
+    user_id = get_user_id(request)
+
+    response = requests.get(f"{proxy}/test/result/{test_id}/{user_id}")
+
+    pprint(response.json())
+
+    return Response(response, response.status_code)
+
+
+
 
 
 # @api_view(['POST'])

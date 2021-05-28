@@ -1,7 +1,40 @@
-import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
 import { FC, useEffect, useRef, useState } from 'react';
-import { Test, testsFromResponse } from 'const';
+import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
+import { testsFromResponse } from 'const';
 
+type UserAnswer = {
+  content: string;
+  user: number;
+  comment?: string;
+  score: number;
+};
+
+type Answer = {
+  index: number;
+  content: string;
+  isCorrect: boolean;
+  usersVoted?: number[];
+};
+
+type Question = {
+  answers: Answer[];
+  content: string;
+  index: number;
+  maxScore: number;
+  questionType: string;
+  userAnswers?: UserAnswer[];
+};
+
+type Test = {
+  id: string;
+  creatorId: number;
+  testName: string;
+  isLinkGenerated: boolean;
+  creationDate: Date;
+  questions: Question[];
+  userIds: number[];
+  isChecked: boolean;
+};
 
 const header = {
   id: 'header',
@@ -23,8 +56,8 @@ const TempTest = [
     testName: 'Gabriella Grzmot',
     isLinkGenerated: true,
     creationDate: new Date('05/31/2021'),
-    questions: [],
-    userIds: [],
+    questions: [] as Question[],
+    userIds: [] as number[],
     isChecked: false,
   },
   {
@@ -227,7 +260,6 @@ export const TestList: FC = () => {
       setTests(tempTests);
     }
   };
-
 
   return (
     <>

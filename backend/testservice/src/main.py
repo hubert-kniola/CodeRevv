@@ -1,4 +1,5 @@
-from src.functions import check_answers
+from fastapi.params import Body
+from src.functions import check_answers, get_test_with_user_answers_for_user
 import uvicorn
 
 from typing import List
@@ -16,6 +17,7 @@ from datetime import datetime
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
 app = FastAPI()
+
 client = AsyncIOMotorClient(MONGODB_URL)
 engine = AIOEngine(motor_client=client, database='testdb')
 
@@ -38,23 +40,35 @@ async def generate_test_link(test_id, user_id):
         return {'link': 'Request was not send by creator'}
 
 
-@app.post('/test/{test_id}/{user_id}', status_code=200)
-async def test(test_id, user_id):
+@app.post('/test/{test_id}/{user_id}', response_model=Test, status_code=200)
+async def join_test(test_id, user_id):
     user_id = int(user_id)
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
-        return {'test': test}
+        if not test.users:
+            test.users = [user_id]
+        elif user_id not in test.users:
+            test.users.append(user_id)
+
+        return await engine.save(test)
+
     elif test.is_link_generated:
         if not test.users:
-            test.users = []
+            test.users = [user_id]
+
         if user_id not in test.users:
             test.users.append(user_id)
-            await engine.save(test)
-        return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+
+        else:
+            return JSONResponse(status_code=status.HTTP_409_CONFLICT)
+
+        return await engine.save(test)
+
     elif not test.is_link_generated:
         if test.users:
             if user_id in test.users:
-                return {'name': test.name, 'creator_id': test.creator, 'questions': test.questions}
+                return test
+
     return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
 
@@ -73,13 +87,21 @@ async def finish_test(test_id):
         return {'status': 'the test is already finished'}
 
 
-@app.get('/test/result/{test_id}/{user_id}', status_code=200)
+@app.get('/test/result/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def result_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    if test.users and test.is_finished:
-        if user_id in test.users:
-            return 'dupa'
-    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+    user_id = int(user_id)
+
+    if user_id not in test.users and test.creator != user_id:
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+    test = check_answers(test)
+    test = await engine.save(test)
+
+    if test.creator == user_id:
+        return test
+
+    return get_test_with_user_answers_for_user(test, user_id)
 
 
 @app.post('/test/create', response_model=Test, status_code=201)
@@ -87,7 +109,7 @@ async def create_test(test: Test):
     test.pub_test = str(datetime.now())
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
-    return {'test': created_test}
+    return created_test
 
 
 @app.get('/test/list', response_model=List[Test], status_code=200)
@@ -143,7 +165,7 @@ async def modify_question(test_id, question_id, question: Question):
     return {'message': 'question modified'}
 
 
-@app.patch('/test/save', status_code=200)
+@app.post('/test/save', response_model=Test, status_code=200)
 async def save_test(test_id, user_id, modified_test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     # for question in modified_test.questions:
@@ -156,12 +178,20 @@ async def save_test(test_id, user_id, modified_test: Test):
     #                             og_answer.users_voted[user_id] = answer.users_voted[0]
     #                             break
     #                     break
-    for question in modified_test.questions:
-        for answer in question.answers:
+
+    user_id = int(user_id)
+
+    for iq, question in enumerate(modified_test.questions):
+        for ia, answer in enumerate(question.answers):
             if answer.users_voted:
-                test.questions[question.index].answers[answer.index].users_voted[user_id] = answer.users_voted[0]
+                if not test.questions[iq].answers[ia].users_voted:
+                    test.questions[iq].answers[ia].users_voted = [user_id]
+
+                else:
+                    test.questions[iq].answers[ia].users_voted.append(user_id)
+
     await engine.save(test)
-    return {'test': test}
+    return await engine.find_one(Test, Test.id == ObjectId(test_id))
 
 
 # @app.post('/test/answer', status_code=201)

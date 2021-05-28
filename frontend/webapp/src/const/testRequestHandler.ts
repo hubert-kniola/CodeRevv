@@ -38,28 +38,34 @@ export type Test = {
   userIds: number[];
 };
 
-export const testFromResponse = (data: any): Test => ({
-  id: data.id,
-  creator: { name: data.creator.first_name, surname: data.creator.last_name, email: data.creator.email } as TestCreator,
-  creatorId: data.creator_id,
-  testName: data.name,
-  isLinkGenerated: data.is_link_generated,
-  creationDate: new Date(data.pub_test).toLocaleString(),
-  userIds: data.users,
-  questions: data.questions.map((q: any) => ({
-    content: q.content,
-    index: q.index,
-    questionType: q.question_type,
-    maxScore: q.max_score,
-    userAnswers: null,
-    answers: q.answers.map((a: any) => ({
-      index: a.index,
-      content: a.content,
-      isCorrect: a.is_correct,
-      usersVoted: a.users_voted,
+export const testFromResponse = (data: any): Test => {
+  return {
+    id: data.id,
+    creator: {
+      name: data.creator.first_name,
+      surname: data.creator.last_name,
+      email: data.creator.email,
+    } as TestCreator,
+    creatorId: data.creator_id,
+    testName: data.name,
+    isLinkGenerated: data.is_link_generated,
+    creationDate: new Date(data.pub_test).toLocaleString(),
+    userIds: data.users,
+    questions: data.questions.map((q: any) => ({
+      content: q.content,
+      index: q.index,
+      questionType: q.question_type,
+      maxScore: q.max_score,
+      userAnswers: null,
+      answers: q.answers.map((a: any) => ({
+        index: a.index,
+        content: a.content,
+        isCorrect: a.is_correct,
+        usersVoted: a.users_voted,
+      })),
     })),
-  })),
-});
+  };
+};
 
 export const testsFromResponse = (data: any): Test[] => data.tests.map((t: any) => testFromResponse(t));
 

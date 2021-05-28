@@ -10,7 +10,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const QuestionFill: FC = () => {
   const context = useContext(TestFillContext);
-  const [qRef, trans, doTrans] = useTransState(context.getActiveQuestion());
+  const [qRef, trans, doTrans] = useTransState(context.getActiveQuestion(), true);
 
   useEffect(() => {
     doTrans();

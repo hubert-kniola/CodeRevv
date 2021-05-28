@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react';
 import { Backdrop } from 'components';
 import { Panel } from './style';
-import { useOnClickOutside } from '../../hooks/index';
+import { useOnClickOutside } from 'hooks';
 
 import CloseIcon from '@material-ui/icons/Close';
 

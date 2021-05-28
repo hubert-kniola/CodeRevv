@@ -22,7 +22,7 @@ def check_answers(test: Test):
 
             if question.question_type == 'closed':
                 points_for_answer = question.max_score / \
-                    len(filter(lambda a: a.is_correct, question.answers))
+                    len(list(filter(lambda a: a.is_correct, question.answers)))
 
                 for answer in question.answers:
                     if user in answer.users_voted and answer.is_correct:
@@ -32,8 +32,25 @@ def check_answers(test: Test):
                         score -= points_for_answer
 
             score = 0 if score <= 0 else score
-            question.user_answers.append(UserAnswer(user=user, score=score))
+
+            ua = UserAnswer(user=user, score=score)
+            
+            if not question.user_answers:
+                question.user_answers = [ua]
+            else:
+                question.user_answers.append(ua)
 
     test.users = users
+    test.questions = questions
+    return test
+
+
+def get_test_with_user_answers_for_user(test: Test, user_id: int):
+    questions = test.questions
+
+    for question in questions:
+        question.user_answers = list(filter(
+            lambda ua: ua.user == user_id, question.user_answers))
+
     test.questions = questions
     return test

@@ -11,7 +11,7 @@ export const Panel = styled.div<{ show: boolean }>`
   transform: ${({ show }) => (show ? ' translateX(0);' : 'translateX(100%)')};
   transition: transform 0.3s ease-out;
   padding: 1rem;
-  background-color: ${({ theme }) => theme.colors.lighterBackgound};
+  background-color: ${({ theme }) => theme.colors.lighterBackground};
 
   .ico {
     font-size: 32px;
