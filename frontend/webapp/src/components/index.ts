@@ -21,3 +21,4 @@ export * from './sliding-panel/SlidingPanel';
 export * from './test-fill/Components';
 export * from './test-fill/QuestionFill';
 export * from './input-checkbox/CustomCheckbox';
+export * from './small-popup/SmallPopup';
