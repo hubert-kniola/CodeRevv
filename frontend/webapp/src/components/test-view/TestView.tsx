@@ -10,9 +10,10 @@ import {
   Setting_details,
   ScrollDiv,
   SearchField,
-  SelectList
+  SelectList,
 } from './styles';
 import { SlidingPanel, CustomCheckbox } from 'components';
+import { Test, testListHeader } from 'const';
 
 export const TestViewContainer: FC = ({ children }) => {
   return <Container>{children}</Container>;
@@ -34,7 +35,6 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
   searchTest,
   sort,
 }) => {
-
   return (
     <HeaderTool>
       <div>
@@ -48,67 +48,19 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         autoComplete="off"
         onChange={(e) => searchTest(e.target.value)}
       />
-      <SelectList onChange={(e) =>sort(e.target.value) } >
-          <option value="DATE_DESC"> Data malejaco</option>
-          <option value="DATE_ASC"> Data rosnąco</option>
-          <option value="A_Z"> A..Z</option>
-          <option value="Z_A"> Z..A</option>
+      <SelectList onChange={(e) => sort(e.target.value)}>
+        <option value="DATE_DESC"> Data malejaco</option>
+        <option value="DATE_ASC"> Data rosnąco</option>
+        <option value="A_Z"> A..Z</option>
+        <option value="Z_A"> Z..A</option>
       </SelectList>
       <button>Widok</button>
     </HeaderTool>
   );
 };
 
-const header = {
-  id: 'header',
-  isChecked: false,
-  testName: 'Nazwa testu',
-  testDate: 'Data',
-  points: 'Punkty',
-  time: 'Czas',
-  link: 'Link',
-  details: 'Szczegóły',
-  deleteItem: 'Usuń',
-};
-
-//DO WYJEBANIA
-type UserAnswer = {
-  content: string;
-  user: number;
-  comment?: string;
-  score: number;
-};
-
-type Answer = {
-  index: number;
-  content: string;
-  isCorrect: boolean;
-  usersVoted?: number[];
-};
-
-type Question = {
-  answers: Answer[];
-  content: string;
-  index: number;
-  maxScore: number;
-  questionType: string;
-  userAnswers?: UserAnswer[];
-};
-
-type Test = {
-  id: string;
-  creatorId: number;
-  testName: string;
-  isLinkGenerated: boolean;
-  creationDate: Date;
-  questions: Question[];
-  userIds: number[];
-  isChecked: boolean;
-};
-//DO WYJEBANIA
-
 export type HeaderProp = {
-  deleteALot: boolean
+  deleteALot: boolean;
   tests: Test[];
   deleteItem: (id: string) => void;
   setChecked: (id: string) => void;
@@ -117,22 +69,26 @@ export type HeaderProp = {
 export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALot }) => {
   const [headerChecked, setHeaderChecked] = useState(false);
 
+  const h = testListHeader;
+
   const selectAll = () => {
-    setChecked(header.id);
+    setChecked(h.id);
     setHeaderChecked((state) => !state);
   };
 
   return (
     <>
-      <TableFormat id={header.id} deleted={deleteALot}>
+      <TableFormat id={h.id} deleted={deleteALot}>
         <CustomCheckbox id="input" onClick={selectAll} checked={headerChecked} />
-        <div id="name">{header.testName}</div>
-        <div>{header.testDate}</div>
-        <div>{header.points}</div>
-        <div>{header.time}</div>
-        <div>{header.link}</div>
-        <div>{header.details}</div>
-        <div onClick={() => deleteItem(header.id) } id="delete" >Usuń</div>
+        <div id="name">{h.testName}</div>
+        <div>{h.testDate}</div>
+        <div>{h.points}</div>
+        <div>{h.time}</div>
+        <div>{h.link}</div>
+        <div>{h.details}</div>
+        <div onClick={() => deleteItem(h.id)} id="delete">
+          Usuń
+        </div>
       </TableFormat>
       <ScrollDiv>
         {tests.map((test) => (
@@ -154,19 +110,19 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
 
   return (
     <>
-      <SlidingPanel show={open} close={() => setOpen((state) => false)}>
+      <SlidingPanel show={open} close={() => setOpen((_) => false)}>
         <TestDetails />
       </SlidingPanel>
-      <TableFormat >
+      <TableFormat>
         <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>
-        <div>{test.creationDate.toLocaleDateString()}</div>
+        <div>{test.creationDate}</div>
         <div>{test.creatorId.toString()}</div>
-        <div>25 min</div>
+        <div>---</div>
         <div>{test.isLinkGenerated.toString()}</div>
-        <div>FAKERS</div>
+        <div>---</div>
         <div onClick={() => deleteItem(test.id)}>Usuń</div>
       </TableFormat>
     </>

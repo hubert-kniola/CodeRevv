@@ -36,10 +36,12 @@ export type Test = {
   creationDate: string;
   questions: Question[];
   userIds: number[];
+  isChecked: boolean;
 };
 
 export const testFromResponse = (data: any): Test => {
   return {
+    isChecked: false,
     id: data.id,
     creator: {
       name: data.creator.first_name,
