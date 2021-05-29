@@ -88,13 +88,15 @@ def creator_tests(request):
         users_of_test = []
         pprint(test)
 
-        if not test['users']: continue
+        if not test['users']:
+            test['users'] = []
 
         for user in test['users']:
             user_object = AuthUser.objects.get(pk=user)
             user_dict = {'index': user_object.id ,'first_name': user_object.first_name, 'last_name': user_object.last_name, 'email': user_object.email}
             users_of_test.append(user_dict)
-        test['users'] = users_of_test
+
+        test['users_data'] = users_of_test
     return Response({'tests': tests}, response.status_code)
 
 
