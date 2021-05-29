@@ -10,6 +10,7 @@ import {
   Setting_details,
   ScrollDiv,
   SearchField,
+  SelectList
 } from './styles';
 import { SlidingPanel, CustomCheckbox } from 'components';
 
@@ -33,6 +34,7 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
   searchTest,
   sort,
 }) => {
+
   return (
     <HeaderTool>
       <div>
@@ -46,12 +48,12 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         autoComplete="off"
         onChange={(e) => searchTest(e.target.value)}
       />
-      <select onChange={(e) => sort(e.target.value)}>
-        <option value="DATE_DESC"> Data malejaco</option>
-        <option value="DATE_ASC"> Data rosnąco</option>
-        <option value="A_Z"> A..Z</option>
-        <option value="Z_A"> Z..A</option>
-      </select>
+      <SelectList onChange={(e) =>sort(e.target.value) } >
+          <option value="DATE_DESC"> Data malejaco</option>
+          <option value="DATE_ASC"> Data rosnąco</option>
+          <option value="A_Z"> A..Z</option>
+          <option value="Z_A"> Z..A</option>
+      </SelectList>
       <button>Widok</button>
     </HeaderTool>
   );
@@ -106,12 +108,13 @@ type Test = {
 //DO WYJEBANIA
 
 export type HeaderProp = {
+  deleteALot: boolean
   tests: Test[];
   deleteItem: (id: string) => void;
   setChecked: (id: string) => void;
 };
 
-export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
+export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALot }) => {
   const [headerChecked, setHeaderChecked] = useState(false);
 
   const selectAll = () => {
@@ -121,15 +124,15 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
 
   return (
     <>
-      <TableFormat id={header.id}>
-        <CustomCheckbox onClick={selectAll} checked={headerChecked} />
+      <TableFormat id={header.id} deleted={deleteALot}>
+        <CustomCheckbox id="input" onClick={selectAll} checked={headerChecked} />
         <div id="name">{header.testName}</div>
         <div>{header.testDate}</div>
         <div>{header.points}</div>
         <div>{header.time}</div>
         <div>{header.link}</div>
         <div>{header.details}</div>
-        <div onClick={() => deleteItem(header.id)}>Usuń</div>
+        <div onClick={() => deleteItem(header.id) } id="delete" >Usuń</div>
       </TableFormat>
       <ScrollDiv>
         {tests.map((test) => (
@@ -154,8 +157,8 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
       <SlidingPanel show={open} close={() => setOpen((state) => false)}>
         <TestDetails />
       </SlidingPanel>
-      <TableFormat>
-        <CustomCheckbox onClick={() => setChecked(test.id)} checked={test.isChecked} />
+      <TableFormat >
+        <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>

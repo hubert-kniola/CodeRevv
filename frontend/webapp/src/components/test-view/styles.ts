@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { TextField } from '@material-ui/core';
 
 export const SearchField = styled(TextField)(({ theme }) => ({
@@ -33,7 +33,7 @@ export const SearchField = styled(TextField)(({ theme }) => ({
 }));
 
 export const Container = styled.div`
-  width: 80%;
+  width: 85%;
   background-color: #1f1f1f;
   margin: 1rem auto;
   padding: 0.5rem;
@@ -82,7 +82,7 @@ export const HeaderTool = styled.div`
   }
 `;
 
-export const TableFormat = styled.div`
+export const TableFormat = styled.div<{deleted?:boolean}>`
   width: 100%;
   margin: 0 auto;
   height: 40px;
@@ -98,9 +98,9 @@ export const TableFormat = styled.div`
     color: #ebebeb;
   }
 
-  input {
-    width: 2%;
-    height: 100%;
+  #input {
+    width: 20px;
+    height: 20px;
     margin: auto;
   }
 
@@ -114,6 +114,30 @@ export const TableFormat = styled.div`
     width: 35%;
     margin: auto auto auto 3%;
   }
+
+  & div#delete{
+    ${({deleted}) => deleted ? css`
+    color: red;
+    animation: pulse 2s infinite;
+    ` : ' '}
+  }
+
+  @keyframes pulse{
+    0% {
+      color: #ebebeb;
+
+    }
+
+    50% {
+      color: red;
+
+    }
+
+    100% {
+      color: #ebebeb;
+
+    }
+  }
 `;
 
 export const ScrollDiv = styled.div`
@@ -122,6 +146,7 @@ export const ScrollDiv = styled.div`
   overflow: auto;
   scroll-behavior: smooth;
   color: #ebebeb90;
+  padding: 0 0 0.5rem 0;
 
   ::-webkit-scrollbar {
     width: 3px;
@@ -185,4 +210,8 @@ export const Menu_details = styled.div`
 export const Setting_details = styled.div`
   background-color: blue;
   width: 75%;
+`;
+
+export const SelectList = styled.select`
+  animation: animate 1s easy-ease-in-out;
 `;
