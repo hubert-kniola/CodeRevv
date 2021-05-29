@@ -14,7 +14,7 @@ export const Box = styled.div<{checked:boolean}>`
         font-weight: bold;
         transition: all  0.5s;
         margin: 0;
-        transform: translate(-8%, -8%) ${({checked}) => checked ? 'scale(1)' : 'scale(2.5)'};;
+        transform: translate(-8%, -8%) ${({checked}) => checked ? 'scale(1)' : 'scale(2.25)'};;
         opacity: ${({checked}) => checked ? '1' : '0'};
         color: #ebebeb;
     }

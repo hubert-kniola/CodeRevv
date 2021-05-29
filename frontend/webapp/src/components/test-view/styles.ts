@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 80%;
+  width: 85%;
   background-color: #1f1f1f;
   margin: 1rem auto;
   padding: 0.5rem;
@@ -97,6 +97,7 @@ export const ScrollDiv = styled.div`
   overflow: auto;
   scroll-behavior: smooth;
   color: #ebebeb90;
+  padding: 0 0 0.5rem 0;
 
   ::-webkit-scrollbar {
     width: 3px;
