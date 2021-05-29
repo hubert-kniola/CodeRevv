@@ -3,7 +3,7 @@ import { TextField } from '@material-ui/core';
 
 export const SearchField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.colors.text,
+    borderColor: 'none',
   },
   '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
     borderColor: theme.colors.text,
@@ -19,6 +19,7 @@ export const SearchField = styled(TextField)(({ theme }) => ({
   },
   '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input': {
     color: theme.colors.text,
+    borderColor: 'none',
   },
   '& .MuiInputLabel-outlined': {
     color: theme.colors.text,

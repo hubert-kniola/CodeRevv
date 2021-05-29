@@ -125,7 +125,7 @@ export const TitleRow = styled.div`
 export const MainBoard = styled.div`
   margin-top: 5vw;
   grid-column: 2/3;
-  display: grid;
+  width: 100%;
   justify-content: center;
   transition: width 0.5s;
 `;
