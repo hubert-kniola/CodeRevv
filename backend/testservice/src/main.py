@@ -55,14 +55,14 @@ async def join_test(test_id, user_id):
     elif test.is_link_generated:
         if not test.users:
             test.users = [user_id]
+            return await engine.save(test)
 
         if user_id not in test.users:
             test.users.append(user_id)
+            return await engine.save(test)
 
         else:
             return JSONResponse(status_code=status.HTTP_409_CONFLICT)
-
-        return await engine.save(test)
 
     elif not test.is_link_generated:
         if test.users:
