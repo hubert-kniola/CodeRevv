@@ -73,8 +73,26 @@ def test_create(request):
 @api_view(['GET'])
 @session_authentication
 def test_list(request):
-    response = requests.get(f"{proxy}/test/list")
+    user_id = get_user_id(request)
+    response = requests.get(f"{proxy}/test/list/{user_id}")
     return Response({'tests': response.json()}, response.status_code)
+
+
+@api_view(['GET'])
+@session_authentication
+def creator_tests(request):
+    user_id = get_user_id(request)
+    response = requests.get(f"{proxy}/test/list/creator/{user_id}")
+    tests = response.json()
+    for test in tests:
+        users_of_test = []
+        pprint(test)
+        for user in test['users']:
+            user_object = AuthUser.objects.get(pk=user)
+            user_dict = {'index': user_object.id ,'first_name': user_object.first_name, 'last_name': user_object.last_name, 'email': user_object.email}
+            users_of_test.append(user_dict)
+        test['users'] = users_of_test
+    return Response({'tests': tests}, response.status_code)
 
 
 @api_view(['DELETE'])

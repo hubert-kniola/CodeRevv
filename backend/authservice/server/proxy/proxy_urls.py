@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/v1/test/results/<str:test_id>', test_results, name='test_results'),
     path('api/v1/test/create', test_create, name='test_create'),
     path('api/v1/test/list', test_list, name='test_list'),
+    path('api/v1/test/list/creator', creator_tests, name='creator_tests'),
     path('api/v1/test/delete', test_delete, name='test_delete'),
     path('api/v1/test/user', test_user, name='test_user'),
     path('api/v1/test/question', test_question, name='test_question'),
