@@ -13,6 +13,11 @@ export const Panel = styled.div<{ show: boolean }>`
   padding: 1rem;
   background-color: ${({ theme }) => theme.colors.lighterBackground};
 
+  hr {
+    width: 70%;
+    margin: 1rem auto;
+  }
+
   .ico {
     font-size: 32px;
     transition: 0.5s all ease-in-out;
@@ -20,5 +25,17 @@ export const Panel = styled.div<{ show: boolean }>`
     :hover {
       transform: scale(1.5);
     }
+  }
+`;
+
+export const HeaderContainer = styled.div`
+  display: fixed;
+  justify-content: space-between;
+  text-align: center;
+
+  & p {
+    font-size: 30px;
+    color: ${({ theme }) => theme.colors.text};
+    margin: auto;
   }
 `;

@@ -1,19 +1,22 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-export const Popup = styled.div<{show:boolean}>`
-  height: 7%;
-  background-color: white;
+export const Popup = styled.div<{ show: boolean }>`
+  height: max-content;
+  background-color: ${({ theme }) => theme.colors.lighterBackground};
+  color: ${({ theme }) => theme.colors.text};
   position: fixed;
   right: 1.5rem;
-  bottom: 1,5rem;
-  width: 15%;
+  bottom: 1.5rem;
+  width: 500px;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  white-space: pre-wrap;
   z-index: 99998;
-  transform: ${({ show }) => (show ? ' translatey(150%);' : 'translatey(300%)')};
+  transform: ${({ show }) => (show ? ' translatey(0%);' : 'translatey(300%)')};
   transition: transform 0.3s ease-out;
-  padding: 1rem;
-  background-color: #69D62F;
-  padding: 1rem auto;
   border-radius: 15px;
   text-align: center;
-  align-items: center;
-`
+
+  & a {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;

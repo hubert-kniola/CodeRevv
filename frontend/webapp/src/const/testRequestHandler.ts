@@ -27,6 +27,13 @@ export type Question = {
   userAnswers?: UserAnswer[];
 };
 
+export type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  id: number;
+};
+
 export type Test = {
   id: string;
   creator: TestCreator;
@@ -38,9 +45,11 @@ export type Test = {
   isChecked: boolean;
   userIds?: number[];
   maxScore?: number;
+  users?: User[];
 };
 
-export const testFromResponse = (data: any): Test => {
+export const testFromResponse = (data: any, confidential: boolean = false): Test => {
+  console.log (data);
   return {
     isChecked: false,
     maxScore: data.max_score,
@@ -54,24 +63,33 @@ export const testFromResponse = (data: any): Test => {
     testName: data.name,
     isLinkGenerated: data.is_link_generated,
     creationDate: new Date(data.pub_test),
-    userIds: undefined,
+    userIds: confidential ? data.users : undefined,
     questions: data.questions.map((q: any) => ({
       content: q.content,
       index: q.index,
       questionType: q.question_type,
       maxScore: q.max_score,
-      userAnswers: null,
+      userAnswers: confidential ? q.user_answers : null,
       answers: q.answers.map((a: any) => ({
         index: a.index,
         content: a.content,
         isCorrect: a.is_correct,
-        usersVoted: null,
+        usersVoted: confidential ? a.users_voted : null,
       })),
     })),
+    users: confidential
+      ? data.users_data.map((u: any) => ({
+          firstName: u.first_name,
+          lastName: u.last_name,
+          email: u.email,
+          id: u.index,
+        }))
+      : null,
   };
 };
 
-export const testsFromResponse = (data: any): Test[] => data.tests.map((t: any) => testFromResponse(t));
+export const testsFromResponse = (data: any, confidential: boolean = false): Test[] =>
+  data.tests.map((t: any) => testFromResponse(t, confidential));
 
 export const testToResponse = (test: Test): any => {
   return {

@@ -44,8 +44,10 @@ export const QuestionFill: FC = () => {
                         <Checkbox
                           checked={isAnswerChecked(i)}
                           onChange={() => context.toggleAnswerForActiveQuestion(i)}
-                          icon={<Avatar style={{ backgroundColor: 'grey' }}>{LETTERS[i]}</Avatar>}
-                          checkedIcon={<Avatar style={{ backgroundColor: 'green' }}>{LETTERS[i]}</Avatar>}
+                          icon={<Avatar style={{ backgroundColor: 'grey', color: 'black' }}>{LETTERS[i]}</Avatar>}
+                          checkedIcon={
+                            <Avatar style={{ backgroundColor: 'orange', color: 'black' }}>{LETTERS[i]}</Avatar>
+                          }
                         />
                       </Grid>
                       <Grid item xs={10}>

@@ -36,9 +36,11 @@ export const Container = styled.div`
   width: 85%;
   background-color: #1f1f1f;
   margin: 1rem auto;
-  padding: 0.5rem;
+  padding: 1rem;
   position: relative;
   color: #ebebeb;
+  border-radius: 15px;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   div#header {
     font-weight: bold;
@@ -123,7 +125,6 @@ export const TableFormat = styled.div<{ deleted?: boolean }>`
           `
         : ' '}
   }
-
 `;
 
 export const ScrollDiv = styled.div`

@@ -10,17 +10,18 @@ import {
 } from 'components';
 import { Test, testsFromResponse } from 'const';
 import { apiAxios } from 'utility';
+import { SmallPopup } from 'components';
 
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [tests, setTests] = useState([] as Test[]);
 
-  const errorRef = useRef<HTMLDivElement>(null);
   const [filteredTests, setFilteredTest] = useState(tests);
   const [nextTest, setNextTests] = useState({} as Test);
   const [checkedAll, setCheckedAll] = useState(false);
 
+  const errorRef = useRef<HTMLDivElement>(null);
   const testsRef = useRef(tests);
   testsRef.current = tests;
 
@@ -36,8 +37,9 @@ export const TestList: FC = () => {
 
       try {
         const { data } = await apiAxios.get('/test/list/creator');
-        setTests(testsFromResponse(data));
+        setTests(testsFromResponse(data, true));
       } catch (err) {
+        console.log({ parseErr: err });
         if (err.response) {
           setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
         } else {
@@ -61,7 +63,7 @@ export const TestList: FC = () => {
 
     testsRef.current.forEach((test) => {
       let currentDate = new Date().getDate().valueOf();
-      let testTime = new Date(test.creationDate).getDate().valueOf() - currentDate;
+      let testTime = test.creationDate.getDate().valueOf() - currentDate;
 
       if (time < 0) {
         time = testTime;
@@ -101,9 +103,9 @@ export const TestList: FC = () => {
       setFilteredTest((tests) => [
         ...tests.sort((a, b) => {
           if (type === 'DATE_DESC') {
-            return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+            return b.creationDate.getTime() - a.creationDate.getTime();
           } else if (type === 'DATE_ASC') {
-            return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+            return a.creationDate.getTime() - b.creationDate.getTime();
           } else if (type === 'A_Z') {
             return a.testName > b.testName ? 1 : -1;
           } else {

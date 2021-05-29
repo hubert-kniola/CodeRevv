@@ -1,26 +1,23 @@
-import { FC, useEffect } from 'react'
-import { Popup } from './styles'
+import { FC, useEffect } from 'react';
+import { Popup } from './styles';
 
 type SmallPopupProps = {
-    show: boolean,
-    setShow: () => void;
-}
+  show: boolean;
+  onTimeout: () => void;
+};
 
-export const SmallPopup:FC<SmallPopupProps> = ({children, show, setShow}) =>{
-    useEffect(()=>{
-        if(show){
-            if(show){
-                setTimeout(()=>{
-                    setShow();
-                }, 2000);
-            };
-        }
-    },[show])
+export const SmallPopup: FC<SmallPopupProps> = ({ children, show, onTimeout }) => {
+  useEffect(() => {
+    if (show) {
+      setTimeout(() => {
+        onTimeout();
+      }, 3000);
+    }
+  }, [show]);
 
-    return(
-        <Popup show={show}>
-            {children}
-        </Popup>
-
-    )
-}
+  return (
+    <Popup show={show}>
+      <p>{children}</p>
+    </Popup>
+  );
+};
