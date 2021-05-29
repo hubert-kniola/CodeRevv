@@ -9,21 +9,16 @@ export const Container = styled.div`
   color: #ebebeb;
 
   div#header {
-    background-color: #3f3f3f;
     font-weight: bold;
     color: #ebebeb;
     text-align: center;
     border-radius: 0 15px 0 0;
+    border-bottom: 1px solid #ebebeb;
 
-    :hover {
-      background-color: #3f3f3f;
-      border-bottom: 0;
+    :hover{
+      background-color: #1f1f1f;
     }
   }
-`;
-
-export const Pagination = styled.div`
-  margin: 0.5rem 0.5rem 0.5rem auto;
 `;
 
 export const HeaderTool = styled.div`
@@ -52,7 +47,7 @@ export const HeaderTool = styled.div`
 
   & input {
     margin: auto;
-    color: black;
+    color: #ebebeb;
     height: 20%;
   }
 
@@ -63,7 +58,6 @@ export const HeaderTool = styled.div`
 
 export const TableFormat = styled.div`
   width: 100%;
-  background-color: #5f5f5f;
   margin: 0 auto;
   height: 40px;
   display: fixed;
@@ -71,11 +65,11 @@ export const TableFormat = styled.div`
   justify-items: space-between;
   display: inner-block;
   text-align: center;
-  color: black;
+  transition: all 0.15s ease-in-out; 
 
   :hover {
-    background-color: #4f4f4f;
-    border-bottom: 2px solid #ebebeb;
+    background-color: #5f5f5f;
+    color: #ebebeb
   }
 
   input {
@@ -88,6 +82,7 @@ export const TableFormat = styled.div`
     marker: none;
     width: 10%;
     margin: auto;
+
   }
 
   & div#name {
@@ -95,6 +90,27 @@ export const TableFormat = styled.div`
     margin: auto auto auto 3%;
   }
 `;
+
+export const ScrollDiv = styled.div`
+  scrollbar-width: 0;
+  max-height: 200px;
+  overflow: auto;
+  scroll-behavior: smooth;
+  color: #ebebeb90;
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-track{
+    background-color: #1f1f1f;
+  }
+
+  ::-webkit-scrollbar-thumb{
+    background-image: linear-gradient(#1f1f1f, #ebebeb50, #FFA50090 ,#ebebeb50, #1f1f1f);
+
+  }
+`
 
 export const TestDetails = styled.div`
   width: 100%;
@@ -130,15 +146,15 @@ export const Menu_details = styled.div`
     width: 100%;
     height: 35px;
     border: 0px;
-    color: #ebebeb
+    color: #ebebeb;
   }
 
-  button#first{
+  button#first {
     border-radius: 15px 15px 0 0;
   }
 
-  button#last{
-    border-radius:  0 0 15px 15px;
+  button#last {
+    border-radius: 0 0 15px 15px;
   }
 `;
 

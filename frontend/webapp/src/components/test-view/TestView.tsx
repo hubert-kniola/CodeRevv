@@ -1,22 +1,21 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   TableFormat,
   HeaderTool,
   Container,
-  Pagination,
   TestName_detail,
   Container_details,
   Menu_details,
-  Setting_details
+  Setting_details,
+  ScrollDiv
 } from './styles';
 import TextField from '@material-ui/core/TextField';
-import { SlidingPanel } from 'components';
+import { SlidingPanel, CustomCheckbox } from 'components';
 
 export const TestViewContainer: FC = ({ children }) => {
   return (
     <Container>
       {children}
-      <Pagination>1 2 3 ... 99</Pagination>
     </Container>
   );
 };
@@ -126,7 +125,7 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
   return (
     <>
       <TableFormat id={header.id}>
-        <input type="checkbox" onClick={selectAll} checked={headerChecked} />
+        <CustomCheckbox onClick={selectAll} checked={headerChecked} />
         <div id="name">{header.testName}</div>
         <div>{header.testDate}</div>
         <div>{header.points}</div>
@@ -135,9 +134,11 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
         <div>{header.details}</div>
         <div onClick={() => deleteItem(header.id)}>Usuń</div>
       </TableFormat>
+      <ScrollDiv>
       {tests.map((test) => (
         <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
       ))}
+      </ScrollDiv>
     </>
   );
 };
@@ -157,7 +158,7 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
         <TestDetails />
       </SlidingPanel>
       <TableFormat>
-        <input type="checkbox" onClick={() => setChecked(test.id)} checked={test.isChecked} />
+        <CustomCheckbox onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>
