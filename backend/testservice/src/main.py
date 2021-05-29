@@ -104,18 +104,34 @@ async def result_test(test_id, user_id):
     return get_test_with_user_answers_for_user(test, user_id)
 
 
+@app.get('/test/list/{user_id}', response_model=List[Test], status_code=200)
+async def list_test(user_id):
+    tests = await engine.find(Test)
+    user_id = int(user_id)
+    response_tests = []
+    for test in tests:
+        if user_id in test.users:
+            response_tests.append(test)
+    return response_tests
+
+
+@app.get('/test/list/creator/{user_id}', response_model=List[Test], status_code=200)
+async def creator_tests(user_id):
+    tests = await engine.find(Test)
+    user_id = int(user_id)
+    response_tests = []
+    for test in tests:
+        if test.creator == user_id:
+            response_tests.append(test)
+    return response_tests
+
+
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     test.pub_test = str(datetime.now())
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
     return created_test
-
-
-@app.get('/test/list', response_model=List[Test], status_code=200)
-async def tests_list():
-    tests = await engine.find(Test)
-    return tests
 
 
 @app.delete('/test/delete', status_code=204)
