@@ -43,7 +43,7 @@ export const LeftSidebar: FC = ({ children }) => {
               <MenuOpenIcon />
             </Icon>
           ) : (
-            'MENU'
+            <div style={{ cursor: 'pointer'}}>MENU</div>
           )}
         </MenuHeader>
         <SidebarList>

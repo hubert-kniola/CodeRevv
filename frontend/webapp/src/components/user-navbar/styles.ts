@@ -8,7 +8,7 @@ export const NavBarUser = styled.nav`
   top: 0px;
   background-color: ${({ theme }) => theme.colors.background};
   padding: 0 1rem;
-  z-index: 999;
+  z-index: 1000;
   padding-top: 30px;
   padding-left: 30px;
 

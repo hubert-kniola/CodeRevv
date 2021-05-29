@@ -129,6 +129,10 @@ async def creator_tests(user_id):
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     test.pub_test = str(datetime.now())
+    
+    if not test.users:
+        test.users = []
+
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
     return created_test

@@ -10,7 +10,7 @@ type CheckboxPRops = {
 
 export const CustomCheckbox: FC<CheckboxPRops> = ({ id, onClick, checked }) => {
   return (
-    <Box id={id} checked={checked} onClick={() => onClick()}>
+    <Box id={id} checked={checked} onClick={() => onClick(id)}>
       <CheckIcon className="ico" />
     </Box>
   );

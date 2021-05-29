@@ -5,11 +5,12 @@ export const Container = styled.div`
   background: ${({ theme }) => theme.colors.background};
   border-radius: 30px;
   height: max-content;
-  margin-bottom: 10px;
+  margin: 1rem auto;
   padding-top: 15px;
   padding-bottom: 30px;
   display: flex;
   justify-content: center;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   hr {
     margin-top: 15px;
@@ -71,6 +72,7 @@ export const Input = styled.input`
   border-radius: 15px;
   background-color: ${({ theme }) => theme.colors.setting};
   box-shadow: 0px 8px 14px 4px #000000;
+  outline: none;
 `;
 
 export const Error = styled.h3`

@@ -112,6 +112,7 @@ export const Icon = styled.div`
   flex: 25%;
   display: grid;
   place-items: center;
+  cursor: pointer;
 `;
 
 export const TitleRow = styled.div`

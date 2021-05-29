@@ -87,6 +87,9 @@ def creator_tests(request):
     for test in tests:
         users_of_test = []
         pprint(test)
+
+        if not test['users']: continue
+
         for user in test['users']:
             user_object = AuthUser.objects.get(pk=user)
             user_dict = {'index': user_object.id ,'first_name': user_object.first_name, 'last_name': user_object.last_name, 'email': user_object.email}

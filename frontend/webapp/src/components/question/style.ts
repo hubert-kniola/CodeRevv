@@ -13,6 +13,7 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
   border: ${({ error }) => (error ? '2px solid #f53030' : '2px solid #1f1f1f')};
   height: auto;
   transition: all 1s ease;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   & label {
     display: block;
