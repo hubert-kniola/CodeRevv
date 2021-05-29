@@ -40,12 +40,14 @@ def test_save(request):
 
 @api_view(['POST'])
 @session_authentication
-def test(request, test_id):
+def test_join(request, test_id):
     user_id = get_user_id(request)
     response = requests.post(f"{proxy}/test/{test_id}/{str(user_id)}")
-    print(response.json())
-    if response.status_code == 403 or 'creator' not in response.json():
+    if response.status_code == 403 or response.status_code == 409:
         return Response(response, response.status_code)
+
+    if 'creator' not in response.json():
+        return Response(response, 500)
 
     creator = AuthUser.objects.get(pk=response.json()['creator'])
     new_response = response.json()
@@ -60,7 +62,7 @@ def test(request, test_id):
 def test_create(request):
     user_id = get_user_id(request)
     request.data['creator'] = int(user_id)
-    request.data['is_link_generated'] = False
+    request.data['is_link_generated'] = True # do zmiany przy wprowadzeniu whitelisty
 
     pprint(request.data)
 
@@ -71,8 +73,26 @@ def test_create(request):
 @api_view(['GET'])
 @session_authentication
 def test_list(request):
-    response = requests.get(f"{proxy}/test/list")
+    user_id = get_user_id(request)
+    response = requests.get(f"{proxy}/test/list/{user_id}")
     return Response({'tests': response.json()}, response.status_code)
+
+
+@api_view(['GET'])
+@session_authentication
+def creator_tests(request):
+    user_id = get_user_id(request)
+    response = requests.get(f"{proxy}/test/list/creator/{user_id}")
+    tests = response.json()
+    for test in tests:
+        users_of_test = []
+        pprint(test)
+        for user in test['users']:
+            user_object = AuthUser.objects.get(pk=user)
+            user_dict = {'index': user_object.id ,'first_name': user_object.first_name, 'last_name': user_object.last_name, 'email': user_object.email}
+            users_of_test.append(user_dict)
+        test['users'] = users_of_test
+    return Response({'tests': tests}, response.status_code)
 
 
 @api_view(['DELETE'])
@@ -140,9 +160,6 @@ def test_results(request, test_id):
     pprint(response.json())
 
     return Response(response, response.status_code)
-
-
-
 
 
 # @api_view(['POST'])

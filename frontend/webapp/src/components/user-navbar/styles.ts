@@ -25,6 +25,8 @@ export const ButtonSpace = styled.div`
 
 export const Row = styled.div<{ id: string }>`
   width: 100%;
+  border-radius: 15px;
+
   display: flex;
   flex-direction: row;
   color: ${({ theme }) => theme.colors.text};

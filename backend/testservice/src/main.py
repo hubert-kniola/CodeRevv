@@ -45,24 +45,24 @@ async def join_test(test_id, user_id):
     user_id = int(user_id)
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
-        if not test.users:
-            test.users = [user_id]
-        elif user_id not in test.users:
-            test.users.append(user_id)
+        # if not test.users:
+        #     test.users = [user_id]
+        # elif user_id not in test.users:
+        #     test.users.append(user_id)
 
         return await engine.save(test)
 
     elif test.is_link_generated:
         if not test.users:
             test.users = [user_id]
+            return await engine.save(test)
 
         if user_id not in test.users:
             test.users.append(user_id)
+            return await engine.save(test)
 
         else:
             return JSONResponse(status_code=status.HTTP_409_CONFLICT)
-
-        return await engine.save(test)
 
     elif not test.is_link_generated:
         if test.users:
@@ -104,18 +104,34 @@ async def result_test(test_id, user_id):
     return get_test_with_user_answers_for_user(test, user_id)
 
 
+@app.get('/test/list/{user_id}', response_model=List[Test], status_code=200)
+async def list_test(user_id):
+    tests = await engine.find(Test)
+    user_id = int(user_id)
+    response_tests = []
+    for test in tests:
+        if user_id in test.users:
+            response_tests.append(test)
+    return response_tests
+
+
+@app.get('/test/list/creator/{user_id}', response_model=List[Test], status_code=200)
+async def creator_tests(user_id):
+    tests = await engine.find(Test)
+    user_id = int(user_id)
+    response_tests = []
+    for test in tests:
+        if test.creator == user_id:
+            response_tests.append(test)
+    return response_tests
+
+
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     test.pub_test = str(datetime.now())
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
     return created_test
-
-
-@app.get('/test/list', response_model=List[Test], status_code=200)
-async def tests_list():
-    tests = await engine.find(Test)
-    return tests
 
 
 @app.delete('/test/delete', status_code=204)
@@ -168,27 +184,27 @@ async def modify_question(test_id, question_id, question: Question):
 @app.post('/test/save', response_model=Test, status_code=200)
 async def save_test(test_id, user_id, modified_test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    # for question in modified_test.questions:
-    #     for answer in question.answers:
-    #         if answer.users_voted: # sprawdzenie czy dany użytkownik dał odpowiedź
-    #             for og_question in test.questions:
-    #                 if question.index == og_question.index:
-    #                     for og_answer in og_question.answers:
-    #                         if answer.index == og_answer.index:
-    #                             og_answer.users_voted[user_id] = answer.users_voted[0]
-    #                             break
-    #                     break
-
     user_id = int(user_id)
 
-    for iq, question in enumerate(modified_test.questions):
-        for ia, answer in enumerate(question.answers):
-            if answer.users_voted:
-                if not test.questions[iq].answers[ia].users_voted:
-                    test.questions[iq].answers[ia].users_voted = [user_id]
+    if user_id == test.creator:
+        return test
 
-                else:
-                    test.questions[iq].answers[ia].users_voted.append(user_id)
+    for question in modified_test.questions:
+        for answer in question.answers:
+            if answer.users_voted:  # sprawdzenie czy dany użytkownik dał odpowiedź
+                for iq, og_question in enumerate(test.questions):
+                    if question.index == og_question.index:
+                        for ia, og_answer in enumerate(og_question.answers):
+                            if answer.index == og_answer.index:
+                                if not og_answer.users_voted:
+                                    test.questions[iq].answers[ia].users_voted = [
+                                        user_id]
+                                else:
+                                    test.questions[iq].answers[ia].users_voted.append(
+                                        user_id)
+                                break
+
+                        break
 
     await engine.save(test)
     return await engine.find_one(Test, Test.id == ObjectId(test_id))

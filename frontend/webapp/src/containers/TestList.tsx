@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
+
 import { MessageOverlay, TestViewContainer, HeaderToolBar, Table, scrollIntoMessageOverlay } from 'components';
 import { Test, testsFromResponse } from 'const';
 import { apiAxios } from 'utility';
@@ -34,6 +35,7 @@ export const TestList: FC = () => {
       }
     };
     fetch();
+
   }, []);
 
   //Efekt wyszukuje najbliższy test (póki)
