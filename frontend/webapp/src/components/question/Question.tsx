@@ -12,7 +12,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import { QuestionContainer, GeneralQuestion, Button, AnswerBlock, AnswerContainer, ErrorText } from './style';
 
 import { EditorQuestion, EditorAnswer, newAnswer, TestEditorContext } from 'context';
-import { MessageOverlay } from 'components';
+import { CustomCheckbox, MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
 
 type QuestionEditorProps = {
@@ -237,10 +237,10 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answer, setAnswerState, on
           />
         </div>
         <div className="div2">
-          <input
-            type="checkbox"
+          <CustomCheckbox
+            id="checkid"
             checked={answer.isCorrect}
-            onChange={() => setAnswerState({ ...answer, isCorrect: !answer.isCorrect })}
+            onClick={() => setAnswerState({ ...answer, isCorrect: !answer.isCorrect })}
           />
           Poprawna
         </div>

@@ -82,7 +82,7 @@ export const HeaderTool = styled.div`
   }
 `;
 
-export const TableFormat = styled.div<{deleted?:boolean}>`
+export const TableFormat = styled.div<{ deleted?: boolean }>`
   width: 100%;
   margin: 0 auto;
   height: 40px;
@@ -115,29 +115,15 @@ export const TableFormat = styled.div<{deleted?:boolean}>`
     margin: auto auto auto 3%;
   }
 
-  & div#delete{
-    ${({deleted}) => deleted ? css`
-    color: red;
-    animation: pulse 2s infinite;
-    ` : ' '}
+  & div#delete {
+    ${({ deleted }) =>
+      deleted
+        ? css`
+            color: red;
+          `
+        : ' '}
   }
 
-  @keyframes pulse{
-    0% {
-      color: #ebebeb;
-
-    }
-
-    50% {
-      color: red;
-
-    }
-
-    100% {
-      color: #ebebeb;
-
-    }
-  }
 `;
 
 export const ScrollDiv = styled.div`
@@ -214,4 +200,23 @@ export const Setting_details = styled.div`
 
 export const SelectList = styled.select`
   animation: animate 1s easy-ease-in-out;
+`;
+
+export const LinkButton = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 0px solid transparent;
+  text-align: center;
+  border-radius: 15px;
+  background-color: ${({ theme }) => theme.colors.setting};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 14px;
+  cursor: pointer;
+  padding: 3px 0 3px 0;
+  min-width: 65px;
+
+  &:hover {
+    transition: all 0.5s ease-in-out;
+    background: ${({ theme }) => theme.colors.primary};
+  }
 `;

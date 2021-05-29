@@ -1,11 +1,19 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { MessageOverlay, TestViewContainer, HeaderToolBar, Table, scrollIntoMessageOverlay } from 'components';
+import {
+  MessageOverlay,
+  TestViewContainer,
+  HeaderToolBar,
+  Table,
+  scrollIntoMessageOverlay,
+  LoadingOverlay,
+} from 'components';
 import { Test, testsFromResponse } from 'const';
 import { apiAxios } from 'utility';
 
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [tests, setTests] = useState([] as Test[]);
 
   const errorRef = useRef<HTMLDivElement>(null);
@@ -15,13 +23,17 @@ export const TestList: FC = () => {
 
   const testsRef = useRef(tests);
   testsRef.current = tests;
+
   const filteredTestsRef = useRef(filteredTests);
   filteredTestsRef.current = filteredTests;
+
   const checkedAllRef = useRef(checkedAll);
   checkedAllRef.current = checkedAll;
 
   useEffect(() => {
     const fetch = async () => {
+      setLoading((_) => true);
+
       try {
         const { data } = await apiAxios.get('/test/list/creator');
         setTests(testsFromResponse(data));
@@ -33,9 +45,12 @@ export const TestList: FC = () => {
         }
         scrollIntoMessageOverlay(errorRef);
       }
+
+      console.log({ tests, filteredTests });
+
+      setLoading((_) => false);
     };
     fetch();
-
   }, []);
 
   //Efekt wyszukuje najbliższy test (póki)
@@ -137,22 +152,24 @@ export const TestList: FC = () => {
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
 
-      <TestViewContainer>
-        <HeaderToolBar
-          numberOfTest={tests.length}
-          nextTestName={nextTest.testName ? nextTest.testName : '---'}
-          nextTestDate={nextTest.creationDate ? nextTest.creationDate : '---'}
-          searchTest={searchItemHandler}
-          changeView={() => {}}
-          sort={sort}
-        />
-        <Table
-          tests={filteredTestsRef.current}
-          deleteItem={deleteTestsHandler}
-          setChecked={selectCheckbox}
-          deleteALot={true}
-        />
-      </TestViewContainer>
+      <LoadingOverlay active={loading} text="Wczytujemy twoje testy..." logo>
+        <TestViewContainer>
+          <HeaderToolBar
+            numberOfTest={tests.length}
+            nextTestName={nextTest.testName ? nextTest.testName : '---'}
+            nextTestDate={nextTest.creationDate ? nextTest.creationDate.toLocaleString() : '---'}
+            searchTest={searchItemHandler}
+            changeView={() => {}}
+            sort={sort}
+          />
+          <Table
+            tests={filteredTestsRef.current}
+            deleteItem={deleteTestsHandler}
+            setChecked={selectCheckbox}
+            deleteALot={true}
+          />
+        </TestViewContainer>
+      </LoadingOverlay>
     </>
   );
 };

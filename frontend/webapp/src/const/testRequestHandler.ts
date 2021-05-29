@@ -33,15 +33,17 @@ export type Test = {
   creatorId: number;
   testName: string;
   isLinkGenerated: boolean;
-  creationDate: string;
+  creationDate: Date;
   questions: Question[];
   isChecked: boolean;
   userIds?: number[];
+  maxScore?: number;
 };
 
 export const testFromResponse = (data: any): Test => {
   return {
     isChecked: false,
+    maxScore: data.max_score,
     id: data.id,
     creator: {
       name: data.creator.first_name,
@@ -51,7 +53,7 @@ export const testFromResponse = (data: any): Test => {
     creatorId: data.creator_id,
     testName: data.name,
     isLinkGenerated: data.is_link_generated,
-    creationDate: new Date(data.pub_test).toLocaleString(),
+    creationDate: new Date(data.pub_test),
     userIds: undefined,
     questions: data.questions.map((q: any) => ({
       content: q.content,
@@ -71,23 +73,25 @@ export const testFromResponse = (data: any): Test => {
 
 export const testsFromResponse = (data: any): Test[] => data.tests.map((t: any) => testFromResponse(t));
 
-export const testToResponse = (test: Test): any => ({
-  creator: test.creatorId,
-  name: test.testName,
-  is_link_generated: test.isLinkGenerated,
-  pub_test: new Date(test.creationDate).toLocaleString(),
-  users: test.userIds,
-  questions: test.questions.map((q: Question) => ({
-    content: q.content,
-    index: q.index,
-    question_type: q.questionType,
-    max_score: q.maxScore,
-    user_answers: q.userAnswers,
-    answers: q.answers.map((a: Answer) => ({
-      index: a.index,
-      content: a.content,
-      is_correct: a.isCorrect,
-      users_voted: a.usersVoted,
+export const testToResponse = (test: Test): any => {
+  return {
+    creator: test.creatorId,
+    name: test.testName,
+    is_link_generated: test.isLinkGenerated,
+    pub_test: test.creationDate.toLocaleString(),
+    users: test.userIds,
+    questions: test.questions.map((q: Question) => ({
+      content: q.content,
+      index: q.index,
+      question_type: q.questionType,
+      max_score: q.maxScore,
+      user_answers: q.userAnswers,
+      answers: q.answers.map((a: Answer) => ({
+        index: a.index,
+        content: a.content,
+        is_correct: a.isCorrect,
+        users_voted: a.usersVoted,
+      })),
     })),
-  })),
-});
+  };
+};

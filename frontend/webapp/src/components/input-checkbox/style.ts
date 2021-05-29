@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const Box = styled.div<{checked:boolean}>`
     width: 20px;
     height: 20px;
-    background-color: ${({checked}) => checked ? 'orange' : "#ebebeb"};
+    background-color: ${({checked, theme}) => checked ? theme.colors.primary : theme.colors.text};
     margin: 0 auto;
     align-items: center;
     justify-content: center;

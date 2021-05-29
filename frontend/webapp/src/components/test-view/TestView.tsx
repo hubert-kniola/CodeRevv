@@ -11,6 +11,7 @@ import {
   ScrollDiv,
   SearchField,
   SelectList,
+  LinkButton,
 } from './styles';
 import { SlidingPanel, CustomCheckbox } from 'components';
 import { Test, testListHeader } from 'const';
@@ -91,9 +92,11 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALo
         </div>
       </TableFormat>
       <ScrollDiv>
-        {tests.map((test) => (
-          <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
-        ))}
+        {tests.length > 0 ? (
+          tests.map((test) => <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />)
+        ) : (
+          <div>Nie utworzyłeś żadnych testów.</div>
+        )}
       </ScrollDiv>
     </>
   );
@@ -115,13 +118,13 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
       </SlidingPanel>
       <TableFormat>
         <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
-        <div id="name" onClick={() => setOpen((open) => !open)}>
+        <div id="name" style={{ cursor: 'pointer' }} onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>
-        <div>{test.creationDate}</div>
-        <div>{test.creatorId.toString()}</div>
+        <div>{new Date(test.creationDate).toLocaleDateString()}</div>
+        <div>{test.maxScore}</div>
         <div>---</div>
-        <div>{test.isLinkGenerated.toString()}</div>
+        <LinkButton>{test.isLinkGenerated ? 'Kopiuj' : 'Generuj'}</LinkButton>
         <div>---</div>
         <div onClick={() => deleteItem(test.id)}>Usuń</div>
       </TableFormat>
