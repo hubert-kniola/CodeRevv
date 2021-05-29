@@ -40,7 +40,7 @@ def test_save(request):
 
 @api_view(['POST'])
 @session_authentication
-def test(request, test_id):
+def test_join(request, test_id):
     user_id = get_user_id(request)
     response = requests.post(f"{proxy}/test/{test_id}/{str(user_id)}")
     print(response.json())
@@ -140,9 +140,6 @@ def test_results(request, test_id):
     pprint(response.json())
 
     return Response(response, response.status_code)
-
-
-
 
 
 # @api_view(['POST'])

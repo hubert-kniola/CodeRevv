@@ -2,7 +2,7 @@ from django.urls import path
 from .proxy_views import *
 
 urlpatterns = [
-    path('api/v1/test/join/<str:test_id>', test, name='test'),
+    path('api/v1/test/join/<str:test_id>', test_join, name='test_join'),
     path('api/v1/test/results/<str:test_id>', test_results, name='test_results'),
     path('api/v1/test/create', test_create, name='test_create'),
     path('api/v1/test/list', test_list, name='test_list'),

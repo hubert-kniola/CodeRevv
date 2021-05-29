@@ -45,10 +45,10 @@ async def join_test(test_id, user_id):
     user_id = int(user_id)
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
-        if not test.users:
-            test.users = [user_id]
-        elif user_id not in test.users:
-            test.users.append(user_id)
+        # if not test.users:
+        #     test.users = [user_id]
+        # elif user_id not in test.users:
+        #     test.users.append(user_id)
 
         return await engine.save(test)
 
@@ -180,7 +180,8 @@ async def save_test(test_id, user_id, modified_test: Test):
     #                     break
 
     user_id = int(user_id)
-
+    if user_id == test.creator:
+        return {'message': 'as creator you can not save test answer'}
     for iq, question in enumerate(modified_test.questions):
         for ia, answer in enumerate(question.answers):
             if answer.users_voted:
@@ -188,7 +189,8 @@ async def save_test(test_id, user_id, modified_test: Test):
                     test.questions[iq].answers[ia].users_voted = [user_id]
 
                 else:
-                    test.questions[iq].answers[ia].users_voted.append(user_id)
+                    if user_id not in test.questions[iq].answers[ia].users_voted:
+                        test.questions[iq].answers[ia].users_voted.append(user_id)
 
     await engine.save(test)
     return await engine.find_one(Test, Test.id == ObjectId(test_id))
