@@ -72,9 +72,9 @@ export const TableFormat = styled.div`
     color: #ebebeb
   }
 
-  input {
-    width: 2%;
-    height: 100%;
+  #input {
+    width: 20px;
+    height: 20px;
     margin: auto;
   }
 
@@ -93,7 +93,7 @@ export const TableFormat = styled.div`
 
 export const ScrollDiv = styled.div`
   scrollbar-width: 0;
-  max-height: 200px;
+  max-height: 400px;
   overflow: auto;
   scroll-behavior: smooth;
   color: #ebebeb90;

@@ -1,35 +1,22 @@
 import styled from 'styled-components'
 
-
-export const Conteiner = styled.div` //checkbox wrapper
-
-    .checkmark{
-        display: block;
-        width: 20px;
-        height: 20px;
-        background-color: #ddd;
-        border-radius: 1px;
-        transition: background-color 0.4s;
-    }
-
-    #check:checked ~ .checkmark{
-        background-color: orange;
-    }
-
-    .checkmark::after{
-        content: "";
-        width: 7px;
-        height: 15px;
-        border-right: 2px solid #fff;
-        border-bottom: 2px solid #fff;
-        transform: translate(-50%, -0%) rotate(40deg) scale(2);
-        opacity: 0;
-        transition: all 0.4s;
-    }   
-
-    #check:checked ~ .checkmark::after{
-        opacity: 1;
-        transform: translate(-50%, -0%) rotate(40deg) scale(1);
+export const Box = styled.div<{checked:boolean}>`
+    width: 20px;
+    height: 20px;
+    background-color: ${({checked}) => checked ? 'orange' : "#ebebeb"};
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s;
+    border-radius: 2px;
+    
+    .ico{
+        font-weight: bold;
+        transition: all  0.5s;
+        margin: 0;
+        transform: translate(-8%, -8%) ${({checked}) => checked ? 'scale(1)' : 'scale(2.5)'};;
+        opacity: ${({checked}) => checked ? '1' : '0'};
+        color: #ebebeb;
     }
 
 `

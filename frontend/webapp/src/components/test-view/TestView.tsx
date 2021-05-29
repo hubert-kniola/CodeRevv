@@ -125,7 +125,7 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
   return (
     <>
       <TableFormat id={header.id}>
-        <CustomCheckbox onClick={selectAll} checked={headerChecked} />
+        <CustomCheckbox id="input" onClick={selectAll} checked={headerChecked} />
         <div id="name">{header.testName}</div>
         <div>{header.testDate}</div>
         <div>{header.points}</div>
@@ -158,7 +158,7 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
         <TestDetails />
       </SlidingPanel>
       <TableFormat>
-        <CustomCheckbox onClick={() => setChecked(test.id)} checked={test.isChecked} />
+        <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>
