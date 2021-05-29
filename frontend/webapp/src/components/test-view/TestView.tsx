@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { FC, useState } from 'react';
+
 import {
   TableFormat,
   HeaderTool,
@@ -8,11 +9,10 @@ import {
   Menu_details,
   Setting_details,
   ScrollDiv,
-  SelectList,
+  SearchField,
+  SelectList
 } from './styles';
-import TextField from '@material-ui/core/TextField';
-import { SlidingPanel, CustomCheckbox} from 'components';
-
+import { SlidingPanel, CustomCheckbox } from 'components';
 
 export const TestViewContainer: FC = ({ children }) => {
   return <Container>{children}</Container>;
@@ -42,10 +42,10 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         <p>Nadchodzący test: {nextTestName}</p>
         <p>Data: {nextTestDate}</p>
       </div>
-      <TextField
-        id="outlined-basic"
+      <SearchField
         label="Wyszukaj..."
         variant="outlined"
+        autoComplete="off"
         onChange={(e) => searchTest(e.target.value)}
       />
       <SelectList onChange={(e) =>sort(e.target.value) } >

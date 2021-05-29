@@ -1,4 +1,35 @@
 import styled, { css } from 'styled-components';
+import { TextField } from '@material-ui/core';
+
+export const SearchField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '& .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '& .MuiInputLabel-outlined.Mui-focused': {
+    color: theme.colors.text,
+  },
+}));
 
 export const Container = styled.div`
   width: 85%;
@@ -31,7 +62,7 @@ export const HeaderTool = styled.div`
   .sortFiled {
     width: 10%;
     float: left;
-    margin: auot 0;
+    margin: auto 0;
   }
 
   & h3 {
@@ -43,12 +74,6 @@ export const HeaderTool = styled.div`
     font-size: 11px;
     margin-left: 1rem;
     opacity: 0.7;
-  }
-
-  & input {
-    margin: auto;
-    color: #ebebeb;
-    height: 20%;
   }
 
   & button {
