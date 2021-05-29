@@ -34,10 +34,10 @@ def check_answers(test: Test):
             score = 0 if score <= 0 else score
 
             ua = UserAnswer(user=user, score=score)
-            
+
             if not question.user_answers:
                 question.user_answers = [ua]
-            else:
+            elif ua not in question.user_answers:
                 question.user_answers.append(ua)
 
     test.users = users
@@ -51,6 +51,10 @@ def get_test_with_user_answers_for_user(test: Test, user_id: int):
     for question in questions:
         question.user_answers = list(filter(
             lambda ua: ua.user == user_id, question.user_answers))
+
+        for ia, answer in enumerate(question.answers):
+            question.answers[ia].users_voted = list(
+                filter(lambda a: a == user_id, answer.users_voted))
 
     test.questions = questions
     return test

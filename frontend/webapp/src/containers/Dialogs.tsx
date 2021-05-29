@@ -50,13 +50,16 @@ export const TestStartDialog: FC<Props> = ({ open }) => {
 
 interface TEDProps extends Props {
   onDismiss: () => void;
+  onConfirm: () => Promise<void>;
 }
 
-export const TestEndDialog: FC<TEDProps> = ({ open, onDismiss }) => {
+export const TestEndDialog: FC<TEDProps> = ({ open, onDismiss, onConfirm }) => {
   const { test } = useContext(TestFillContext);
   const history = useHistory();
 
   const handleEnd = async () => {
+    await onConfirm();
+
     const obj = await getTestResults(test!.id);
 
     console.log({ obj });

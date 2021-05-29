@@ -14,7 +14,7 @@ export type UserAnswer = {
 export type Answer = {
   index: number;
   content: string;
-  isCorrect: boolean;
+  isCorrect?: boolean;
   usersVoted?: number[];
 };
 
@@ -35,7 +35,7 @@ export type Test = {
   isLinkGenerated: boolean;
   creationDate: string;
   questions: Question[];
-  userIds: number[];
+  userIds?: number[];
 };
 
 export const testFromResponse = (data: any): Test => {
@@ -50,7 +50,7 @@ export const testFromResponse = (data: any): Test => {
     testName: data.name,
     isLinkGenerated: data.is_link_generated,
     creationDate: new Date(data.pub_test).toLocaleString(),
-    userIds: data.users,
+    userIds: undefined,
     questions: data.questions.map((q: any) => ({
       content: q.content,
       index: q.index,
@@ -61,7 +61,7 @@ export const testFromResponse = (data: any): Test => {
         index: a.index,
         content: a.content,
         isCorrect: a.is_correct,
-        usersVoted: a.users_voted,
+        usersVoted: null,
       })),
     })),
   };

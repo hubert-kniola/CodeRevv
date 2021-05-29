@@ -22,8 +22,10 @@ const TestingFormIn: FC = () => {
       } catch (err) {
         console.log({ fetchErr: err });
         if (err.response) {
-          if (err.response.status_code === 403) {
+          if (err.response.status === 403) {
             setError('Nie masz dostępu do tego testu.');
+          } else if (err.response.status === 409) {
+            setError('Test został już przez Ciebie wypełniony.');
           } else {
             setError('Nie udało się pobrać tego testu.\nSpróbuj ponownie po odświeżeniu strony.');
           }
@@ -76,6 +78,7 @@ const TestingFormIn: FC = () => {
         <TestStartDialog open={!context.hasStarted && !loading && error == null} />
         <TestEndDialog
           onDismiss={() => setConfirmLeave((_) => false)}
+          onConfirm={onSubmit}
           open={confirmLeave && !context.hasEnded && !loading && error == null}
         />
 

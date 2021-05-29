@@ -168,29 +168,27 @@ async def modify_question(test_id, question_id, question: Question):
 @app.post('/test/save', response_model=Test, status_code=200)
 async def save_test(test_id, user_id, modified_test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    # for question in modified_test.questions:
-    #     for answer in question.answers:
-    #         if answer.users_voted: # sprawdzenie czy dany użytkownik dał odpowiedź
-    #             for og_question in test.questions:
-    #                 if question.index == og_question.index:
-    #                     for og_answer in og_question.answers:
-    #                         if answer.index == og_answer.index:
-    #                             og_answer.users_voted[user_id] = answer.users_voted[0]
-    #                             break
-    #                     break
-
     user_id = int(user_id)
-    if user_id == test.creator:
-        return {'message': 'as creator you can not save test answer'}
-    for iq, question in enumerate(modified_test.questions):
-        for ia, answer in enumerate(question.answers):
-            if answer.users_voted:
-                if not test.questions[iq].answers[ia].users_voted:
-                    test.questions[iq].answers[ia].users_voted = [user_id]
 
-                else:
-                    if user_id not in test.questions[iq].answers[ia].users_voted:
-                        test.questions[iq].answers[ia].users_voted.append(user_id)
+    if user_id == test.creator:
+        return test
+
+    for question in modified_test.questions:
+        for answer in question.answers:
+            if answer.users_voted:  # sprawdzenie czy dany użytkownik dał odpowiedź
+                for iq, og_question in enumerate(test.questions):
+                    if question.index == og_question.index:
+                        for ia, og_answer in enumerate(og_question.answers):
+                            if answer.index == og_answer.index:
+                                if not og_answer.users_voted:
+                                    test.questions[iq].answers[ia].users_voted = [
+                                        user_id]
+                                else:
+                                    test.questions[iq].answers[ia].users_voted.append(
+                                        user_id)
+                                break
+
+                        break
 
     await engine.save(test)
     return await engine.find_one(Test, Test.id == ObjectId(test_id))

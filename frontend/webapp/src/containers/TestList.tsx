@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
 import { testsFromResponse } from 'const';
+import { getTestResults } from 'utility';
 
 type UserAnswer = {
   content: string;
@@ -150,6 +151,14 @@ export const TestList: FC = () => {
   checkedAllRef.current = checkedAll;
 
   useEffect(() => {
+    const test = async () => {
+      const obj = await getTestResults('60b0d76a17b34619f4a14778');
+
+      console.log({ obj });
+    };
+
+    test();
+
     // const fetchAndUpdate = async () => {
     //   try {
     //     const { data } = await apiAxios.get('/test/list');

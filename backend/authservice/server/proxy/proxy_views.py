@@ -43,9 +43,11 @@ def test_save(request):
 def test_join(request, test_id):
     user_id = get_user_id(request)
     response = requests.post(f"{proxy}/test/{test_id}/{str(user_id)}")
-    print(response.json())
-    if response.status_code == 403 or 'creator' not in response.json():
+    if response.status_code == 403 or response.status_code == 409:
         return Response(response, response.status_code)
+
+    if 'creator' not in response.json():
+        return Response(response, 500)
 
     creator = AuthUser.objects.get(pk=response.json()['creator'])
     new_response = response.json()
