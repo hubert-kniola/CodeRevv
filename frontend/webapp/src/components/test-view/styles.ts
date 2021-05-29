@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   width: 85%;
@@ -15,7 +15,7 @@ export const Container = styled.div`
     border-radius: 0 15px 0 0;
     border-bottom: 1px solid #ebebeb;
 
-    :hover{
+    :hover {
       background-color: #1f1f1f;
     }
   }
@@ -56,7 +56,7 @@ export const HeaderTool = styled.div`
   }
 `;
 
-export const TableFormat = styled.div`
+export const TableFormat = styled.div<{deleted?:boolean}>`
   width: 100%;
   margin: 0 auto;
   height: 40px;
@@ -65,11 +65,11 @@ export const TableFormat = styled.div`
   justify-items: space-between;
   display: inner-block;
   text-align: center;
-  transition: all 0.15s ease-in-out; 
+  transition: all 0.15s ease-in-out;
 
   :hover {
     background-color: #5f5f5f;
-    color: #ebebeb
+    color: #ebebeb;
   }
 
   #input {
@@ -82,18 +82,41 @@ export const TableFormat = styled.div`
     marker: none;
     width: 10%;
     margin: auto;
-
   }
 
   & div#name {
     width: 35%;
     margin: auto auto auto 3%;
   }
+
+  & div#delete{
+    ${({deleted}) => deleted ? css`
+    color: red;
+    animation: pulse 2s infinite;
+    ` : ' '}
+  }
+
+  @keyframes pulse{
+    0% {
+      color: #ebebeb;
+
+    }
+
+    50% {
+      color: red;
+
+    }
+
+    100% {
+      color: #ebebeb;
+
+    }
+  }
 `;
 
 export const ScrollDiv = styled.div`
   scrollbar-width: 0;
-  max-height: 400px;
+  max-height: 200px;
   overflow: auto;
   scroll-behavior: smooth;
   color: #ebebeb90;
@@ -103,15 +126,14 @@ export const ScrollDiv = styled.div`
     width: 3px;
   }
 
-  ::-webkit-scrollbar-track{
+  ::-webkit-scrollbar-track {
     background-color: #1f1f1f;
   }
 
-  ::-webkit-scrollbar-thumb{
-    background-image: linear-gradient(#1f1f1f, #ebebeb50, #FFA50090 ,#ebebeb50, #1f1f1f);
-
+  ::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(#1f1f1f, #ebebeb50, #ffa50090, #ebebeb50, #1f1f1f);
   }
-`
+`;
 
 export const TestDetails = styled.div`
   width: 100%;
@@ -162,4 +184,8 @@ export const Menu_details = styled.div`
 export const Setting_details = styled.div`
   background-color: blue;
   width: 75%;
+`;
+
+export const SelectList = styled.select`
+  animation: animate 1s easy-ease-in-out;
 `;

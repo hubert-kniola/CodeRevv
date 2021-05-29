@@ -274,7 +274,7 @@ export const TestList: FC = () => {
           changeView={() => {}}
           sort={sort}
         />
-        <Table tests={filteredTestsRef.current} deleteItem={deleteTestsHandler} setChecked={selectCheckbox} />
+        <Table tests={filteredTestsRef.current} deleteItem={deleteTestsHandler} setChecked={selectCheckbox} deleteALot = {true} />
       </TestViewContainer>
     </>
   );

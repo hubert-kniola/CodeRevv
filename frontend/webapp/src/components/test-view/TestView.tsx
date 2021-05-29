@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import {
   TableFormat,
   HeaderTool,
@@ -7,17 +7,15 @@ import {
   Container_details,
   Menu_details,
   Setting_details,
-  ScrollDiv
+  ScrollDiv,
+  SelectList,
 } from './styles';
 import TextField from '@material-ui/core/TextField';
-import { SlidingPanel, CustomCheckbox } from 'components';
+import { SlidingPanel, CustomCheckbox} from 'components';
+
 
 export const TestViewContainer: FC = ({ children }) => {
-  return (
-    <Container>
-      {children}
-    </Container>
-  );
+  return <Container>{children}</Container>;
 };
 
 type HeaderToolBarProps = {
@@ -36,6 +34,7 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
   searchTest,
   sort,
 }) => {
+
   return (
     <HeaderTool>
       <div>
@@ -49,12 +48,12 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         variant="outlined"
         onChange={(e) => searchTest(e.target.value)}
       />
-      <select onChange={(e) => sort(e.target.value)}>
-        <option value="DATE_DESC"> Data malejaco</option>
-        <option value="DATE_ASC"> Data rosnąco</option>
-        <option value="A_Z"> A..Z</option>
-        <option value="Z_A"> Z..A</option>
-      </select>
+      <SelectList onChange={(e) =>sort(e.target.value) } >
+          <option value="DATE_DESC"> Data malejaco</option>
+          <option value="DATE_ASC"> Data rosnąco</option>
+          <option value="A_Z"> A..Z</option>
+          <option value="Z_A"> Z..A</option>
+      </SelectList>
       <button>Widok</button>
     </HeaderTool>
   );
@@ -109,12 +108,13 @@ type Test = {
 //DO WYJEBANIA
 
 export type HeaderProp = {
+  deleteALot: boolean
   tests: Test[];
   deleteItem: (id: string) => void;
   setChecked: (id: string) => void;
 };
 
-export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
+export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALot }) => {
   const [headerChecked, setHeaderChecked] = useState(false);
 
   const selectAll = () => {
@@ -124,7 +124,7 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
 
   return (
     <>
-      <TableFormat id={header.id}>
+      <TableFormat id={header.id} deleted={deleteALot}>
         <CustomCheckbox id="input" onClick={selectAll} checked={headerChecked} />
         <div id="name">{header.testName}</div>
         <div>{header.testDate}</div>
@@ -132,12 +132,12 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
         <div>{header.time}</div>
         <div>{header.link}</div>
         <div>{header.details}</div>
-        <div onClick={() => deleteItem(header.id)}>Usuń</div>
+        <div onClick={() => deleteItem(header.id) } id="delete" >Usuń</div>
       </TableFormat>
       <ScrollDiv>
-      {tests.map((test) => (
-        <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
-      ))}
+        {tests.map((test) => (
+          <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
+        ))}
       </ScrollDiv>
     </>
   );
@@ -157,7 +157,7 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
       <SlidingPanel show={open} close={() => setOpen((state) => false)}>
         <TestDetails />
       </SlidingPanel>
-      <TableFormat>
+      <TableFormat >
         <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
         <div id="name" onClick={() => setOpen((open) => !open)}>
           {test.testName}
