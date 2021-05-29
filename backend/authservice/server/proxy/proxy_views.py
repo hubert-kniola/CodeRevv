@@ -60,7 +60,7 @@ def test_join(request, test_id):
 def test_create(request):
     user_id = get_user_id(request)
     request.data['creator'] = int(user_id)
-    request.data['is_link_generated'] = False
+    request.data['is_link_generated'] = True # do zmiany przy wprowadzeniu whitelisty
 
     pprint(request.data)
 
