@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
 export const Panel = styled.div<{ show: boolean }>`
-  height: 100%;
+  height: 80%;
   background-color: white;
   position: fixed;
   top: 0;
   right: 0;
-  width: 70%;
+  width: 100%;
   z-index: 99998;
-  transform: ${({ show }) => (show ? ' translateX(0);' : 'translateX(100%)')};
+  transform: ${({ show }) => (show ? ' translatey(30%);' : 'translatey(200%)')};
   transition: transform 0.3s ease-out;
   padding: 1rem;
   background-color: ${({ theme }) => theme.colors.lighterBackground};

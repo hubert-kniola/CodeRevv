@@ -1,7 +1,39 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { TextField } from '@material-ui/core';
+
+export const SearchField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'none',
+  },
+  '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+    borderColor: 'none',
+  },
+  '& .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '& .MuiInputLabel-outlined.Mui-focused': {
+    color: theme.colors.text,
+  },
+}));
 
 export const Container = styled.div`
-  width: 80%;
+  width: 85%;
   background-color: #1f1f1f;
   margin: 1rem auto;
   padding: 0.5rem;
@@ -9,21 +41,16 @@ export const Container = styled.div`
   color: #ebebeb;
 
   div#header {
-    background-color: #3f3f3f;
     font-weight: bold;
     color: #ebebeb;
     text-align: center;
     border-radius: 0 15px 0 0;
+    border-bottom: 1px solid #ebebeb;
 
     :hover {
-      background-color: #3f3f3f;
-      border-bottom: 0;
+      background-color: #1f1f1f;
     }
   }
-`;
-
-export const Pagination = styled.div`
-  margin: 0.5rem 0.5rem 0.5rem auto;
 `;
 
 export const HeaderTool = styled.div`
@@ -36,7 +63,7 @@ export const HeaderTool = styled.div`
   .sortFiled {
     width: 10%;
     float: left;
-    margin: auot 0;
+    margin: auto 0;
   }
 
   & h3 {
@@ -50,20 +77,13 @@ export const HeaderTool = styled.div`
     opacity: 0.7;
   }
 
-  & input {
-    margin: auto;
-    color: black;
-    height: 20%;
-  }
-
   & button {
     margin: auto;
   }
 `;
 
-export const TableFormat = styled.div`
+export const TableFormat = styled.div<{deleted?:boolean}>`
   width: 100%;
-  background-color: #5f5f5f;
   margin: 0 auto;
   height: 40px;
   display: fixed;
@@ -71,16 +91,16 @@ export const TableFormat = styled.div`
   justify-items: space-between;
   display: inner-block;
   text-align: center;
-  color: black;
+  transition: all 0.15s ease-in-out;
 
   :hover {
-    background-color: #4f4f4f;
-    border-bottom: 2px solid #ebebeb;
+    background-color: #5f5f5f;
+    color: #ebebeb;
   }
 
-  input {
-    width: 2%;
-    height: 100%;
+  #input {
+    width: 20px;
+    height: 20px;
     margin: auto;
   }
 
@@ -93,6 +113,51 @@ export const TableFormat = styled.div`
   & div#name {
     width: 35%;
     margin: auto auto auto 3%;
+  }
+
+  & div#delete{
+    ${({deleted}) => deleted ? css`
+    color: red;
+    animation: pulse 2s infinite;
+    ` : ' '}
+  }
+
+  @keyframes pulse{
+    0% {
+      color: #ebebeb;
+
+    }
+
+    50% {
+      color: red;
+
+    }
+
+    100% {
+      color: #ebebeb;
+
+    }
+  }
+`;
+
+export const ScrollDiv = styled.div`
+  scrollbar-width: 0;
+  max-height: 200px;
+  overflow: auto;
+  scroll-behavior: smooth;
+  color: #ebebeb90;
+  padding: 0 0 0.5rem 0;
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #1f1f1f;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(#1f1f1f, #ebebeb50, #ffa50090, #ebebeb50, #1f1f1f);
   }
 `;
 
@@ -130,19 +195,23 @@ export const Menu_details = styled.div`
     width: 100%;
     height: 35px;
     border: 0px;
-    color: #ebebeb
+    color: #ebebeb;
   }
 
-  button#first{
+  button#first {
     border-radius: 15px 15px 0 0;
   }
 
-  button#last{
-    border-radius:  0 0 15px 15px;
+  button#last {
+    border-radius: 0 0 15px 15px;
   }
 `;
 
 export const Setting_details = styled.div`
   background-color: blue;
   width: 75%;
+`;
+
+export const SelectList = styled.select`
+  animation: animate 1s easy-ease-in-out;
 `;

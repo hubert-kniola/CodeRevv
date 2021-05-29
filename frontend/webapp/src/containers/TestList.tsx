@@ -1,142 +1,12 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { MessageOverlay, TestViewContainer, HeaderToolBar, Table } from 'components';
-import { testsFromResponse } from 'const';
-import { getTestResults } from 'utility';
 
-type UserAnswer = {
-  content: string;
-  user: number;
-  comment?: string;
-  score: number;
-};
-
-type Answer = {
-  index: number;
-  content: string;
-  isCorrect: boolean;
-  usersVoted?: number[];
-};
-
-type Question = {
-  answers: Answer[];
-  content: string;
-  index: number;
-  maxScore: number;
-  questionType: string;
-  userAnswers?: UserAnswer[];
-};
-
-type Test = {
-  id: string;
-  creatorId: number;
-  testName: string;
-  isLinkGenerated: boolean;
-  creationDate: Date;
-  questions: Question[];
-  userIds: number[];
-  isChecked: boolean;
-};
-
-const header = {
-  id: 'header',
-  isChecked: false,
-  testName: 'Nazwa testu',
-  testDate: 'Data',
-  points: 'Punkty',
-  time: 'Czas',
-  link: 'Link',
-  details: 'Szczegóły',
-  deleteItem: 'Usuń',
-};
-
-//#region JAKIEŚ_RaNDOMOWE_TESTY
-const TempTest = [
-  {
-    id: '#1',
-    creatorId: 997,
-    testName: 'Gabriella Grzmot',
-    isLinkGenerated: true,
-    creationDate: new Date('05/31/2021'),
-    questions: [] as Question[],
-    userIds: [] as number[],
-    isChecked: false,
-  },
-  {
-    id: '#2',
-    creatorId: 12,
-    testName: 'Totalne zniszczenie',
-    isLinkGenerated: true,
-    creationDate: new Date('05/27/2021'),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#3',
-    creatorId: 52,
-    testName: 'Bąk ląduje na słoneczniku',
-    isLinkGenerated: true,
-    creationDate: new Date('10/01/2021'),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#4',
-    creatorId: 985,
-    testName: 'Szybkie kładzenie kostki',
-    isLinkGenerated: true,
-    creationDate: new Date('07/01/2021'),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#5',
-    creatorId: 1324,
-    testName: 'Jakiś random test',
-    isLinkGenerated: true,
-    creationDate: new Date('02/15/2021'),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#6',
-    creatorId: 997,
-    testName: 'Gabriella Grzmot 2',
-    isLinkGenerated: true,
-    creationDate: new Date(),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#7',
-    creatorId: 52,
-    testName: 'Bąk Gucio',
-    isLinkGenerated: true,
-    creationDate: new Date(),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-  {
-    id: '#8',
-    creatorId: 52,
-    testName: 'Gitara Siema',
-    isLinkGenerated: true,
-    creationDate: new Date(),
-    questions: [],
-    userIds: [],
-    isChecked: false,
-  },
-] as Test[];
-//#endregion
+import { MessageOverlay, TestViewContainer, HeaderToolBar, Table, scrollIntoMessageOverlay } from 'components';
+import { Test, testsFromResponse } from 'const';
+import { apiAxios } from 'utility';
 
 export const TestList: FC = () => {
   const [error, setError] = useState<string | null>(null);
-  const [tests, setTests] = useState(TempTest as Test[]);
+  const [tests, setTests] = useState([] as Test[]);
 
   const errorRef = useRef<HTMLDivElement>(null);
   const [filteredTests, setFilteredTest] = useState(tests);
@@ -151,28 +21,21 @@ export const TestList: FC = () => {
   checkedAllRef.current = checkedAll;
 
   useEffect(() => {
-    const test = async () => {
-      const obj = await getTestResults('60b0d76a17b34619f4a14778');
-
-      console.log({ obj });
+    const fetch = async () => {
+      try {
+        const { data } = await apiAxios.get('/test/list/creator');
+        setTests(testsFromResponse(data));
+      } catch (err) {
+        if (err.response) {
+          setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
+        } else {
+          setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
+        }
+        scrollIntoMessageOverlay(errorRef);
+      }
     };
+    fetch();
 
-    test();
-
-    // const fetchAndUpdate = async () => {
-    //   try {
-    //     const { data } = await apiAxios.get('/test/list');
-    //     setTests(testsFromResponse(data));
-    //   } catch (err) {
-    //     if (err.response) {
-    //       setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
-    //     } else {
-    //       setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');
-    //     }
-    //     scrollIntoMessageOverlay(errorRef);
-    //   }
-    // };
-    // fetchAndUpdate();
   }, []);
 
   //Efekt wyszukuje najbliższy test (póki)
@@ -183,7 +46,7 @@ export const TestList: FC = () => {
 
     testsRef.current.forEach((test) => {
       let currentDate = new Date().getDate().valueOf();
-      let testTime = test.creationDate.getDate().valueOf() - currentDate;
+      let testTime = new Date(test.creationDate).getDate().valueOf() - currentDate;
 
       if (time < 0) {
         time = testTime;
@@ -278,12 +141,17 @@ export const TestList: FC = () => {
         <HeaderToolBar
           numberOfTest={tests.length}
           nextTestName={nextTest.testName ? nextTest.testName : '---'}
-          nextTestDate={nextTest.creationDate ? nextTest.creationDate!.toLocaleDateString() : '---'}
+          nextTestDate={nextTest.creationDate ? nextTest.creationDate : '---'}
           searchTest={searchItemHandler}
           changeView={() => {}}
           sort={sort}
         />
-        <Table tests={filteredTestsRef.current} deleteItem={deleteTestsHandler} setChecked={selectCheckbox} />
+        <Table
+          tests={filteredTestsRef.current}
+          deleteItem={deleteTestsHandler}
+          setChecked={selectCheckbox}
+          deleteALot={true}
+        />
       </TestViewContainer>
     </>
   );
