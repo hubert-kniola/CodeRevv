@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+
 import {
   TableFormat,
   HeaderTool,
@@ -7,17 +8,13 @@ import {
   Container_details,
   Menu_details,
   Setting_details,
-  ScrollDiv
+  ScrollDiv,
+  SearchField,
 } from './styles';
-import TextField from '@material-ui/core/TextField';
 import { SlidingPanel, CustomCheckbox } from 'components';
 
 export const TestViewContainer: FC = ({ children }) => {
-  return (
-    <Container>
-      {children}
-    </Container>
-  );
+  return <Container>{children}</Container>;
 };
 
 type HeaderToolBarProps = {
@@ -43,10 +40,10 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         <p>Nadchodzący test: {nextTestName}</p>
         <p>Data: {nextTestDate}</p>
       </div>
-      <TextField
-        id="outlined-basic"
+      <SearchField
         label="Wyszukaj..."
         variant="outlined"
+        autoComplete="off"
         onChange={(e) => searchTest(e.target.value)}
       />
       <select onChange={(e) => sort(e.target.value)}>
@@ -135,9 +132,9 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked }) => {
         <div onClick={() => deleteItem(header.id)}>Usuń</div>
       </TableFormat>
       <ScrollDiv>
-      {tests.map((test) => (
-        <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
-      ))}
+        {tests.map((test) => (
+          <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />
+        ))}
       </ScrollDiv>
     </>
   );

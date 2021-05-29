@@ -1,4 +1,35 @@
 import styled from 'styled-components';
+import { TextField } from '@material-ui/core';
+
+export const SearchField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input': {
+    color: theme.colors.text,
+  },
+  '& .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '&:hover .MuiInputLabel-outlined': {
+    color: theme.colors.text,
+  },
+  '& .MuiInputLabel-outlined.Mui-focused': {
+    color: theme.colors.text,
+  },
+}));
 
 export const Container = styled.div`
   width: 80%;
@@ -15,7 +46,7 @@ export const Container = styled.div`
     border-radius: 0 15px 0 0;
     border-bottom: 1px solid #ebebeb;
 
-    :hover{
+    :hover {
       background-color: #1f1f1f;
     }
   }
@@ -31,7 +62,7 @@ export const HeaderTool = styled.div`
   .sortFiled {
     width: 10%;
     float: left;
-    margin: auot 0;
+    margin: auto 0;
   }
 
   & h3 {
@@ -43,12 +74,6 @@ export const HeaderTool = styled.div`
     font-size: 11px;
     margin-left: 1rem;
     opacity: 0.7;
-  }
-
-  & input {
-    margin: auto;
-    color: #ebebeb;
-    height: 20%;
   }
 
   & button {
@@ -65,11 +90,11 @@ export const TableFormat = styled.div`
   justify-items: space-between;
   display: inner-block;
   text-align: center;
-  transition: all 0.15s ease-in-out; 
+  transition: all 0.15s ease-in-out;
 
   :hover {
     background-color: #5f5f5f;
-    color: #ebebeb
+    color: #ebebeb;
   }
 
   input {
@@ -82,7 +107,6 @@ export const TableFormat = styled.div`
     marker: none;
     width: 10%;
     margin: auto;
-
   }
 
   & div#name {
@@ -102,15 +126,14 @@ export const ScrollDiv = styled.div`
     width: 3px;
   }
 
-  ::-webkit-scrollbar-track{
+  ::-webkit-scrollbar-track {
     background-color: #1f1f1f;
   }
 
-  ::-webkit-scrollbar-thumb{
-    background-image: linear-gradient(#1f1f1f, #ebebeb50, #FFA50090 ,#ebebeb50, #1f1f1f);
-
+  ::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(#1f1f1f, #ebebeb50, #ffa50090, #ebebeb50, #1f1f1f);
   }
-`
+`;
 
 export const TestDetails = styled.div`
   width: 100%;
