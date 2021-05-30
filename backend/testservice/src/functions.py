@@ -25,6 +25,8 @@ def check_answers(test: Test):
                     len(list(filter(lambda a: a.is_correct, question.answers)))
 
                 for answer in question.answers:
+                    if not answer.users_voted:
+                        answer.users_voted = []
                     if user in answer.users_voted and answer.is_correct:
                         score += points_for_answer
 

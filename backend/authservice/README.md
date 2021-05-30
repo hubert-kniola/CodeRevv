@@ -21,6 +21,12 @@ Serwer z konsoli uruchamiamy:
 python -m manage runserver
 ```
 
+Tests:
+
+```bash
+python manage.py test
+```
+
 w foderze z plikiem `manage.py`.
 
 > PLS FIX

@@ -53,7 +53,6 @@ def test_join(request, test_id):
     new_response = response.json()
     new_response['creator_id'] = new_response['creator']
     new_response['creator'] = {'first_name': creator.first_name, 'last_name': creator.last_name, 'email': creator.email}
-    print(new_response)
     return Response(new_response, response.status_code)
 
 
@@ -63,9 +62,6 @@ def test_create(request):
     user_id = get_user_id(request)
     request.data['creator'] = int(user_id)
     request.data['is_link_generated'] = True # do zmiany przy wprowadzeniu whitelisty
-
-    pprint(request.data)
-
     response = requests.post(f"{proxy}/test/create", json=request.data)
     return Response(response, response.status_code)
 
@@ -86,7 +82,6 @@ def creator_tests(request):
     tests = response.json()
     for test in tests:
         users_of_test = []
-        pprint(test)
 
         if not test['users']:
             test['users'] = []
@@ -148,9 +143,7 @@ def test_question(request):
 def test_submit(request):
     user_id = get_user_id(request)
     test_id = request.data['test_id']
-
     response = requests.post(f"{proxy}/test/save?test_id={str(test_id)}&user_id={str(user_id)}", json=request.data['test'])
-
     return Response(response, response.status_code)
 
 
@@ -159,11 +152,7 @@ def test_submit(request):
 def test_results(request, test_id):
     print('xd' * 100)
     user_id = get_user_id(request)
-
     response = requests.get(f"{proxy}/test/result/{test_id}/{user_id}")
-
-    pprint(response.json())
-
     return Response(response, response.status_code)
 
 
