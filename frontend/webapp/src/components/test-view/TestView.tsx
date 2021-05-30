@@ -41,6 +41,8 @@ export const HeaderToolBar: FC<HeaderToolBarProps> = ({
         <p>Nadchodzący test: {nextTestName}</p>
         <p>Data: {nextTestDate}</p>
       </div>
+      <CustomInput />
+
       <SearchField
         label="Wyszukaj..."
         variant="outlined"
@@ -95,7 +97,6 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALo
         ) : (
           <div>Nie utworzyłeś żadnych testów.</div>
         )}
-        <CustomInput />
       </ScrollDiv>
     </>
   );
