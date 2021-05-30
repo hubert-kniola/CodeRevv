@@ -11,7 +11,7 @@ import {
   LinkButton,
 } from './styles';
 
-import { SlidingPanel, CustomCheckbox, SmallPopup } from 'components';
+import { SlidingPanel, CustomCheckbox, SmallPopup, CustomInput } from 'components';
 import { Test, testListHeader } from 'const';
 
 export const TestViewContainer: FC = ({ children }) => {
@@ -95,6 +95,7 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALo
         ) : (
           <div>Nie utworzyłeś żadnych testów.</div>
         )}
+        <CustomInput />
       </ScrollDiv>
     </>
   );
