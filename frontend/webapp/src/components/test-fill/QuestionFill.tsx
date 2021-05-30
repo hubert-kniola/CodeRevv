@@ -3,14 +3,14 @@ import { Grid, Checkbox, Avatar, Fade } from '@material-ui/core';
 import RichTextEditor from 'react-rte';
 
 import { TestFillContext } from 'context';
-import { FillContainer, SmallText, AnswerContainer } from './styles';
+import { FillContainer, SmallText, AnswerContainer, BigText } from './styles';
 import { useTransState } from 'hooks';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const QuestionFill: FC = () => {
   const context = useContext(TestFillContext);
-  const [qRef, trans, doTrans] = useTransState(context.getActiveQuestion(), true);
+  const [qRef, trans, doTrans] = useTransState(context.getActiveQuestion(), true, true, 100);
 
   useEffect(() => {
     doTrans();
@@ -24,7 +24,7 @@ export const QuestionFill: FC = () => {
     <>
       <hr />
       <FillContainer>
-        <Fade in={trans} appear>
+        <Fade in={true} timeout={100} appear>
           <div>
             <RichTextEditor value={RichTextEditor.createValueFromString(qRef.current.content, 'html')} readOnly />
 

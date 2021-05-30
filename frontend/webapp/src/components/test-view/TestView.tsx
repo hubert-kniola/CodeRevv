@@ -4,10 +4,7 @@ import {
   TableFormat,
   HeaderTool,
   Container,
-  TestName_detail,
   Container_details,
-  Menu_details,
-  Setting_details,
   ScrollDiv,
   SearchField,
   SelectList,
@@ -119,8 +116,6 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
     navigator.clipboard.writeText(url);
   };
 
-  console.log(test);
-
   return (
     <>
       <SmallPopup show={link != null} onTimeout={() => setLink((_) => null)}>
@@ -178,7 +173,7 @@ const TestDetails: FC<TDProps> = ({ test }) => {
             })
             .reduce((prev, accu) => prev + accu),
         }))
-        .sort((a, b) => a.points - b.points)
+        .sort((a, b) => b.points - a.points)
     );
   }, [test]);
 
