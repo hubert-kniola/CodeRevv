@@ -22,4 +22,3 @@ export * from './test-fill/Components';
 export * from './test-fill/QuestionFill';
 export * from './input-checkbox/CustomCheckbox';
 export * from './small-popup/SmallPopup';
-export * from './custom-input/CustomInput'

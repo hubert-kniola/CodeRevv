@@ -84,7 +84,7 @@ export const HeaderTool = styled.div`
   }
 `;
 
-export const TableFormat = styled.div<{ deleted?: boolean }>`
+export const TableFormat = styled.div`
   width: 100%;
   margin: 0 auto;
   height: 40px;
@@ -117,14 +117,6 @@ export const TableFormat = styled.div<{ deleted?: boolean }>`
     margin: auto auto auto 3%;
   }
 
-  & div#delete {
-    ${({ deleted }) =>
-      deleted
-        ? css`
-            color: red;
-          `
-        : ' '}
-  }
 `;
 
 export const ScrollDiv = styled.div`
