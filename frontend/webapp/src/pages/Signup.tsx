@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import { LoadingOverlay, MessageOverlay, ReCaptcha, scrollIntoMessageOverlay } from 'components';
@@ -15,6 +15,10 @@ const Signup: FunctionComponent = () => {
 
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.title = `Zarejestruj się`;
+  }, []);
 
   const setFetchError = (error: string) => {
     setLoading(false);

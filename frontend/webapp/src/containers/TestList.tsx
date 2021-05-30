@@ -8,11 +8,12 @@ import {
   scrollIntoMessageOverlay,
   LoadingOverlay,
 } from 'components';
+
 import { Test, testsFromResponse } from 'const';
 import { apiAxios } from 'utility';
-import { SmallPopup } from 'components';
+import { TestListContextProvider } from 'context';
 
-export const TestList: FC = () => {
+const TestListIn: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [tests, setTests] = useState([] as Test[]);
@@ -32,6 +33,8 @@ export const TestList: FC = () => {
   checkedAllRef.current = checkedAll;
 
   useEffect(() => {
+    document.title = `Moje testy`;
+
     const fetch = async () => {
       setLoading((_) => true);
 
@@ -175,3 +178,9 @@ export const TestList: FC = () => {
     </>
   );
 };
+
+export const TestList: FC = () => (
+  <TestListContextProvider>
+    <TestListIn />
+  </TestListContextProvider>
+);

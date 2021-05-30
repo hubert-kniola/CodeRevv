@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useRef, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
 
@@ -8,7 +8,6 @@ import { LoginSchema, loginFormData } from 'const';
 import { AuthContext } from 'context';
 import { apiAxios } from 'utility';
 
-
 const Login: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,6 +15,14 @@ const Login: FunctionComponent = () => {
   const authContext = useContext(AuthContext);
   const history = useHistory();
   const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.title = `Zaloguj się`
+
+    if (authContext.isAuthenticated()) {
+      history.push('/dashboard');
+    }
+  }, []);
 
   const handleLoginCallError = (error: any) => {
     if (error.response.status === 500) {
