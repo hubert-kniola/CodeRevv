@@ -13,6 +13,8 @@ const TestingFormIn: FC = () => {
   const errorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    document.title = `Test`;
+
     setLoading(true);
     setError(null);
 

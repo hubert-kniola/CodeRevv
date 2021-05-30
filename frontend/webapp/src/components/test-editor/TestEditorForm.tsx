@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState, useContext, useRef } from 'react';
+import { FC, FormEvent, useState, useContext, useRef, useEffect } from 'react';
 
 import {
   Container,
@@ -36,6 +36,10 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(testEditorSchema),
   });
+
+  useEffect(() => {
+    document.title = `Stwórz nowy test`;
+  }, []);
 
   const removeQuestion = (pos: number) => {
     if (questions.length > 1 && questions[pos].lock && currentDeleteTimeout != null) {

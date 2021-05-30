@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, MouseEvent, useContext, useRef } from 'react';
+import { FC, useEffect, useState, MouseEvent, useContext, useRef, useCallback } from 'react';
 import RichTextEditor from 'react-rte';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';

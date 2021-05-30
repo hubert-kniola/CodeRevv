@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   width: min(80vw, 1000px);
@@ -79,7 +79,7 @@ export const SmallText = styled.div`
   }
 `;
 
-export const ChooserContainer = styled.div<{ active: boolean }>`
+export const ChooserContainer = styled.div<{ active: boolean; filled: boolean }>`
   width: 100%;
   padding: 10px 10px 10px 10px;
   border-radius: 15px;
@@ -97,6 +97,14 @@ export const ChooserContainer = styled.div<{ active: boolean }>`
     transition: 0.2s ease-in-out;
     background: ${({ theme }) => theme.colors.setting};
   }
+
+  ${({ filled }) =>
+    filled &&
+    css`
+      -webkit-box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.secondary};
+      -moz-box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.secondary};
+      box-shadow: inset 0px 0px 0px 2px ${({ theme }) => theme.colors.secondary};
+    `}
 `;
 
 export const ChooserText = styled.div`
@@ -106,7 +114,7 @@ export const ChooserText = styled.div`
   text-align: left;
 `;
 
-export const MainButton = styled.button`
+export const MainButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   padding: 10px 10px;
   border: 0px solid transparent;
@@ -118,12 +126,22 @@ export const MainButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 8px 14px 4px #000000;
   outline: none;
+  transition: 0.2s ease-in-out;
 
-  &:hover {
-    transition: 0.2s ease-in-out;
-    background: ${({ theme }) => theme.colors.text};
-    color: ${({ theme }) => theme.colors.setting};
-  }
+  ${({ disabled }) =>
+    disabled
+      ? css`
+          background: ${({ theme }) => theme.colors.lighterBackground};
+          color: ${({ theme }) => theme.colors.setting};
+          cursor: default;
+        `
+      : css`
+          &:hover {
+            transition: 0.2s ease-in-out;
+            background: ${({ theme }) => theme.colors.text};
+            color: ${({ theme }) => theme.colors.setting};
+          }
+        `}
 `;
 
 export const MinorButton = styled.div`

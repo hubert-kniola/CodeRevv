@@ -1,86 +1,67 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 
 import {
   TableFormat,
   HeaderTool,
   Container,
-  TestName_detail,
   Container_details,
-  Menu_details,
-  Setting_details,
   ScrollDiv,
   SearchField,
   SelectList,
   LinkButton,
 } from './styles';
 
-import { SlidingPanel, CustomCheckbox, SmallPopup } from 'components';
+import { SlidingPanel, CustomCheckbox, SmallPopup} from 'components';
 import { Test, testListHeader } from 'const';
+import { TestListContext } from 'context';
 
 export const TestViewContainer: FC = ({ children }) => {
   return <Container>{children}</Container>;
 };
 
-type HeaderToolBarProps = {
-  numberOfTest: number;
-  nextTestName: string;
-  nextTestDate: string;
-  searchTest: (value: string) => void;
-  changeView: () => void;
-  sort: (type: string) => void;
-};
+export const HeaderToolBar: FC = () => {
+const context = useContext(TestListContext);
 
-export const HeaderToolBar: FC<HeaderToolBarProps> = ({
-  numberOfTest,
-  nextTestName,
-  nextTestDate,
-  searchTest,
-  sort,
-}) => {
+
   return (
     <HeaderTool>
       <div>
-        <h3>Liczba twoich testów: {numberOfTest}</h3>
-        <p>Nadchodzący test: {nextTestName}</p>
-        <p>Data: {nextTestDate}</p>
+        <h3>Liczba twoich testów: {context.tests.length}</h3>
+        <p>Nadchodzący test: {context.nextTest ? context.nextTest.testName : '---'}</p>
+        <p>Data: {context.nextTest ? context.nextTest.creationDate.toLocaleString() : '---'}</p>
       </div>
+
       <SearchField
         label="Wyszukaj..."
         variant="outlined"
         autoComplete="off"
-        onChange={(e) => searchTest(e.target.value)}
+        onChange={(e) => context.searchTest(e.target.value)}
       />
-      <SelectList onChange={(e) => sort(e.target.value)}>
+      <SelectList onChange={(e) => context.sortTests(e.target.value)}>
         <option value="DATE_DESC"> Data malejaco</option>
         <option value="DATE_ASC"> Data rosnąco</option>
         <option value="A_Z"> A..Z</option>
         <option value="Z_A"> Z..A</option>
       </SelectList>
-      <button>Widok</button>
     </HeaderTool>
   );
 };
 
-export type HeaderProp = {
-  deleteALot: boolean;
-  tests: Test[];
-  deleteItem: (id: string) => void;
-  setChecked: (id: string) => void;
-};
 
-export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALot }) => {
+export const Table: FC = () => {
   const [headerChecked, setHeaderChecked] = useState(false);
+  const context = useContext(TestListContext);
 
   const h = testListHeader;
 
   const selectAll = () => {
-    setChecked(h.id);
+    context.selectCheckbox(h.id);
     setHeaderChecked((state) => !state);
   };
 
   return (
     <>
-      <TableFormat id={h.id} deleted={deleteALot}>
+      <TableFormat id={h.id}>
         <CustomCheckbox id="input" onClick={selectAll} checked={headerChecked} />
         <div id="name">{h.testName}</div>
         <div>{h.testDate}</div>
@@ -88,13 +69,13 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALo
         <div>{h.time}</div>
         <div>{h.link}</div>
         <div>{h.details}</div>
-        <div onClick={() => deleteItem(h.id)} id="delete">
+        <div onClick={() => context.deleteTests(h.id)}>
           Usuń
         </div>
       </TableFormat>
       <ScrollDiv>
-        {tests.length > 0 ? (
-          tests.map((test) => <RowTable test={test} deleteItem={deleteItem} setChecked={setChecked} />)
+        {context.tests.length > 0 ? (
+          context.filteredTests.map((test) => <RowTable test={test} />)
         ) : (
           <div>Nie utworzyłeś żadnych testów.</div>
         )}
@@ -105,21 +86,18 @@ export const Table: FC<HeaderProp> = ({ tests, deleteItem, setChecked, deleteALo
 
 export type RowTableProp = {
   test: Test;
-  deleteItem: (id: string) => void;
-  setChecked: (id: string) => void;
 };
 
-export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => {
+export const RowTable: FC<RowTableProp> = ({ test }) => {
   const [open, setOpen] = useState(false);
   const [link, setLink] = useState<string | null>(null);
+  const context = useContext(TestListContext);
 
   const onLinkClick = () => {
     const url = `http://localhost:3000/test/${test.id}`;
     setLink((_) => url);
     navigator.clipboard.writeText(url);
   };
-
-  console.log(test);
 
   return (
     <>
@@ -138,7 +116,7 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
       </SlidingPanel>
 
       <TableFormat>
-        <CustomCheckbox id="input" onClick={() => setChecked(test.id)} checked={test.isChecked} />
+        <CustomCheckbox id="input" onClick={() => context.selectCheckbox(test.id)} checked={test.isChecked} />
         <div id="name" style={{ cursor: 'pointer' }} onClick={() => setOpen((open) => !open)}>
           {test.testName}
         </div>
@@ -147,7 +125,7 @@ export const RowTable: FC<RowTableProp> = ({ test, deleteItem, setChecked }) => 
         <div>---</div>
         <LinkButton onClick={onLinkClick}>{test.isLinkGenerated ? 'Kopiuj' : 'Generuj'}</LinkButton>
         <div>---</div>
-        <div onClick={() => deleteItem(test.id)}>Usuń</div>
+        <LinkButton onClick={() => context.deleteTests(test.id)}>Usuń</LinkButton>
       </TableFormat>
     </>
   );
@@ -178,7 +156,7 @@ const TestDetails: FC<TDProps> = ({ test }) => {
             })
             .reduce((prev, accu) => prev + accu),
         }))
-        .sort((a, b) => a.points - b.points)
+        .sort((a, b) => b.points - a.points)
     );
   }, [test]);
 
