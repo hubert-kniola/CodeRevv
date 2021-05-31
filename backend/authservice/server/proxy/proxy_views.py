@@ -21,12 +21,22 @@ def get_user_id(request):
                          settings.SIMPLE_JWT['ALGORITHM'])
     return int(payload['user_id'])
 
+def move_cookies(request, response):
+    if request.COOKIES['access']:
+        response.set_cookie('access', request.COOKIES['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+    if request.COOKIES['refresh']:
+        response.set_cookie('refresh', request.COOKIES['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+
+def make_response_with_cookies(request, *args, **kwargs):
+    response = Response(*args, **kwargs)
+    move_cookies(request, response)
+    return response
 
 @api_view(['POST'])
 @session_authentication
 def test_link_generate(request):
     response = requests.post(f"{proxy}/test/link?test_id={str(request.data['test_id'])}&user_id={str(get_user_id(request))}")
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['PATCH'])
@@ -35,7 +45,7 @@ def test_save(request):
     response = requests.patch(
         f"{proxy}/test/save?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}",
         json=request.data['user_answer'])
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['POST'])
@@ -53,7 +63,7 @@ def test_join(request, test_id):
     new_response = response.json()
     new_response['creator_id'] = new_response['creator']
     new_response['creator'] = {'first_name': creator.first_name, 'last_name': creator.last_name, 'email': creator.email}
-    return Response(new_response, response.status_code)
+    return make_response_with_cookies(request, new_response, response.status_code)
 
 
 @api_view(['POST'])
@@ -63,7 +73,7 @@ def test_create(request):
     request.data['creator'] = int(user_id)
     request.data['is_link_generated'] = True # do zmiany przy wprowadzeniu whitelisty
     response = requests.post(f"{proxy}/test/create", json=request.data)
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['GET'])
@@ -71,7 +81,7 @@ def test_create(request):
 def test_list(request):
     user_id = get_user_id(request)
     response = requests.get(f"{proxy}/test/list/{user_id}")
-    return Response({'tests': response.json()}, response.status_code)
+    return make_response_with_cookies(request, {'tests': response.json()}, response.status_code)
 
 
 @api_view(['GET'])
@@ -92,21 +102,22 @@ def creator_tests(request):
             users_of_test.append(user_dict)
 
         test['users_data'] = users_of_test
-    return Response({'tests': tests}, response.status_code)
+
+    return make_response_with_cookies(request, {'tests': tests}, response.status_code)
 
 
 @api_view(['DELETE'])
 @session_authentication
 def test_delete(request):
     response = requests.delete(f"{proxy}/test/delete?test_id={str(request.data['test_id'])}")
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_user(request):
     response = requests.post(f"{proxy}/test/user", json=request.data)
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['DELETE'])
@@ -114,28 +125,28 @@ def test_user(request):
 def test_user(request):
     response = requests.delete(
         f"{proxy}/test/user?test_id={str(request.data['test_id'])}&user_id={str(request.data['user_id'])}")
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['POST'])
 @session_authentication
 def test_question(request):
     response = requests.post(f"{proxy}/test/question?test_id={str(request.data['test_id'])}", json=request.data['data'])
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['DELETE'])
 @session_authentication
 def test_question(request):
     response = requests.delete(f"{proxy}/test/question?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}")
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['PATCH'])
 @session_authentication
 def test_question(request):
     response = requests.patch(f"{proxy}/test/question?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}", json=request.data['data'])
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['POST'])
@@ -144,7 +155,7 @@ def test_submit(request):
     user_id = get_user_id(request)
     test_id = request.data['test_id']
     response = requests.post(f"{proxy}/test/save?test_id={str(test_id)}&user_id={str(user_id)}", json=request.data['test'])
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 @api_view(['GET'])
@@ -153,7 +164,7 @@ def test_results(request, test_id):
     print('xd' * 100)
     user_id = get_user_id(request)
     response = requests.get(f"{proxy}/test/result/{test_id}/{user_id}")
-    return Response(response, response.status_code)
+    return make_response_with_cookies(request, response, response.status_code)
 
 
 # @api_view(['POST'])

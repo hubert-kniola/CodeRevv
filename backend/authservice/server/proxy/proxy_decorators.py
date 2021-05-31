@@ -7,7 +7,6 @@ from jwt import ExpiredSignatureError
 from ..views.serializers import AuthUser, RefreshTokenSerializer
 from rest_framework_simplejwt.exceptions import TokenError
 
-
 def refresh_token(request):
     serializer = RefreshTokenSerializer()
     try:
@@ -16,6 +15,7 @@ def refresh_token(request):
         }
         token = serializer.validate(attr)
         request.COOKIES['access'] = token['access']
+
     except(ValueError, TokenError):
         raise PermissionDenied
 
@@ -29,7 +29,9 @@ def session_authentication(function, login_url=None, redirect_field_name=REDIREC
             user = AuthUser.objects.get(pk=payload['user_id'])
             if payload['email'] == user.email:
                 return function(request, *args, **kwargs)
-        except ExpiredSignatureError:
+        except (ExpiredSignatureError, KeyError):
             refresh_token(request)
+
             return function(request, *args, **kwargs)
+
     return wrap

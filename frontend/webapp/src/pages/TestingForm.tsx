@@ -13,7 +13,7 @@ const TestingFormIn: FC = () => {
   const errorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = `Test`;
+    document.title = `Wypełnij test`;
 
     setLoading(true);
     setError(null);

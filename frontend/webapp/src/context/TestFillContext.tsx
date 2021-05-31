@@ -35,8 +35,8 @@ export interface ITestFillContext {
   activeIndex: number;
   onTestInit: () => Promise<void>;
   onTestStart: () => void;
-  onPartialSubmit: () => void;
-  onSubmit: () => void;
+  onPartialSubmit: () => Promise<void>;
+  onSubmit: () => Promise<void>;
   switchQuestion: (p: number) => void;
   toggleAnswerForActiveQuestion: (p: number) => void;
   getActiveQuestion: () => Question;
