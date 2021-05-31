@@ -149,9 +149,9 @@ def user_google_login(request):
         }
     }
     response = Response(ret, status=status.HTTP_200_OK)
-    response.set_cookie('access', tokens['access'], httponly=True)
+    response.set_cookie('access', tokens['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
     response.set_cookie(
-        'refresh', tokens['refresh'], httponly=True)
+        'refresh', tokens['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
     return response
 
 
