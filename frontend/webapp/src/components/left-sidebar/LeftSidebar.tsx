@@ -4,6 +4,7 @@ import { sidebarData, SidebarItem } from 'const';
 
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
+import { Collapse } from '@material-ui/core';
 
 type Props = {
   item: SidebarItem;
@@ -20,13 +21,14 @@ export const DropDownList: FC<Props> = ({ item, visible }) => {
         <Icon>{item.icon}</Icon>
         {!visible ? <TitleRow>{item.title}</TitleRow> : null}
       </Row>
-      {open &&
-        item.subMenu.map((item) => (
+      <Collapse in={open}>
+        {item.subMenu.map((item) => (
           <SubRow to={item.link} key={item.title} onClick={() => item.action(dashContext)}>
             <Icon>{item.icon}</Icon>
             {!visible && <TitleRow>{item.title}</TitleRow>}
           </SubRow>
         ))}
+      </Collapse>
     </>
   );
 };
@@ -43,7 +45,7 @@ export const LeftSidebar: FC = ({ children }) => {
               <MenuOpenIcon />
             </Icon>
           ) : (
-            <div style={{ cursor: 'pointer'}}>MENU</div>
+            <div style={{ cursor: 'pointer' }}>MENU</div>
           )}
         </MenuHeader>
         <SidebarList>
