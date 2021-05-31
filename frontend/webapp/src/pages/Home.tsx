@@ -1,24 +1,30 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 import { CenteredLink, Title } from 'components';
 import { HomeFooter, HomeNav, HomeFaq } from 'containers';
 
-export const Home: FunctionComponent = () => (
-  <>
-    <HomeNav />
+export const Home: FunctionComponent = () => {
+  useEffect(() => {
+    document.title = `CodeRevv`;
+  }, []);
 
-    <Title>Tu powstaje platforma testów online.</Title>
+  return (
+    <>
+      <HomeNav />
 
-    <HomeFaq />
+      <Title>Tu powstaje platforma testów online.</Title>
 
-    <Title>Zapraszamy do kontaktu!</Title>
+      <HomeFaq />
 
-    <CenteredLink to="#" big>
-      <code onClick={() => window.location.replace('mailto:coderevv@gmail.com?subject=Pytanie o CodeRevv')}>
-        coderevv@gmail.com
-      </code>
-    </CenteredLink>
+      <Title>Zapraszamy do kontaktu!</Title>
 
-    <HomeFooter />
-  </>
-);
+      <CenteredLink to="#" big>
+        <code onClick={() => window.location.replace('mailto:coderevv@gmail.com?subject=Pytanie o CodeRevv')}>
+          coderevv@gmail.com
+        </code>
+      </CenteredLink>
+
+      <HomeFooter />
+    </>
+  );
+};
