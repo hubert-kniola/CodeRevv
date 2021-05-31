@@ -69,6 +69,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
             type="text"
             placeholder="Nazwa testu..."
             ref={register}
+            autoComplete="off"
             onChange={(e) => setTestName(e.target.value)}
           />
         </CenteringContainer>

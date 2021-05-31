@@ -52,6 +52,8 @@ const TestingFormIn: FC = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       await context.onSubmit();
     } catch (err) {
