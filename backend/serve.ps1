@@ -7,3 +7,4 @@ cd $path
 Start-Process -NoNewWindow python -ArgumentList "authservice/manage.py","runserver"
 cd testservice
 Start-Process -NoNewWindow python -ArgumentList "-m","src.main"
+cd ..
