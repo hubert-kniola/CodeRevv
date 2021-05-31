@@ -18,3 +18,5 @@ urlpatterns = [
     path('api/v1/logout/', user_logout, name='logout'),
     path('api/v1/recaptcha/', recaptcha_verify, name='recaptcha'),
 ]
+
+delete_inactive_users()

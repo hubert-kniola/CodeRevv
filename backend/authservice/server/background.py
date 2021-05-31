@@ -1,12 +1,11 @@
 from datetime import datetime
 
 from background_task import background
-from background_task.models import Task
 
 from .models import AuthUser
 
 
-@background()
+@background(schedule=30)
 def delete_inactive_users():
     users = AuthUser.objects.all()
     for user in users:
