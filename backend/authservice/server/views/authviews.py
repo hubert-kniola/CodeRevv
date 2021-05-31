@@ -96,9 +96,9 @@ def user_login(request):
                         }
                     }
                     response = Response(ret, status=status.HTTP_200_OK)
-                    response.set_cookie('access', tokens['access'], httponly=True)
+                    response.set_cookie('access', tokens['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
                     response.set_cookie(
-                        'refresh', tokens['refresh'], httponly=True)
+                        'refresh', tokens['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
                     return response
                 if (datetime.now() - user.date_joined).total_seconds() > 86400:
                     user.delete()
@@ -117,6 +117,7 @@ def user_google_login(request):
     user = authenticate(
         username=google_data['email'], password=google_data['googleId'])
     if not user:
+        print(google_data)
         user_data = {'email': google_data['email'], 'first_name': google_data['givenName'], 'last_name': google_data['familyName'], 'password': google_data['googleId']}
         serializer = UserGoogleRegisterSerializer(data=user_data)
         if serializer.is_valid():
