@@ -8,7 +8,7 @@ const darkTheme: DefaultTheme = {
   name: 'dark',
   colors: {
     background: '#1f1f1f',
-    lighterBackground: '#404040',
+    lighterBackground: '#333333',
     alphabg: '#1f1f1fdf',
     setting: '#474847CC',
     primary: '#FE7920',
