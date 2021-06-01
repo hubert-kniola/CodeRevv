@@ -11,7 +11,7 @@ import {
   LinkButton,
 } from './styles';
 
-import { SlidingPanel, CustomCheckbox, SmallPopup} from 'components';
+import { SlidingPanel, CustomCheckbox, SmallPopup } from 'components';
 import { Test, testListHeader } from 'const';
 import { TestListContext } from 'context';
 
@@ -20,8 +20,7 @@ export const TestViewContainer: FC = ({ children }) => {
 };
 
 export const HeaderToolBar: FC = () => {
-const context = useContext(TestListContext);
-
+  const context = useContext(TestListContext);
 
   return (
     <HeaderTool>
@@ -47,7 +46,6 @@ const context = useContext(TestListContext);
   );
 };
 
-
 export const Table: FC = () => {
   const [headerChecked, setHeaderChecked] = useState(false);
   const context = useContext(TestListContext);
@@ -69,8 +67,8 @@ export const Table: FC = () => {
         <div>{h.time}</div>
         <div>{h.link}</div>
         <div>{h.details}</div>
-        <div onClick={() => context.deleteTests(h.id)}>
-          Usuń
+        <div style={{ cursor: 'pointer', color: 'red' }} onClick={() => context.deleteTests(h.id)}>
+          {h.deleteItem}
         </div>
       </TableFormat>
       <ScrollDiv>

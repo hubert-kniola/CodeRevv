@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Popup = styled.div<{ show: boolean }>`
   height: max-content;
-  background-color: ${({ theme }) => theme.colors.lighterBackground};
+  background-color: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
   position: fixed;
   right: 1.5rem;
@@ -15,6 +15,7 @@ export const Popup = styled.div<{ show: boolean }>`
   transition: transform 0.3s ease-out;
   border-radius: 15px;
   text-align: center;
+  box-shadow: 0px 8px 14px 4px #000000;
 
   & a {
     color: ${({ theme }) => theme.colors.primary};

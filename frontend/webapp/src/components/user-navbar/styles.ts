@@ -3,28 +3,25 @@ import styled, { css } from 'styled-components';
 export const NavBarUser = styled.nav`
   height: 80px;
   display: grid;
-  grid-template-columns: 20% 65% minmax(120px, 15%);
+  grid-template-columns: 20% 65% minmax(160px, 15%);
   position: sticky;
   top: 0px;
   background-color: ${({ theme }) => theme.colors.background};
-  padding: 0 1rem;
+  padding: 1.5rem 3rem 2rem 1.5rem;
   z-index: 1000;
-  padding-top: 30px;
-  padding-left: 30px;
 
   transition: 0.5s;
 `;
 
 export const ButtonSpace = styled.div`
   grid-column: 3/4;
-  width: 100%;
-  height: 100%;
 
   transition: 0.5s;
 `;
 
 export const Row = styled.div<{ id: string }>`
   width: 100%;
+
   border-radius: 15px;
 
   display: flex;
@@ -69,6 +66,11 @@ export const Row = styled.div<{ id: string }>`
 
 export const DropDown = styled.div<{ open: boolean }>`
   width: 100%;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
   background-color: ${({ theme }) => theme.colors.background};
 `;
 

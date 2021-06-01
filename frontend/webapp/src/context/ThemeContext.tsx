@@ -7,9 +7,9 @@ import bg_light from 'images/bg_light.png';
 const darkTheme: DefaultTheme = {
   name: 'dark',
   colors: {
-    background: '#201c21',
-    lighterBackground: '#2B262C',
-    alphabg: 'rgba(32, 28, 33, 0.966)',
+    background: '#1f1f1f',
+    lighterBackground: '#404040',
+    alphabg: '#1f1f1fdf',
     setting: '#474847CC',
     primary: '#FE7920',
     secondary: '#FDD25E',

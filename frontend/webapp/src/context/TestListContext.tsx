@@ -79,9 +79,9 @@ export const TestListContextProvider: FC = ({ children }) => {
           } else if (type === 'DATE_ASC') {
             return a.creationDate.getTime() - b.creationDate.getTime();
           } else if (type === 'A_Z') {
-            return a.testName > b.testName ? 1 : -1;
-          } else {
             return a.testName < b.testName ? 1 : -1;
+          } else {
+            return a.testName > b.testName ? 1 : -1;
           }
         }),
       ]);

@@ -6,7 +6,7 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
   width: 95%;
   margin: 0.3rem auto;
   padding: 1rem;
-  background-color: #1f1f1f;
+  background-color: ${({ theme }) => theme.colors.background};
   border-radius: 15px;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;
@@ -147,7 +147,7 @@ export const AnswerContainer = styled.div<{ deleteError: boolean }>`
   padding: 1rem 1rem 1rem 1rem;
   border-radius: 0 15px 15px 15px;
   font-size: 1rem;
-  background-color: #2b282d;
+  background-color: ${({theme}) => theme.colors.background};
   box-shadow: 0px 8px 14px 4px #000000;
   transition: all 1s;
   border: ${({ deleteError }) => (deleteError ? '2px solid #f53030' : '2px solid #2b282d')};

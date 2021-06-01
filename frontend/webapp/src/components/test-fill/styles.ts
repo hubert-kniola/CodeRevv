@@ -132,7 +132,7 @@ export const MainButton = styled.button<{ disabled: boolean }>`
     disabled
       ? css`
           background: ${({ theme }) => theme.colors.lighterBackground};
-          color: ${({ theme }) => theme.colors.setting};
+          color: ${({ theme }) => theme.colors.alphabg};
           cursor: default;
         `
       : css`

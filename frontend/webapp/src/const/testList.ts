@@ -7,5 +7,5 @@ export const testListHeader = {
     time: 'Czas',
     link: 'Link',
     details: 'Szczegóły',
-    deleteItem: 'Usuń',
+    deleteItem: 'Usuń zaznaczone',
   };
