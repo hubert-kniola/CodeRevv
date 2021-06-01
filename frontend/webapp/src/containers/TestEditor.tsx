@@ -132,6 +132,8 @@ const TestEditorIn: FC = () => {
       <LoadingOverlay active={loading} text="Czekamy na odpowiedź serwera..." logo>
         <TestEditorForm title="Stwórz nowy test" buttonText="Zakończ i zapisz" onSubmit={handleEditorSubmit} />
       </LoadingOverlay>
+
+      <div style={{marginBottom: '200px'}}/>
     </>
   );
 };

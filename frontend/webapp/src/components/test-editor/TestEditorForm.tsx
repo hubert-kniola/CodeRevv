@@ -11,12 +11,15 @@ import {
   CenteringContainer,
 } from './styles';
 
+import './styles.css';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { QuestionEditor } from 'components';
 import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
@@ -81,11 +84,15 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
 
         <Header>Pytania</Header>
 
-        {questions.map((q, index) => (
-          <QuestionContainer>
-            <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
-          </QuestionContainer>
-        ))}
+        <TransitionGroup>
+          {questions.map((q, index) => (
+            <CSSTransition key={q.id} timeout={200} classNames="move">
+              <QuestionContainer>
+                <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
+              </QuestionContainer>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
 
         <CenteringContainer>
           <NewQuestionButton onClick={addEmptyQuestion}>Dodaj pytanie</NewQuestionButton>

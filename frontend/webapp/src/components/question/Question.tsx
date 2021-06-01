@@ -142,7 +142,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
         <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
       </GeneralQuestion>
 
-      <Collapse in={open} timeout={1000}>
+      <Collapse in={open} timeout={500}>
         <Grow in={grow} timeout={500}>
           <ErrorText>{question.error}</ErrorText>
         </Grow>
