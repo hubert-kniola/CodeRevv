@@ -29,22 +29,34 @@ export function useTransState<T>(
   const [lastState, setLastState] = useState(state);
   const [trans, setTrans] = useState(transStart);
   const ref = useRef(state);
+  const [refTimeout, setRefTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [reappearTimeout, setReappearTimeout] = useState<NodeJS.Timeout | null>(null);
 
   ref.current = trans ? state : lastState;
 
   useEffect(() => {
-    setTimeout(() => {
-      setLastState((_: any) => state);
-    }, timeout);
+    if (refTimeout === null) {
+      setRefTimeout(
+        setTimeout(() => {
+          setLastState((_: any) => state);
+          setRefTimeout(null);
+        }, timeout)
+      );
+    }
   }, [ref.current]);
 
   const trigger = () => {
-    setTrans((t) => !t);
+    if (reappearTimeout === null) {
+      setTrans((t) => !t);
 
-    if (autoReappear) {
-      setTimeout(() => {
-        setTrans((t) => !t);
-      }, timeout);
+      if (autoReappear) {
+        setReappearTimeout(
+          setTimeout(() => {
+            setTrans((t) => !t);
+            setReappearTimeout(null);
+          }, timeout)
+        );
+      }
     }
   };
 

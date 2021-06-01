@@ -14,6 +14,7 @@ import { QuestionContainer, GeneralQuestion, Button, AnswerBlock, AnswerContaine
 import { EditorQuestion, EditorAnswer, newAnswer, TestEditorContext } from 'context';
 import { CustomCheckbox, MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
+import { useTransState } from 'hooks';
 
 type QuestionEditorProps = {
   index: number;
@@ -141,7 +142,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
         <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
       </GeneralQuestion>
 
-      <Collapse in={open} timeout={500}>
+      <Collapse in={open} timeout={1000}>
         <Grow in={grow} timeout={500}>
           <ErrorText>{question.error}</ErrorText>
         </Grow>
@@ -162,11 +163,11 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
             answersCount={question.answers!.length}
           />
         ))}
-        {buttonDisabled && (
+        <Collapse in={buttonDisabled}>
           <p>
-            Każde pytanie może mieć tylko 10 odpowiedzi <HighlightOffIcon className="icon" />{' '}
+            Każde pytanie może mieć tylko 10 odpowiedzi.
           </p>
-        )}
+        </Collapse>
 
         <Button onClick={addAnswer} disabled={buttonDisabled}>
           Dodaj odpowiedź
@@ -184,28 +185,29 @@ type AnswerEditorProps = {
 };
 
 export const AnswerEditor: FC<AnswerEditorProps> = ({ answer, setAnswerState, onDelete, answersCount }) => {
-  const [error, setError] = useState(false);
-  const [grow, setGrow] = useState(true);
-  const answerRef = useRef(answer);
-  answerRef.current = answer;
+  const [deleteError, setDeleteError] = useState(false);
+  const [answerError, setAnswerError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (error) {
+    if (answerError === null) {
+      setAnswerError(answer.error);
+    }
+  }, [answer]);
+
+  useEffect(() => {
+    if (deleteError) {
       setTimeout(() => {
-        setError(false);
+        setDeleteError(false);
       }, 2000);
     }
-  }, [error]);
+  }, [deleteError]);
 
   useEffect(() => {
-    if (answer.error != null) {
-      setTimeout(() => {
-        setGrow(false);
-      }, 1800);
+    if (answerError != null) {
+      setAnswerState({ ...answer, error: null });
 
       setTimeout(() => {
-        setAnswerState({ ...answerRef.current, error: null });
-        setGrow(true);
+        setAnswerError(null);
       }, 2000);
     }
   }, [answer.value]);
@@ -214,18 +216,23 @@ export const AnswerEditor: FC<AnswerEditorProps> = ({ answer, setAnswerState, on
     if (answersCount > 2) {
       onDelete();
     } else {
-      setError(true);
+      setDeleteError(true);
     }
   };
 
   return (
-    <AnswerContainer deleteError={error || answer.error != null}>
-      <Grow in={grow} timeout={500}>
+    <AnswerContainer deleteError={deleteError || answerError !== null}>
+      <Collapse in={answer.error !== null}>
         <ErrorText>
-          {answer.error != null && <>{answer.error}</>}
-          {error && <>Każde pytanie musi zawierać dwie odpowiedzi!</>}
+          <>{answerError}</>
         </ErrorText>
-      </Grow>
+      </Collapse>
+
+      <Collapse in={deleteError}>
+        <ErrorText>
+          <>Każde pytanie musi zawierać dwie odpowiedzi!</>
+        </ErrorText>
+      </Collapse>
 
       <AnswerBlock className="test">
         <div className="div1">

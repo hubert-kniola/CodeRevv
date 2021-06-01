@@ -10,12 +10,15 @@ import { useHistory } from 'react-router-dom';
 const MIN_QUESTION_BODY = 5;
 const MIN_ANSWER_BODY = 1;
 
-const validateEditorValue = (e: EditorValue, min: number) => {
-  const body = e.toString('markdown');
+const isEditorValueInvalid = (e: EditorValue, min: number) => {
+  const body = e.toString('markdown').replace(/[^\x20-\x7E]/g, '');
 
-  if (body.trim().length < min) {
+  console.log({ body, isEmpty: body === '', len: body.length, min });
+
+  if (body === '' || body.length < min) {
     return true;
   }
+
   return false;
 };
 
@@ -46,7 +49,7 @@ const TestEditorIn: FC = () => {
     questions.forEach((q, iQuestion) => {
       let errorMessage = '';
 
-      if (validateEditorValue(q.value, MIN_QUESTION_BODY)) {
+      if (isEditorValueInvalid(q.value, MIN_QUESTION_BODY)) {
         errorMessage += `Zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_QUESTION_BODY}.\n`;
       }
 
@@ -54,11 +57,11 @@ const TestEditorIn: FC = () => {
 
       if (q.answers !== undefined) {
         if (q.answers.filter((a) => a.isCorrect).length < 1) {
-          errorMessage += `Pytanie musi zawierać conajmniej jedną odpowiedź prawidłową.\n`;
+          errorMessage += `Pytanie musi zawierać co najmniej jedną odpowiedź prawidłową.\n`;
         }
 
         q.answers.forEach((a, iAnswer) => {
-          if (validateEditorValue(a.value, MIN_ANSWER_BODY)) {
+          if (isEditorValueInvalid(a.value, MIN_ANSWER_BODY)) {
             const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
 
             if (tempQuestion === null) {
@@ -90,7 +93,7 @@ const TestEditorIn: FC = () => {
       } else if (tempQuestion != null) {
         hadErrors = true;
 
-        setSingleQuestion(tempQuestion, iQuestion);
+        setSingleQuestion({ ...(tempQuestion as EditorQuestion), error: null }, iQuestion);
       }
     });
 

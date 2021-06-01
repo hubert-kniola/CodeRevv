@@ -56,15 +56,15 @@ export const TestEditorContextProvider: FC = ({ children }) => {
   const [questions, setQuestions] = useState([newQuestion()] as EditorQuestion[]);
 
   const addEmptyQuestion = () => {
-    setQuestions((questions) => [...questions, newQuestion()]);
+    setQuestions((qs) => [...qs, newQuestion()]);
   };
 
   const setSingleQuestion = (q: EditorQuestion, pos: number) => {
-    setQuestions((questions) => [...questions.slice(0, pos), q, ...questions.slice(pos + 1)]);
+    setQuestions((qs) => [...qs.slice(0, pos), q, ...qs.slice(pos + 1)]);
   };
 
   const removeSingleQuestion = (pos: number) => {
-    setQuestions((questions) => questions.filter((_, index) => index !== pos));
+    setQuestions((qs) => qs.filter((_, index) => index !== pos));
   };
 
   return (
