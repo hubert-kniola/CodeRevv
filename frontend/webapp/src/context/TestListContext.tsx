@@ -1,6 +1,6 @@
-import { Test, testsFromResponse } from 'const';
-import { createContext, Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
-import { apiAxios } from 'utility';
+import { Test } from 'const';
+import { createContext, FC, useEffect, useRef, useState } from 'react';
+import { apiAxios, testsFromResponse } from 'utility';
 
 export interface ITestListContext {
   tests: Test[];
@@ -18,8 +18,8 @@ export const TestListContext = createContext({} as ITestListContext);
 export const TestListContextProvider: FC = ({ children }) => {
   const [tests, setTests] = useState([] as Test[]);
 
-  const [filteredTests, setFilteredTest] = useState(tests);
-  const [nextTest, setNextTests] = useState<Test | undefined>(undefined);
+  const [filteredTests, setFilteredTests] = useState(tests);
+  const [nextTest, setNextTest] = useState<Test | undefined>(undefined);
   const [checkedAll, setCheckedAll] = useState(false);
 
   const testsRef = useRef(tests);
@@ -47,21 +47,21 @@ export const TestListContextProvider: FC = ({ children }) => {
         tempTest = test;
       }
     });
-    setNextTests(tempTest);
+    setNextTest(tempTest);
   }, [testsRef.current.length]);
 
   //Aktualizuje filreredTest przy każdej zmianie tests
   useEffect(() => {
-    setFilteredTest(tests);
+    setFilteredTests(tests);
   }, [testsRef.current, checkedAll]);
 
   //Wyszukuje testy po nazwie
   const searchTest = (value: string) => {
     if (value === '') {
-      setFilteredTest(testsRef.current);
+      setFilteredTests(testsRef.current);
     } else if (testsRef.current.length > 0) {
-      setFilteredTest(testsRef.current);
-      setFilteredTest((tests) =>
+      setFilteredTests(testsRef.current);
+      setFilteredTests((tests) =>
         tests.filter((test) => {
           return test.testName.toLowerCase().trim().includes(value.toLowerCase());
         })
@@ -72,7 +72,7 @@ export const TestListContextProvider: FC = ({ children }) => {
   //Sortuje według wyzanczonego kryterium
   const sortTests = (type: string) => {
     if (testsRef.current.length > 0 && type.length > 2) {
-      setFilteredTest((tests) => [
+      setFilteredTests((tests) => [
         ...tests.sort((a, b) => {
           if (type === 'DATE_DESC') {
             return b.creationDate.getTime() - a.creationDate.getTime();

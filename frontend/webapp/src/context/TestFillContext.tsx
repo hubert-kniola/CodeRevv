@@ -1,7 +1,7 @@
-import { Question, Test, testFromResponse, testToResponse } from 'const';
+import { Question, Test } from 'const';
 import { createContext, FC, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { apiAxios } from 'utility';
+import { useParams } from 'react-router-dom';
+import { apiAxios, testFromResponse, testToResponse } from 'utility';
 
 /* Randomize array with deepcopy using Durstenfeld shuffle algorithm */
 const shuffleArray = (array: any[]): any[] => {

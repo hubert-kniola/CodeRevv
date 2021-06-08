@@ -9,8 +9,6 @@ import {
   LoadingOverlay,
 } from 'components';
 
-import { Test, testsFromResponse } from 'const';
-import { apiAxios } from 'utility';
 import { TestListContext, TestListContextProvider } from 'context';
 
 const TestListIn: FC = () => {
