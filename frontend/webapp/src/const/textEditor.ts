@@ -1,4 +1,5 @@
 import { ToolbarConfig } from 'react-rte';
+
 export const toolbarConfig: ToolbarConfig = {
   // Optionally specify the groups to display (displayed in the order listed). IMAGE_BUTTON
   display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
