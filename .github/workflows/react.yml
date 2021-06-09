@@ -14,12 +14,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: cd
-        run: cd frontend/webapp
-
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          build: npm run build
-          start: npm start
+          project: ./frontend/webapp
           config-file: false
