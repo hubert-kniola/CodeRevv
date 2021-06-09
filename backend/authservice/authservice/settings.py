@@ -219,3 +219,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(os.path.join(BASE_DIR, 'webapp'), 'build', 'static'),
 )
+
+TEST_RUNNER = 'django_slowtests.testrunner.DiscoverSlowestTestsRunner'
+NUM_SLOW_TESTS = 10
+
+# (Optional)
+SLOW_TEST_THRESHOLD_MS = 200  # Only show tests slower than 200ms
