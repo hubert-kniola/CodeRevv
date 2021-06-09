@@ -2,9 +2,9 @@ name: React CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -13,10 +13,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: cd
+        with:
+          start: cd frontend/webapp
+
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          start: |
-                cd frontend/webapp
-                npm start
+          start: npm start
           config-file: false
