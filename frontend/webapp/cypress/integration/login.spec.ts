@@ -21,7 +21,7 @@ describe('Login page', () => {
 
   it('fills inputs and logs in', () => {
     cy.intercept('POST', `${PROXY}/login/`, { statusCode: 200, body: response });
-    cy.visit('/signin');
+    cy.visit('http://localhost:3000/signin');
 
     cy.get(selectors.email).type(typedEmail).should('have.value', typedEmail);
     cy.get(selectors.password).type(typedPassword).should('have.value', typedPassword);
