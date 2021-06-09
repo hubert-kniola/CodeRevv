@@ -20,6 +20,6 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
           working-directory: frontend/webapp
-          start: npm start
-          wait-on: http://localhost:3030
+          start: PORT=3001 npm start
+          wait-on: http://localhost:3001
           config-file: false
