@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 import pytest
 
-from ..src.models import Test
-from ..src.main import app, engine, client
+from ..models import Test
+from ..main import app, engine, client
 
 engine.database_name = 'test_testdb'
 engine.database = client[engine.database_name]

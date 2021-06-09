@@ -1,17 +1,16 @@
 from fastapi.params import Body
-from src.functions import check_answers, get_test_with_user_answers_for_user
+from .functions import check_answers, get_test_with_user_answers_for_user
 import uvicorn
 
 from typing import List
 
 from bson import ObjectId
-from fastapi import FastAPI, Response, status
-from fastapi.encoders import jsonable_encoder
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .models import Test, Question, UserAnswer
+from .models import Test, Question
 from datetime import datetime
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
@@ -129,7 +128,7 @@ async def creator_tests(user_id):
 @app.post('/test/create', response_model=Test, status_code=201)
 async def create_test(test: Test):
     test.pub_test = str(datetime.now())
-    
+
     if not test.users:
         test.users = []
 
