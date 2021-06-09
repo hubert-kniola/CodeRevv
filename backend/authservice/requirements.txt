@@ -21,6 +21,7 @@ django-compat==1.0.15
 django-cors-headers==3.7.0
 django-recaptcha==2.0.6
 django-rest-auth==0.9.5
+django-slowtests==1.1.1
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
 djangotoolbox==1.8.0
