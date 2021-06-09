@@ -67,10 +67,8 @@ async def setup_method():
 
 # WSZYSTKIE DO POPRAWKI
 
-# def test_create_test():
-#     response = client.post('/test/create', json=test_data[0])
-#     assert response.status_code == 201
-#     assert response.json() == test_data[0]
+def test_init():
+    assert 1 == 1
 
 
 # def test_lists_test():
