@@ -1,5 +1,9 @@
 # Internetowa platforma służąca do automatycznego sprawdzania wiedzy z zakresu programowania 
 
+![Authservice](https://github.com/bart-kosmala/inz/actions/workflows/authservice.yml/badge.svg)
+![Testservice](https://github.com/bart-kosmala/inz/actions/workflows/testservice.yml/badge.svg)
+![Webapp](https://github.com/bart-kosmala/inz/actions/workflows/webapp.yml/badge.svg)
+
 ### Narzędzia do `webapp`
 * VS Code + wtyczki
 * `nodejs`
