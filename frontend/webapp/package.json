@@ -42,7 +42,8 @@
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "lint": "eslint src/**/*.ts src/**/*.tsx",
-    "format": "prettier --write \"**/*.+(ts|tsx|json|css|md)\""
+    "format": "prettier --write \"**/*.+(ts|tsx|json|css|md)\"",
+    "cypress": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -63,12 +64,14 @@
     ]
   },
   "devDependencies": {
+    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.1",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.9",
     "babel-eslint": "^10.1.0",
+    "cypress": "^7.5.0",
     "eslint": "^7.23.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^8.1.0",
