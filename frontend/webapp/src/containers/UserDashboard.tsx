@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
-import { MainPanel } from 'components';
+import { MainPanel, UserNavbar } from 'components';
 
-import { DashNavbar, TestEditor, UserFeed, TestList } from 'containers';
+import { TestEditor, UserFeed, TestList } from 'containers';
 import { useParams } from 'react-router-dom';
 
 type RouteParams = {
@@ -44,7 +44,7 @@ export const UserDashboard: FC = () => {
 
   return (
     <>
-      <DashNavbar />
+      <UserNavbar />
 
       <MainPanel>
         <MainComponent />
