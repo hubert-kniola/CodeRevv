@@ -1,39 +1,45 @@
 import { FC, useContext, useRef } from 'react';
 
-import { NavBarUser, ButtonSpace, Row, Icon, TitleRow, DropDown } from './styles';
+import { NavContainer, Row, InlineItem, DropDown, UserNav } from './styles';
 
 import { NavBarData, userNavBarData } from 'const';
 import { AuthContext, DashContext } from 'context';
-import { useOnClickOutside } from 'hooks';
+import { ThemeSwitch } from 'components';
 import { Collapse } from '@material-ui/core';
 
-export const List: FC = () => {
+export const DropDownMenuNav: FC = () => {
   const { authState } = useContext(AuthContext);
   const dashContext = useContext(DashContext);
-  const dropDownRef = useRef<HTMLDivElement>(null);
+  const { isNavbarOpen, toggleNavbar } = dashContext;
 
   userNavBarData[0].title = `Cześć, ${authState.userInfo?.name}!`;
 
-  const dataToItem = (item: NavBarData) => (
+  const dataToJsx = (item: NavBarData) => (
     <Row onClick={() => item.action(dashContext)} id={item.id}>
-      <Icon>{item.icon}</Icon>
-      <TitleRow> {item.title} </TitleRow>
+      <InlineItem>{item.icon}</InlineItem>
+      <InlineItem> {item.title} </InlineItem>
     </Row>
   );
 
-  const { navbarOpen, setNavbarOpen } = dashContext;
-  const toggleOpen = () => setNavbarOpen(!navbarOpen);
-
-  useOnClickOutside(dropDownRef, () => setNavbarOpen(false));
+  const head = userNavBarData[0];
 
   return (
-    <DropDown ref={dropDownRef} onClick={toggleOpen} open={navbarOpen}>
-      {dataToItem(userNavBarData[0])}
-      <Collapse in={navbarOpen}>{userNavBarData.slice(1).map((item) => dataToItem(item))}</Collapse>
+    <DropDown onMouseEnter={() => toggleNavbar()} onMouseLeave={() => toggleNavbar()}>
+      <Row id={head.id}>
+        <InlineItem>{head.icon}</InlineItem>
+        <InlineItem> {head.title} </InlineItem>
+      </Row>
+      <Collapse in={isNavbarOpen}>{userNavBarData.slice(1).map(dataToJsx)}</Collapse>
     </DropDown>
   );
 };
 
-export const SpaceButton: FC = ({ children }) => <ButtonSpace>{children} </ButtonSpace>;
+export const UserNavbar: FC = () => (
+  <NavContainer>
+    <ThemeSwitch />
 
-export const UserNavbar: FC = ({ children }) => <NavBarUser>{children}</NavBarUser>;
+    <UserNav>
+      <DropDownMenuNav />
+    </UserNav>
+  </NavContainer>
+);

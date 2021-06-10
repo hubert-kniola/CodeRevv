@@ -102,7 +102,7 @@ export const userNavBarData: NavBarData[] = [
     title: 'Mój profil',
     icon: <EmojiEmotionsIcon />,
     link: '#',
-    action: ({ navbarOpen, setNavbarOpen }) => setNavbarOpen(!navbarOpen),
+    action: (_) => {},
   },
   {
     id: 'edit',

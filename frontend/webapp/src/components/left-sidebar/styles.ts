@@ -17,8 +17,10 @@ export const LeftNav = styled.nav`
 
   transition: 0.5s;
 
-  :hover {
-    width: 16rem;
+  @media only screen and (min-width: 800px) {
+    :hover {
+      width: 16rem;
+    }
   }
 `;
 

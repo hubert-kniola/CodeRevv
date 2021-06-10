@@ -2,10 +2,8 @@ import { createContext, useState, FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
 export interface IDashContext {
-  menuOpen: boolean;
-  navbarOpen: boolean;
-  setMenuOpen: (state: boolean) => void;
-  setNavbarOpen: (state: boolean) => void;
+  isNavbarOpen: boolean;
+  toggleNavbar: () => void;
   logout: () => void;
 }
 
@@ -16,9 +14,10 @@ type Props = {
 };
 
 export const DashContextProvider: FC<Props> = ({ children, logoutCallback }) => {
-  const [menuOpen, setMenuOpen] = useState(true);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const history = useHistory();
+
+  const toggleNavbar = () => setNavbarOpen((s) => !s);
 
   const logout = () => {
     logoutCallback();
@@ -26,8 +25,6 @@ export const DashContextProvider: FC<Props> = ({ children, logoutCallback }) => 
   };
 
   return (
-    <DashContext.Provider value={{ menuOpen, navbarOpen, setMenuOpen, setNavbarOpen, logout }}>
-      {children}
-    </DashContext.Provider>
+    <DashContext.Provider value={{ isNavbarOpen: navbarOpen, toggleNavbar, logout }}>{children}</DashContext.Provider>
   );
 };
