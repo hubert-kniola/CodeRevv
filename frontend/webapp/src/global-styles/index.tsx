@@ -14,6 +14,14 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  & button {
+    outline: none;
+  }
+
+  & input {
+    caret-color: ${({ theme }) => theme.colors.text}
+  }
+
   html, body {
     margin: 0 0;
     font-family: Roboto, Arial, sans-serif;
