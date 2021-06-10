@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: min(80vw, 1000px);
+  margin: 1rem auto;
   background: ${({ theme }) => theme.colors.background};
   border-radius: 30px;
   height: max-content;
-  margin: 1rem auto;
   padding-top: 15px;
   padding-bottom: 30px;
   display: flex;

@@ -2,59 +2,48 @@ import { FC, useState, useContext } from 'react';
 import { DashContext } from 'context';
 import { sidebarData, SidebarItem } from 'const';
 
-import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-import { Board, LeftBar, MenuHeader, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
+import { Board, LeftNav, Row, SidebarList, Icon, TitleRow, SubRow, MainBoard } from './styles';
 import { Collapse } from '@material-ui/core';
 
 type Props = {
   item: SidebarItem;
-  visible: boolean;
 };
 
-export const DropDownList: FC<Props> = ({ item, visible }) => {
+export const MenuItemList: FC<Props> = ({ item }) => {
   const [open, setOpen] = useState(true);
   const dashContext = useContext(DashContext);
 
   return (
-    <>
+    <li>
       <Row to={item.link} key={item.title} onClick={() => setOpen(!open)}>
         <Icon>{item.icon}</Icon>
-        {!visible ? <TitleRow>{item.title}</TitleRow> : null}
+        <TitleRow>{item.title}</TitleRow>
       </Row>
       <Collapse in={open}>
         {item.subMenu.map((item) => (
           <SubRow to={item.link} key={item.title} onClick={() => item.action(dashContext)}>
             <Icon>{item.icon}</Icon>
-            {!visible && <TitleRow>{item.title}</TitleRow>}
+            <TitleRow>{item.title}</TitleRow>
           </SubRow>
         ))}
       </Collapse>
-    </>
+    </li>
   );
 };
 
-export const LeftSidebar: FC = ({ children }) => {
-  const [open, setOpen] = useState(false);
-
+export const MainPanel: FC = ({ children }) => {
   return (
-    <Board open={open}>
-      <LeftBar open={open}>
-        <MenuHeader onClick={() => setOpen(!open)}>
-          {open ? (
-            <Icon>
-              <MenuOpenIcon />
-            </Icon>
-          ) : (
-            <div style={{ cursor: 'pointer' }}>MENU</div>
-          )}
-        </MenuHeader>
+    <Board>
+      <LeftNav>
         <SidebarList>
           {sidebarData.map((item) => (
-            <DropDownList item={item} key={item.title} visible={open} />
+            <MenuItemList item={item} key={item.title} />
           ))}
         </SidebarList>
-      </LeftBar>
-      <MainBoard>{children}</MainBoard>
+      </LeftNav>
+      <MainBoard>
+        <div>{children}</div>
+      </MainBoard>
     </Board>
   );
 };
