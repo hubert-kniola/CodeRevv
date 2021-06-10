@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const PROXY = `http://127.0.0.1:8000/api/v1`;
+const PROXY = `http://localhost:8000/api/v1`;
 
 describe('Login page', () => {
   const typedEmail = 'test@mail.com';
@@ -21,7 +21,7 @@ describe('Login page', () => {
 
   it('fills inputs and logs in', () => {
     cy.intercept('POST', `${PROXY}/login/`, { statusCode: 200, body: response });
-    cy.visit('http://localhost:3000/signin');
+    cy.visit('/signin');
 
     cy.get(selectors.email).type(typedEmail).should('have.value', typedEmail);
     cy.get(selectors.password).type(typedPassword).should('have.value', typedPassword);

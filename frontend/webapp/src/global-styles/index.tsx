@@ -13,6 +13,7 @@ export const GlobalStyle = createGlobalStyle`
   *, *:before, *:after {
     box-sizing: border-box;
   }
+
   html, body {
     margin: 0 0;
     font-family: Roboto, Arial, sans-serif;
@@ -23,4 +24,17 @@ export const GlobalStyle = createGlobalStyle`
     transition: all 0.2s ease-in-out;
     background-repeat: repeat;
     font-size: 16px;
-}`;
+  }
+
+  body::-webkit-scrollbar {
+    width: 0.3rem;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.lighterBackground}
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.primary}
+  }
+`;
