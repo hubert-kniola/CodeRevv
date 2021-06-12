@@ -105,6 +105,7 @@ def test_delete(request):
     return make_response_with_cookies(request, response, response.status_code)
 
 # ===================================================================
+
 @api_view(['POST'])
 @session_authentication
 def test_user(request):
