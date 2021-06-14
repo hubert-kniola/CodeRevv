@@ -45,12 +45,15 @@ describe('Register page', () => {
 
     cy.get(selectors.button).click();
 
-    if (cy.get('iframe').length > 0) {
-      cy.log('Recaptcha opened :C')
-
-    } else {
-      cy.contains(typed.email).contains('został wysłany e-mail');
-    }
+    cy.get('iframe')
+      .its('length')
+      .then((res) => {
+        if (res <= 0) {
+          cy.contains(typed.email).contains('został wysłany e-mail');
+        } else {
+          cy.log('recaptcha opened :C');
+        }
+      });
   });
 });
 
