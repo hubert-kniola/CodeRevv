@@ -29,7 +29,7 @@ const TestListIn: FC = () => {
         await context.onLoading();
       } catch (err) {
         console.log({ parseErr: err });
-        if (err.response) {
+        if (err.response !== undefined) {
           setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');
         } else {
           setError('Nasz serwer nie odpowiada.\nJeśli masz dostęp do internetu oznacza to że mamy awarię :(');

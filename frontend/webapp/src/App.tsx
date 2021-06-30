@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Home, NotFound, Loading } from 'pages';
 import { ProtectedRoute, PythonEditor } from 'components';
-import { TestEditor, TestList } from 'containers';
+import { TestEditor, TestList, TestCodeAnswer } from 'containers';
 
 const Login = lazy(() => import('pages/Login'));
 const Signup = lazy(() => import('pages/Signup'));
@@ -24,7 +24,7 @@ const App = () => (
         <ProtectedRoute exact path="/dashboard/:verb?/:resource?/:id?" For={Dashboard} fallbackPath="/signin" />
         <ProtectedRoute exact path="/test/:id" For={TestingForm} fallbackPath="/signin" />
         <Route exact path="/dashboardTestList" component={TestList} />
-        <Route exact path="/testEditor" component={PythonEditor} />
+        <Route exact path="/editor" component={TestCodeAnswer} />
         <Route exact path="/dashboardTest" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>

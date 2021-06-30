@@ -8,7 +8,11 @@ const API_URL = '18.220.31.50';
 const JUDGE_URL = `http://${API_URL}:2358`;
 const LANG_ID = 71;
 
-export const PythonEditor: FC = () => {
+type Props = {
+  text: string;
+};
+
+export const PythonEditor: FC<Props> = ({ text }) => {
   const [loading, setLoading] = useState(false);
   const [code, setCode] = useState('# test');
 
@@ -36,10 +40,8 @@ export const PythonEditor: FC = () => {
   };
 
   return (
-    <LoadingOverlay active={loading} text="Uruchamiamy kod...">
+    <LoadingOverlay active={loading} text={text}>
       <MonacoEditor
-        width="800"
-        height="600"
         language="python"
         theme="vs-dark"
         value={code}
