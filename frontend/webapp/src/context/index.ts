@@ -4,3 +4,4 @@ export * from './DashContext';
 export * from './TestEditorContext';
 export * from './TestFillContext';
 export * from './TestListContext';
+export * from './CodeCellContext';
