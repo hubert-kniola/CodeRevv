@@ -17,6 +17,11 @@ from rest_framework_simplejwt.exceptions import TokenError
 from datetime import datetime
 import requests
 
+def without_cookies(response):
+    response.delete_cookie('access')
+    response.delete_cookie('refresh')
+
+    return response
 
 def check_token(request):
     try:
@@ -104,9 +109,10 @@ def user_login(request):
                     user.delete()
                     return Response({'success': True}, status=status.HTTP_205_RESET_CONTENT)
                 return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
-            return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
-        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
-    return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
+            return without_cookies(Response({'success': False}, status=status.HTTP_403_FORBIDDEN))
+
+        return without_cookies(Response({'success': False}, status=status.HTTP_404_NOT_FOUND))
+    return without_cookies(Response({'success': False}, status=status.HTTP_400_BAD_REQUEST))
 
 
 @api_view(['GET', 'POST'])
@@ -258,7 +264,5 @@ def user_logout(request):
         logout(request)
     except UserWarning:
         return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
-    response = Response(status=status.HTTP_200_OK)
-    response.delete_cookie('access')
-    response.delete_cookie('refresh')
-    return response
+
+    return without_cookies(Response(status=status.HTTP_200_OK))
