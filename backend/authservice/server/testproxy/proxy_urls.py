@@ -12,5 +12,5 @@ urlpatterns = [
     path('api/v1/test/question', test_question, name='test_question'),
     path('api/v1/test/link', test_link_generate, name='test_link_generate'),
     path('api/v1/test/save', test_save, name='test_save'),
-    path('api/v1/test/submit', test_submit, name='test_submit'),
+    path('api/v1/test/submit', test_submit, name='test_submit')
 ]
