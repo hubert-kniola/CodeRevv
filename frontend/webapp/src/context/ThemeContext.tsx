@@ -17,6 +17,7 @@ const darkTheme: DefaultTheme = {
     error: '#eb2f2f',
   },
   background: bg_dark,
+  monacoTheme: 'vs-dark',
 };
 
 const lightTheme: DefaultTheme = {
@@ -32,6 +33,7 @@ const lightTheme: DefaultTheme = {
     error: '#eb2f2f',
   },
   background: bg_light,
+  monacoTheme: 'vs-dark',
 };
 
 const storageKey = 'theme';

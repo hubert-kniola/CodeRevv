@@ -107,19 +107,6 @@ LOGOUT_REDIRECT_URL = '/main'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_HEADERS = (
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-)
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile',
@@ -136,8 +123,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # cross-origin
-    'corsheaders.middleware.CorsMiddleware',
+    'server.middleware.cors.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'authservice.urls'
@@ -225,3 +211,5 @@ NUM_SLOW_TESTS = 10
 
 # (Optional)
 SLOW_TEST_THRESHOLD_MS = 200  # Only show tests slower than 200ms
+
+APPEND_SLASH = False
