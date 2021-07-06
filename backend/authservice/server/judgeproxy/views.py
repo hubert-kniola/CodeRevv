@@ -1,14 +1,11 @@
-from django.http.response import JsonResponse
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from pprint import pprint
 from time import sleep
 from typing import Callable, Dict
 
-from ..models import AuthUser
-from ..utility import get_user_id, make_response_with_cookies, session_authentication
+from ..utility import make_response_with_cookies, session_authentication
 
 proxy = r'http://3.18.215.227:2358'
 

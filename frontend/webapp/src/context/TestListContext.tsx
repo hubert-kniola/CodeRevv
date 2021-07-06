@@ -123,7 +123,7 @@ export const TestListContextProvider: FC = ({ children }) => {
   };
 
   const onLoading = async () => {
-    const { data } = await apiAxios.get('/test/list/creator');
+    const { data } = await apiAxios.get('/t/list/creator');
     setTests(testsFromResponse(data, true));
   };
 
