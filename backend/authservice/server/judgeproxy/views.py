@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,7 +17,7 @@ def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict
     ''' Judge0 wymaga wysłania żądania uruchomienia kodu i dopiero potem pobrania wyniku.
         Pobranie wyniku nie oznacza że dostaniesz output, status może być '1' czyli 'w kolejce'.
         Funkcja zapewnia output, lub wyrzuca wyjątek gdy przekroczony zostanie czas.
-        
+
         Arguments:
             * callable -- funkcja wykonująca żądanie
             * predicate -- funkcja sprawdzająca czy odpowiedź jest ok
@@ -59,8 +60,18 @@ def run_python(request):
     token = response.json()['token']
 
     response = force_await_response(
-        callable=lambda _: requests.get(f"{proxy}/submissions/{token}"),
+        callable=lambda: requests.get(f"{proxy}/submissions/{token}"),
         predicate=lambda resp: resp['status']['id'] != 1
     )
 
-    return make_response_with_cookies(request, response, response.status_code)
+    data = response.json()
+
+    result = {
+        'success': data['status']['id'] == 3,
+        'time': data['time'],
+        'status': data['status']['description']
+    }
+
+    result['output'] = data['stdout'] if result['success'] else data['stderr']
+
+    return make_response_with_cookies(request, result, response.status_code)
