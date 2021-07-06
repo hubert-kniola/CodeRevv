@@ -1,5 +1,6 @@
 {
   "name": "coderevv-app",
+  "proxy": "http://localhost:8000",
   "version": "0.1.1",
   "private": true,
   "dependencies": {

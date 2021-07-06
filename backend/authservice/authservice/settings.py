@@ -211,3 +211,5 @@ NUM_SLOW_TESTS = 10
 
 # (Optional)
 SLOW_TEST_THRESHOLD_MS = 200  # Only show tests slower than 200ms
+
+APPEND_SLASH = False

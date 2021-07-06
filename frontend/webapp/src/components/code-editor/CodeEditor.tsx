@@ -26,7 +26,7 @@ export const CodeEditor: FC = () => {
         theme={theme.monacoTheme}
         height="600"
         value={code}
-        options={{ selectOnLineNumbers: true }}
+        options={{ selectOnLineNumbers: true, fontSize: 18 }}
       />
     </MonacoFixer>
   );
