@@ -35,11 +35,12 @@ class Test(Model):
     questions: List[Question]
     is_link_generated: bool
     # pozniej usunac stary test i dodac nowy, usunac optional!
-    start_time: Optional[str]
+    start_time: Optional[str]  # !
     stop_time: Optional[str]  # !
     is_visible: Optional[bool]  # !
     is_finished: Optional[bool]  # !
     max_score: Optional[float]  # !
+
 
 
 class TestSearcher(Model):

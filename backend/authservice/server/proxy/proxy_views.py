@@ -21,11 +21,13 @@ def get_user_id(request):
                          settings.SIMPLE_JWT['ALGORITHM'])
     return int(payload['user_id'])
 
+
 def move_cookies(request, response):
     if request.COOKIES['access']:
         response.set_cookie('access', request.COOKIES['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
     if request.COOKIES['refresh']:
         response.set_cookie('refresh', request.COOKIES['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+
 
 def make_response_with_cookies(request, *args, **kwargs):
     response = Response(*args, **kwargs)
@@ -158,11 +160,10 @@ def test_results(request, test_id):
     response = requests.get(f"{proxy}/t/result/{test_id}/{user_id}")
     return make_response_with_cookies(request, response, response.status_code)
 
-
 # @api_view(['PATCH'])
 # @session_authentication
 # def test_save(request):
-#     response = requests.patch(
-#         f"{proxy}/t/save?test_id={str(request.data['test_id'])}&question_id={str(request.data['question_id'])}",
-#         json=request.data['user_answer'])
-#     return make_response_with_cookies(request, response, response.status_code)
+#      response = requests.patch(
+#          f"{proxy}/t/save/{str(request.data['test_id'])}/{str(request.data['question_id'])}",
+#          json=request.data['user_answer'])
+#      return make_response_with_cookies(request, response, response.status_code)
