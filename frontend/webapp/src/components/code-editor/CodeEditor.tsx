@@ -10,12 +10,10 @@ export const CodeEditor: FC = () => {
   const { theme } = useContext(ThemeContext);
 
   const editorDidMount = (editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: typeof monacoEditor) => {
-    console.log('editorDidMount', editor);
     editor.focus();
   };
 
   const onChange = (newValue: string, e: monacoEditor.editor.IModelContentChangedEvent) => {
-    console.log('onChange', newValue, e);
     updateCode(newValue);
   };
 

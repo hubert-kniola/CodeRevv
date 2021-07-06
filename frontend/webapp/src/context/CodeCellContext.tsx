@@ -49,12 +49,21 @@ export const CodeCellContextProvider: FC<Props> = ({ children, language }) => {
     setError((_) => false);
 
     try {
-      const { data } = await apiAxios.post(`/execute/${PLACEHOLDERS[language].endpoint}`, { code });
+      const { data } = await apiAxios.post(`/run/${PLACEHOLDERS[language].endpoint}/`, { code });
       console.log({ returned: data });
-      setConsoleOutput((_) => data);
+
+      const { output, success } = data;
+
+      if (!success) {
+        setError((_) => true);
+      }
+
+      setConsoleOutput((_) => output);
+
     } catch (err) {
       console.log({ error: err });
       setError((_) => true);
+      setConsoleOutput((_) => 'ERRR');
     }
 
     setLoading((_) => false);
