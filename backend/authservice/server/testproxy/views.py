@@ -1,36 +1,14 @@
-from django.http import response
-import jwt
 import requests
-from django.conf import settings
-from django.utils.http import urlsafe_base64_decode
-from jwt import ExpiredSignatureError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from pprint import pprint
 
-from .proxy_decorators import session_authentication
+from ..utility import session_authentication, make_response_with_cookies, get_user_id
 from ..models import AuthUser
 
 proxy = r'http://127.0.0.1:8080'
 
-
-def get_user_id(request):
-    token1 = request.COOKIES['access']
-    payload = jwt.decode(token1, settings.SECRET_KEY,
-                         settings.SIMPLE_JWT['ALGORITHM'])
-    return int(payload['user_id'])
-
-def move_cookies(request, response):
-    if request.COOKIES['access']:
-        response.set_cookie('access', request.COOKIES['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
-    if request.COOKIES['refresh']:
-        response.set_cookie('refresh', request.COOKIES['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
-
-def make_response_with_cookies(request, *args, **kwargs):
-    response = Response(*args, **kwargs)
-    move_cookies(request, response)
-    return response
 
 @api_view(['POST'])
 @session_authentication

@@ -1,5 +1,5 @@
 from django.urls import path
-from .proxy_views import *
+from .views import *
 
 urlpatterns = [
     path('api/v1/test/join/<str:test_id>', test_join, name='test_join'),
