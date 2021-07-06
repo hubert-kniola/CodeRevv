@@ -33,17 +33,14 @@ class Test(Model):
     creator: int
     users: Optional[List[int]]
     questions: List[Question]
+    creator_contact: Optional[str]  # always optional
+    description: Optional[str]
     is_link_generated: bool
-    # pozniej usunac stary test i dodac nowy, usunac optional!
+    # ============================
     start_time: Optional[str]  # !
     stop_time: Optional[str]  # !
     is_visible: Optional[bool]  # !
     is_finished: Optional[bool]  # !
-    max_score: Optional[float]  # !
+    max_score: Optional[float]  # !\
+    pass_treshold: Optional[float]
 
-
-
-class TestSearcher(Model):
-    creator_id: int
-    test_id: str
-    users_id: List[int]

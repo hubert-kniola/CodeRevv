@@ -105,6 +105,12 @@ async def create_test(test: Test):
     return created_test
 
 
+# @app.patch('/t/whitelist/{test_id}', response_model=Test, status_code=201) TODO
+# async def whitelist_test(test_id):
+#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+#     test.users =
+
+
 @app.delete('/t/delete/{test_id}', status_code=204)
 async def delete_test(test_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))

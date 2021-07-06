@@ -40,8 +40,18 @@ def test_join(request, test_id):
 def test_create(request):
     user_id = get_user_id(request)
     request.data['creator'] = int(user_id)
-    request.data['is_link_generated'] = True # do zmiany przy wprowadzeniu whitelisty
     response = requests.post(f"{proxy}/t/create", json=request.data)
+    return make_response_with_cookies(request, response, response.status_code)
+
+
+@api_view(['PATCH'])
+@session_authentication
+def test_whitelist(request, test_id):
+    users_id = []
+    for user_email in request['users']:
+        users_id.append(AuthUser.objects.get(email=user_email))
+    request.data['users_id'] = users_id
+    response = requests.patch(f'{proxy}/t/whitelist/{test_id}', json=request.data)
     return make_response_with_cookies(request, response, response.status_code)
 
 
