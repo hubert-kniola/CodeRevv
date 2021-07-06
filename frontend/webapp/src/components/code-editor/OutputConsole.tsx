@@ -24,6 +24,7 @@ export const OutputConsole = () => {
           lineNumbersMinChars: 0,
           minimap: { enabled: false },
           contextmenu: false,
+          fontSize: 16,
         }}
       />
     </MonacoFixer>
