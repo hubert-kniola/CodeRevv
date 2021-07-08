@@ -50,6 +50,8 @@ test_data = {
     "id": "5f85f36d6dfecacc68428a00"
 }
 
+id_list = {"users": [2, 3, 4, 5, 6]}
+
 test_id = "5f85f36d6dfecacc68428a00"
 
 prefix = r'http://127.0.0.1:8000/api/v1'
@@ -74,6 +76,7 @@ def test_init():
 # test_list_test DONE
 # test_creator_test DONE
 # test_create_test DONE
+# test_whitelist_test DONE
 # test_delete_test DONE
 # test_sumbit_test DONE
 # test_result_test DONE
@@ -83,6 +86,12 @@ def test_create_test():
     response = client.post(f'/t/create', json=test_data)
     assert response.status_code == 201
     # assert response.json() == test_data
+
+
+def test_whitelist_test():
+    response = client.patch(f'/t/whitelist/{test_id}', json=id_list)
+    assert response.status_code == 201
+    assert response.json() == {'message': 'whitelist updated'}
 
 
 def test_generate_test_link():
@@ -114,7 +123,7 @@ def test_submit_test():
 
 
 def test_result_test():
-    response = client.get(f'/t/result/{test_id}/0')
+    response = client.get(f'/t/result/{test_id}/1')
     assert response.status_code == 200
 
 
@@ -122,39 +131,3 @@ def test_delete_test():
     response = client.delete(f'/t/delete/{test_id}')
     assert response.status_code == 204
     assert response.json() == {'message': 'test deleted'}
-
-
-# def test_add_user():
-#     response = client.post('/test/user', json=user_data)
-#     assert response.status_code == 200
-#     assert response.json() == {'message': 'user added'}
-
-
-# def test_delete_user():
-#     response = client.delete('/test/user?test_id=5f85f36d6dfecacc68428a47&user_id=1')
-#     assert response.status_code == 204
-#     assert response.json() == {'message': 'user deleted'}
-
-
-# def test_add_question():
-#     response = client.post('/test/question?test_id=5f85f36d6dfecacc68428a47', json=question_data)
-#     assert response.status_code == 200
-#     assert response.json() == {'message': 'question added'}
-
-
-# def test_modify_question():
-#     response = client.patch('/test/question?test_id=5f85f36d6dfecacc68428a47&question_id=1', json=question_data)
-#     assert response.status_code == 200
-#     assert response.json() == {'message': 'question modified'}
-
-
-# def test_delete_question():
-#     response = client.delete('/test/question?test_id=5f85f36d6dfecacc68428a47&question_id=1')
-#     assert response.status_code == 204
-#     assert response.json() == {'message': 'question deleted'}
-
-
-# def test_add_answer():
-#     response = client.post('/test/answer?test_id=5f85f36d6dfecacc68428a47', json=answer_data)
-#     assert response.status_code == 201
-#     assert response.json() == {'message': 'answer added'}
