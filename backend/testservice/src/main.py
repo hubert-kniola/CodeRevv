@@ -5,8 +5,9 @@ import uvicorn
 from typing import List
 
 from bson import ObjectId
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Request
 from fastapi.responses import JSONResponse
+from fastapi_utils.tasks import repeat_every
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -26,6 +27,18 @@ prefix = r'http://127.0.0.1:8000/api/v1'
 @app.on_event("shutdown")
 def shutdown_event():
     client.close()
+
+
+@app.on_event("startup")
+@repeat_every(seconds=10)
+async def close_test():
+    tests = await engine.find(Test, Test.is_finished == False)
+    for test in tests:
+        if datetime.strptime(test.start_time, '%Y-%m-%d %H:%M:%S.%f') < datetime.now():
+            if datetime.strptime(test.stop_time, '%Y-%m-%d %H:%M:%S.%f') <= datetime.now():
+                test.is_finished = True
+                test = check_answers(test)
+                await engine.save(test)
 
 
 @app.post('/t/link/{test_id}/{user_id}', status_code=200)
@@ -105,6 +118,16 @@ async def create_test(test: Test):
     return created_test
 
 
+@app.patch('/t/whitelist/{test_id}', status_code=201)
+async def whitelist_test(test_id, request: Request):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    request = await request.json()
+    test.users = request['users']
+    print(test)
+    await engine.save(test)
+    return {'message': 'whitelist updated'}
+
+
 @app.delete('/t/delete/{test_id}', status_code=204)
 async def delete_test(test_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
@@ -149,8 +172,7 @@ async def result_test(test_id, user_id):
     if user_id not in test.users and test.creator != user_id:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
-    test = check_answers(test)
-    test = await engine.save(test)
+
 
     if test.creator == user_id:
         return test

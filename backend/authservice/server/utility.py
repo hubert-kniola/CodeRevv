@@ -44,11 +44,13 @@ def get_user_id(request):
                          settings.SIMPLE_JWT['ALGORITHM'])
     return int(payload['user_id'])
 
+
 def move_cookies(request, response):
     if request.COOKIES['access']:
         response.set_cookie('access', request.COOKIES['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
     if request.COOKIES['refresh']:
         response.set_cookie('refresh', request.COOKIES['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+
 
 def make_response_with_cookies(request, *args, **kwargs):
     response = Response(*args, **kwargs)
