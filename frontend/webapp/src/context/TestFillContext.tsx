@@ -90,7 +90,7 @@ export const TestFillContextProvider: FC = ({ children }) => {
   };
 
   const onTestInit = async () => {
-    const { data } = await apiAxios.post(`/test/join/${id}`);
+    const { data } = await apiAxios.post(`/t/join/${id}`);
     const rawTest = testFromResponse(data);
 
     setTest((_) => shuffleTest(rawTest));
@@ -110,7 +110,7 @@ export const TestFillContextProvider: FC = ({ children }) => {
   const onPartialSubmit = async () => {};
 
   const onSubmit = async () => {
-    await apiAxios.post(`/test/submit`, { test_id: id, test: testToResponse(test!) });
+    await apiAxios.post(`/t/submit`, { test_id: id, test: testToResponse(test!) });
 
     clearTimeout(currentTimeout!);
     setCurrentTimeout((_) => null);

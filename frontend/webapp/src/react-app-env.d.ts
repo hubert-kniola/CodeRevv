@@ -17,6 +17,7 @@ declare module 'styled-components' {
     name: string;
     colors: Colors;
     background: string;
+    monacoTheme: string;
   }
 }
 

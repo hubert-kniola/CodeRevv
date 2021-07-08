@@ -15,7 +15,7 @@ export const captchaValidateHuman = async (token: string) => {
 };
 
 export const getTestResults = async (testId: string): Promise<Test> => {
-  const { data } = await apiAxios.get(`/test/results/${testId}`);
+  const { data } = await apiAxios.get(`/t/results/${testId}`);
   let obj = {} as Test;
   try {
     obj = JSON.parse(data);

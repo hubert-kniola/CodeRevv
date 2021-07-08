@@ -106,7 +106,7 @@ const TestEditorIn: FC = () => {
 
     if (!editorHasErrors()) {
       try {
-        await apiAxios.post('/test/create', getRawTestEditorData());
+        await apiAxios.post('/t/create', getRawTestEditorData());
         history.push('/dashboard/view/tests');
       } catch (err) {
         if (err.response) {

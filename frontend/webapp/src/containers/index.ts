@@ -8,3 +8,4 @@ export * from './UserFeed';
 export * from './TestList';
 export * from './TestFillForm';
 export * from './Dialogs';
+export * from './TestCodeAnswer';
