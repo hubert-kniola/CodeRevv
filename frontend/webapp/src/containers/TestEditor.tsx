@@ -1,11 +1,20 @@
 import { FC, useRef, useState, useContext } from 'react';
 
-import { LoadingOverlay, MessageOverlay, scrollIntoMessageOverlay, TestEditorForm } from 'components';
+import {
+  LoadingOverlay,
+  MessageOverlay,
+  QuestionCollection,
+  scrollIntoMessageOverlay,
+  TestEditorForm,
+} from 'components';
+
 import { EditorQuestion, TestEditorContext, TestEditorContextProvider } from 'context';
 
 import { EditorValue } from 'react-rte';
 import { apiAxios } from 'utility';
 import { useHistory } from 'react-router-dom';
+import { DropResult, DragDropContext } from 'react-beautiful-dnd';
+import { Grid } from '@material-ui/core';
 
 const MIN_QUESTION_BODY = 5;
 const MIN_ANSWER_BODY = 1;
@@ -25,7 +34,14 @@ const isEditorValueInvalid = (e: EditorValue, min: number) => {
 const TestEditorIn: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { testName, questions, setSingleQuestion } = useContext(TestEditorContext);
+  const {
+    testName,
+    questions,
+    setSingleQuestion,
+    addQuestionInPosition,
+    swapQuestions,
+    popPreviousQuestionAtPosition,
+  } = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
 
@@ -125,15 +141,41 @@ const TestEditorIn: FC = () => {
     setLoading(false);
   };
 
+  const editorTitle = 'Stwórz nowy test';
+  const collectionTitle = 'Moje poprzednie pytania';
+
+  const onDragEnd = ({ source, destination }: DropResult) => {
+    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) return;
+
+    if (destination.droppableId === source.droppableId && source.droppableId === editorTitle) {
+      swapQuestions(source.index, destination.index);
+    } else if (destination.droppableId === editorTitle && source.droppableId === collectionTitle) {
+      const collectionQuestion = popPreviousQuestionAtPosition(source.index);
+      addQuestionInPosition(collectionQuestion, destination.index);
+    }
+
+    //TODO drag editors only by the bar !
+    //TODO make previous questions disappear!
+  };
+
   return (
     <>
       <MessageOverlay ref={errorRef} active={error != null} title="Błąd" text={error!} noLogo />
 
       <LoadingOverlay active={loading} text="Czekamy na odpowiedź serwera..." logo>
-        <TestEditorForm title="Stwórz nowy test" buttonText="Zakończ i zapisz" onSubmit={handleEditorSubmit} />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Grid container>
+            <Grid item xs>
+              <TestEditorForm title={editorTitle} onSubmit={handleEditorSubmit} />
+            </Grid>
+            <Grid item xs>
+              <QuestionCollection title={collectionTitle} />
+            </Grid>
+          </Grid>
+        </DragDropContext>
       </LoadingOverlay>
 
-      <div style={{marginBottom: '200px'}}/>
+      <div style={{ marginBottom: '200px' }} />
     </>
   );
 };

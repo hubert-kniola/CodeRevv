@@ -7,31 +7,30 @@ import {
   Header,
   Button,
   NewQuestionButton,
-  QuestionContainer,
   CenteringContainer,
+  QuestionList,
 } from './styles';
 
 import './styles.css';
 
+import { Droppable } from 'react-beautiful-dnd';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { QuestionEditor } from 'components';
 import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
   title: string;
-  buttonText: string;
 };
 
-export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
+export const TestEditorForm: FC<Props> = ({ onSubmit, title }) => {
   const [currentDeleteTimeout, setCurrentDeleteTimeout] = useState<NodeJS.Timeout | null>(null);
-  const { questions, setTestName, setSingleQuestion, addEmptyQuestion, removeSingleQuestion } = useContext(
-    TestEditorContext
-  );
+  const { questions, setTestName, setSingleQuestion, addEmptyQuestion, removeSingleQuestion } =
+    useContext(TestEditorContext);
 
   const questionsRef = useRef(questions);
   questionsRef.current = questions;
@@ -82,17 +81,20 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
 
         <hr />
 
-        <Header>Pytania</Header>
+        <Header>Pytania testowe</Header>
 
-        <TransitionGroup>
-          {questions.map((q, index) => (
-            <CSSTransition key={q.id} timeout={200} classNames="move">
-              <QuestionContainer>
-                <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
-              </QuestionContainer>
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
+        <Droppable droppableId={title}>
+          {(provided) => (
+            <QuestionList ref={provided.innerRef} {...provided.droppableProps}>
+              <TransitionGroup>
+                {questions.map((q, index) => (
+                  <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
+                ))}
+                {provided.placeholder}
+              </TransitionGroup>
+            </QuestionList>
+          )}
+        </Droppable>
 
         <CenteringContainer>
           <NewQuestionButton onClick={addEmptyQuestion}>Dodaj pytanie</NewQuestionButton>
@@ -101,7 +103,7 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title, buttonText }) => {
         <hr />
 
         <CenteringContainer>
-          <Button>{buttonText}</Button>
+          <Button>Zakończ i zapisz test</Button>
         </CenteringContainer>
       </form>
     </Container>

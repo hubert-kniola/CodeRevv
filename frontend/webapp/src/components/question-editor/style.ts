@@ -1,12 +1,19 @@
 import styled, { css } from 'styled-components';
 
-export const QuestionContainer = styled.div<{ error: boolean }>`
+export const Container = styled.div`
+  width: 800px;
+  margin: 0;
+  justify-content: center;
+`;
+
+export const QuestionContainer = styled.div<{ isDragging: boolean; error: boolean }>`
   min-width: 500px;
-  max-width: 900px;
+  max-width: 800px;
   width: 95%;
   margin: 0.3rem auto;
   padding: 1rem;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme, isDragging }) =>
+    isDragging ? theme.colors.lighterBackground : theme.colors.background};
   border-radius: 15px;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;
@@ -24,6 +31,7 @@ export const QuestionContainer = styled.div<{ error: boolean }>`
   }
 
   & .text-editor {
+    margin-top: 1rem;
     border-radius: 0 15px 15px 15px;
     text-align: left;
     color: black;
@@ -70,6 +78,10 @@ export const GeneralQuestion = styled.div<{ open: boolean }>`
     font-size: 2rem;
     transition: all 0.5s;
     cursor: pointer;
+
+    :hover {
+      color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   & .ico#ExpandMoreIcon {
@@ -115,7 +127,7 @@ export const GeneralQuestion = styled.div<{ open: boolean }>`
 export const ErrorText = styled.div`
   transition: 0.5s;
   white-space: pre-wrap;
-  margin: 1rem auto;
+  margin: 0 0 1rem 0;
 `;
 
 export const Button = styled.button`
@@ -147,7 +159,7 @@ export const AnswerContainer = styled.div<{ deleteError: boolean }>`
   padding: 1rem 1rem 1rem 1rem;
   border-radius: 0 15px 15px 15px;
   font-size: 1rem;
-  background-color: ${({theme}) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   box-shadow: 0px 8px 14px 4px #000000;
   transition: all 1s;
   border: ${({ deleteError }) => (deleteError ? '2px solid #f53030' : '2px solid #2b282d')};
@@ -166,65 +178,45 @@ export const AnswerContainer = styled.div<{ deleteError: boolean }>`
 `;
 
 export const AnswerBlock = styled.div`
-  display: grid;
-  grid-template-columns: 85% 15%;
-  grid-template-rows: minmax(65px, 25%) minmax(65px, 25%) minmax(0px, 40%) minmax(10px, 10%);
-  grid-area: 1 / 1 / 4 / 3;
-
-  .div1 {
-    grid-area: 1 / 1 / 4 / 2;
-    margin: 0 0 0;
-    margin: 0 1rem 0 0;
-    color: black;
-  }
-
   .div2 {
-    grid-area: 1 / 2 / 2 / 3;
     align-items: center;
     text-align: center;
     padding: 0.5rem 0;
 
     input[type='checkbox'] {
-      background-color: green;
       margin: 0 auto;
-      position: relative;
-      width: 100%;
       transform: scale(1.5);
       --webkit-appearance: none;
     }
   }
   .div3 {
-    grid-area: 2 / 2 / 3 / 3;
     align-items: center;
-    display: grid;
-    grid-template-columns: 40% 60%;
-
     transition: 0.5s;
 
     &:hover {
       color: #f53030;
     }
 
-    .div3_1 {
-      display: block;
-      height: 100%;
-      grid-area: 1 / 1 / 2 / 2;
-    }
     .div3_2 {
-      grid-area: 1 / 2 / 2 / 3;
-      margin-left: 0.8rem;
-      text-align: left;
+      text-align: center;
     }
 
     .div4 {
-      grid-area: 4 / 1 / 5 / 3;
       background-color: red;
     }
 
     .ico {
-      font-size: 45px;
-      height: 100%;
+      font-size: 40px;
       margin: 0 auto;
     }
   }
+`;
+
+export const PreviewText = styled.div`
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: 10px;
 `;

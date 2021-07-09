@@ -25,6 +25,7 @@ const App = () => (
         <ProtectedRoute exact path="/test/:id" For={TestingForm} fallbackPath="/signin" />
         <Route exact path="/dashboardTestList" component={TestList} />
         <Route exact path="/editor" component={TestCodeAnswer} />
+        <Route exact path="/creator" component={TestEditor} />
         <Route exact path="/dashboardTest" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>

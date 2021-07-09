@@ -1,14 +1,13 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: min(80vw, 1000px);
+  width: max-content;
   margin: 1rem auto;
   background: ${({ theme }) => theme.colors.background};
   border-radius: 30px;
   height: max-content;
   padding-top: 15px;
   padding-bottom: 30px;
-  display: flex;
   justify-content: center;
   box-shadow: 0px 8px 14px 4px #000000;
 
@@ -121,7 +120,6 @@ export const NewQuestionButton = styled.div`
   }
 `;
 
-export const QuestionContainer = styled.div`
-  margin: 0;
-  justify-content: center;
+export const QuestionList = styled.div`
+
 `;
