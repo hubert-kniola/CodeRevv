@@ -75,7 +75,7 @@ def creator_tests(request):
         users_of_test = []
 
         if not test['users']:
-            test['users'] = []
+            test['users'] = {}
 
         for user in test['users']:
             user_object = AuthUser.objects.get(pk=user)

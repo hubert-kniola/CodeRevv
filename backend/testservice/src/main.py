@@ -11,7 +11,7 @@ from fastapi_utils.tasks import repeat_every
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .models import Test, Question
+from .models import Test, Question, TestUser
 from datetime import datetime
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
@@ -66,11 +66,18 @@ async def join_test(test_id, user_id):
 
     elif test.is_link_generated:
         if not test.users:
-            test.users = [user_id]
+            test.users[user_id] = TestUser(attempt_count=1, finished=False)
             return await engine.save(test)
 
         if user_id not in test.users:
-            test.users.append(user_id)
+            test.users[user_id] = TestUser(attempt_count=1, finished=False)
+            return await engine.save(test)
+
+        elif test.users[user_id].finished is True:
+            return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+        elif test.users[user_id].finished is False:
+            test.users[user_id].attempt_count += 1
             return await engine.save(test)
 
         else:
@@ -79,7 +86,12 @@ async def join_test(test_id, user_id):
     elif not test.is_link_generated:
         if test.users:
             if user_id in test.users:
-                return test
+                if test.users[user_id].finished is True:
+                    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+                elif test.users[user_id].finished is False:
+                    test.users[user_id].attempt_count += 1
+                    return await engine.save(test)
 
     return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
@@ -111,7 +123,7 @@ async def create_test(test: Test):
     test.pub_test = str(datetime.now())
 
     if not test.users:
-        test.users = []
+        test.users = {}
 
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
@@ -122,8 +134,8 @@ async def create_test(test: Test):
 async def whitelist_test(test_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     request = await request.json()
-    test.users = request['users']
-    print(test)
+    for user in request['users']:
+        test.users[user] = TestUser(attempt_count=0, finished=False)
     await engine.save(test)
     return {'message': 'whitelist updated'}
 
@@ -171,8 +183,6 @@ async def result_test(test_id, user_id):
 
     if user_id not in test.users and test.creator != user_id:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
-
-
 
     if test.creator == user_id:
         return test

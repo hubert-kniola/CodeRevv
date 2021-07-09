@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from odmantic import Model, EmbeddedModel
 
@@ -26,12 +26,17 @@ class Question(EmbeddedModel):
     user_answers: Optional[List[UserAnswer]]
 
 
+class TestUser(EmbeddedModel):
+    attempt_count: int
+    finished: bool
+
+
 class Test(Model):
     __test__ = False
     name: str
     pub_test: Optional[str]
     creator: int
-    users: Optional[List[int]]
+    users: Optional[Dict[int, TestUser]]
     questions: List[Question]
     creator_contact: Optional[str]  # always optional
     description: Optional[str]
