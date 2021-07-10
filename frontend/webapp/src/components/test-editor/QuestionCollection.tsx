@@ -1,11 +1,9 @@
 import { FC, useContext } from 'react';
 
 import { Container, Header, QuestionList } from './styles';
-import './styles.css';
 
 import { TestEditorContext } from 'context';
 import { Droppable } from 'react-beautiful-dnd';
-import { TransitionGroup } from 'react-transition-group';
 import { QuestionViewer } from 'components';
 
 type Props = {
@@ -13,7 +11,7 @@ type Props = {
 };
 
 export const QuestionCollection: FC<Props> = ({ title }) => {
-  const { previousQuestions } = useContext(TestEditorContext);
+  const { questions } = useContext(TestEditorContext);
 
   return (
     <Container>
@@ -23,12 +21,10 @@ export const QuestionCollection: FC<Props> = ({ title }) => {
       <Droppable droppableId={title} isDropDisabled>
         {(provided) => (
           <QuestionList ref={provided.innerRef} {...provided.droppableProps}>
-            <TransitionGroup>
-              {previousQuestions.map((q, index) => (
-                <QuestionViewer index={index} question={q} />
-              ))}
-              {provided.placeholder}
-            </TransitionGroup>
+            {questions.hinted.map((q, index) => (
+              <QuestionViewer key={q.id} index={index} question={q} />
+            ))}
+            {provided.placeholder}
           </QuestionList>
         )}
       </Droppable>

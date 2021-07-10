@@ -1,17 +1,6 @@
 import { FC, FormEvent, useState, useContext, useRef, useEffect } from 'react';
 
-import {
-  Container,
-  Input,
-  Error,
-  Header,
-  Button,
-  NewQuestionButton,
-  CenteringContainer,
-  QuestionList,
-} from './styles';
-
-import './styles.css';
+import { Container, Input, Error, Header, Button, NewQuestionButton, CenteringContainer, QuestionList } from './styles';
 
 import { Droppable } from 'react-beautiful-dnd';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -20,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { QuestionEditor } from 'components';
 import { TestEditorContext } from 'context';
 import { testEditorSchema } from 'const';
-import { TransitionGroup } from 'react-transition-group';
 
 type Props = {
   onSubmit: SubmitHandler<FormEvent<HTMLFormElement>>;
@@ -29,7 +17,7 @@ type Props = {
 
 export const TestEditorForm: FC<Props> = ({ onSubmit, title }) => {
   const [currentDeleteTimeout, setCurrentDeleteTimeout] = useState<NodeJS.Timeout | null>(null);
-  const { questions, setTestName, setSingleQuestion, addEmptyQuestion, removeSingleQuestion } =
+  const { questions, setTestName, setActiveQuestion: setSingleQuestion, addEmptyQuestion, removeSingleQuestion } =
     useContext(TestEditorContext);
 
   const questionsRef = useRef(questions);
@@ -44,16 +32,16 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title }) => {
   }, []);
 
   const removeQuestion = (pos: number) => {
-    if (questions.length > 1 && questions[pos].lock && currentDeleteTimeout != null) {
+    if (questions.active.length > 1 && questions.active[pos].lock && currentDeleteTimeout != null) {
       clearTimeout(currentDeleteTimeout);
       setCurrentDeleteTimeout(null);
       removeSingleQuestion(pos);
     } else if (currentDeleteTimeout == null) {
-      setSingleQuestion({ ...questions[pos], lock: true }, pos);
+      setSingleQuestion({ ...questions.active[pos], lock: true }, pos);
 
       setCurrentDeleteTimeout(
         setTimeout(() => {
-          setSingleQuestion({ ...questionsRef.current[pos], lock: false }, pos);
+          setSingleQuestion({ ...questionsRef.current.active[pos], lock: false }, pos);
           setCurrentDeleteTimeout(null);
         }, 1000)
       );
@@ -86,12 +74,10 @@ export const TestEditorForm: FC<Props> = ({ onSubmit, title }) => {
         <Droppable droppableId={title}>
           {(provided) => (
             <QuestionList ref={provided.innerRef} {...provided.droppableProps}>
-              <TransitionGroup>
-                {questions.map((q, index) => (
-                  <QuestionEditor index={index} question={q} onDelete={() => removeQuestion(index)} />
-                ))}
-                {provided.placeholder}
-              </TransitionGroup>
+              {questions.active.map((q, index) => (
+                <QuestionEditor key={q.id} index={index} question={q} onDelete={() => removeQuestion(index)} />
+              ))}
+              {provided.placeholder}
             </QuestionList>
           )}
         </Droppable>

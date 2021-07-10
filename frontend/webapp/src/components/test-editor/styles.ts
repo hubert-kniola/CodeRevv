@@ -121,5 +121,5 @@ export const NewQuestionButton = styled.div`
 `;
 
 export const QuestionList = styled.div`
-
+  min-width: 800px;
 `;

@@ -27,7 +27,7 @@ const TestListIn: FC = () => {
 
       try {
         await context.onLoading();
-      } catch (err) {
+      } catch (err: any) {
         console.log({ parseErr: err });
         if (err.response !== undefined) {
           setError('Nie udało się wczytać twoich testów.\nSpróbuj ponownie po odświeżeniu strony.');

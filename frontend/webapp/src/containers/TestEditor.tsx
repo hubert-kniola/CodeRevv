@@ -34,20 +34,13 @@ const isEditorValueInvalid = (e: EditorValue, min: number) => {
 const TestEditorIn: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const {
-    testName,
-    questions,
-    setSingleQuestion,
-    moveQuestionToActive,
-    swapQuestions,
-    previousQuestions
-  } = useContext(TestEditorContext);
+  const { testName, questions, setActiveQuestion, moveQuestionToActive, swapQuestions } = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
 
   const getRawTestEditorData = () => ({
     name: testName,
-    questions: questions.map((q, iQuestion) => ({
+    questions: questions.active.map((q, iQuestion) => ({
       index: iQuestion,
       content: q.value.toString('html'),
       question_type: q.type,
@@ -62,7 +55,7 @@ const TestEditorIn: FC = () => {
 
   const editorHasErrors = () => {
     let hadErrors = false;
-    questions.forEach((q, iQuestion) => {
+    questions.active.forEach((q, iQuestion) => {
       let errorMessage = '';
 
       if (isEditorValueInvalid(q.value, MIN_QUESTION_BODY)) {
@@ -102,14 +95,14 @@ const TestEditorIn: FC = () => {
         hadErrors = true;
 
         if (tempQuestion != null) {
-          setSingleQuestion({ ...(tempQuestion as EditorQuestion), error: errorMessage }, iQuestion);
+          setActiveQuestion({ ...(tempQuestion as EditorQuestion), error: errorMessage }, iQuestion);
         } else {
-          setSingleQuestion({ ...q, error: errorMessage }, iQuestion);
+          setActiveQuestion({ ...q, error: errorMessage }, iQuestion);
         }
       } else if (tempQuestion != null) {
         hadErrors = true;
 
-        setSingleQuestion({ ...(tempQuestion as EditorQuestion), error: null }, iQuestion);
+        setActiveQuestion({ ...(tempQuestion as EditorQuestion), error: null }, iQuestion);
       }
     });
 
@@ -124,7 +117,7 @@ const TestEditorIn: FC = () => {
       try {
         await apiAxios.post('/t/create', getRawTestEditorData());
         history.push('/dashboard/view/tests');
-      } catch (err) {
+      } catch (err: any) {
         if (err.response) {
           setError('Nie udało się stworzyć testu.\nSpróbuj ponownie po odświeżeniu strony.');
         } else {
@@ -149,14 +142,11 @@ const TestEditorIn: FC = () => {
 
     if (destination.droppableId === source.droppableId) {
       swapQuestions(source.index, destination.index);
-
     } else {
       moveQuestionToActive(source.index, destination.index);
     }
 
-    console.log({questions, previousQuestions})
-    //TODO drag editors only by the bar !
-    //TODO make previous questions disappear!
+    //TODO drag first and drop into first BUG DK WAT TO DO
   };
 
   return (

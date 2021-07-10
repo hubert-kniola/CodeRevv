@@ -8,8 +8,6 @@ import Collapse from '@material-ui/core/Collapse';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { CSSTransition } from 'react-transition-group';
-
 import {
   QuestionContainer,
   Container,
@@ -26,13 +24,12 @@ import { CustomCheckbox, MessageOverlay } from 'components';
 import { toolbarConfig } from 'const';
 import { Grid } from '@material-ui/core';
 
-export const questionPreview = (question: EditorQuestion, length=50): string =>
+export const questionPreview = (question: EditorQuestion): string =>
   question.value
     .toString('html')
     .replace(/(<([^>]+)>)/gi, '')
     .replace(/&nbsp;/g, ' ')
-    .trimRight()
-    .slice(0, length) + '...';
+    .trimRight() || '...';
 
 type QuestionEditorProps = {
   index: number;
@@ -42,15 +39,14 @@ type QuestionEditorProps = {
 
 export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDelete }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [grow, setGrow] = useState(true);
-  const [open, setOpen] = useState(true);
-  const { questions, setSingleQuestion } = useContext(TestEditorContext);
+  const [questionErrorAnimation, setQuestionErrorAnimation] = useState(true);
+  const { questions, setActiveQuestion } = useContext(TestEditorContext);
 
   const questionRef = useRef(question);
   questionRef.current = question;
 
   const replaceAnswer = (pos: number, value: EditorAnswer) => {
-    setSingleQuestion(
+    setActiveQuestion(
       {
         ...question,
         answers: [...question.answers!.slice(0, pos), value, ...question.answers!.slice(pos + 1)],
@@ -61,7 +57,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
 
   const removeAnswer = (pos: number) => {
     if (question.answers!.length > 2) {
-      setSingleQuestion(
+      setActiveQuestion(
         {
           ...question,
           answers: question.answers!.filter((_, index) => index !== pos),
@@ -76,7 +72,7 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
     e.preventDefault();
 
     if (question.answers!.length < 10) {
-      setSingleQuestion(
+      setActiveQuestion(
         {
           ...question,
           answers: [...question.answers!, newAnswer()],
@@ -91,113 +87,117 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ index, question, onDel
   useEffect(() => {
     if (question.error != null) {
       setTimeout(() => {
-        setGrow(false);
+        setQuestionErrorAnimation(false);
       }, 1800);
 
       setTimeout(() => {
-        setSingleQuestion({ ...questionRef.current, error: null }, index);
-        setGrow(true);
+        setActiveQuestion({ ...questionRef.current, error: null }, index);
+        setQuestionErrorAnimation(true);
       }, 2000);
     }
   }, [question.value]);
 
   const addPoint = () => {
     if (question.maxScore < 10) {
-      setSingleQuestion({ ...question, maxScore: question.maxScore + 0.5 }, index);
+      setActiveQuestion({ ...question, maxScore: question.maxScore + 0.5 }, index);
     }
   };
 
   const removePoint = () => {
     if (question.maxScore > 1) {
-      setSingleQuestion({ ...question, maxScore: question.maxScore - 0.5 }, index);
+      setActiveQuestion({ ...question, maxScore: question.maxScore - 0.5 }, index);
     }
   };
 
-  const showQuestionDetails = () => setOpen((open) => !open);
+  const toggleDetails = () => {
+    const updated = {
+      ...questions.active[index],
+      isOpen: !questions.active[index].isOpen,
+    };
+
+    setActiveQuestion(updated, index);
+  };
 
   return (
-    <CSSTransition key={question.id} timeout={200} classNames="move">
-      <Container>
-        <Draggable draggableId={question.id} index={index}>
-          {(provided, snapshot) => (
-            <QuestionContainer
-              isDragging={snapshot.isDragging}
-              error={question.error != null}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              ref={provided.innerRef}
-            >
-              <GeneralQuestion open={open}>
-                <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={showQuestionDetails} />
-                <div className="test">
-                  <MessageOverlay
-                    className="deleteOverlay"
-                    active={question.lock}
-                    noLogo
-                    text={
-                      questions.length > 1
-                        ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
-                        : 'Test musi zawierać przynajmniej jedno pytanie!'
-                    }
-                  >
-                    <label>Pytanie {index + 1}: </label>
-                    <h3>{questionPreview(question)}</h3>
-                  </MessageOverlay>
-                </div>
+    <Container>
+      <Draggable draggableId={question.id} index={index}>
+        {(provided, snapshot) => (
+          <QuestionContainer
+            isDragging={snapshot.isDragging}
+            error={question.error != null}
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+          >
+            <GeneralQuestion open={question.isOpen} {...provided.dragHandleProps}>
+              <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={toggleDetails} />
+              <div className="test">
+                <MessageOverlay
+                  className="deleteOverlay"
+                  active={question.lock}
+                  noLogo
+                  text={
+                    questions.active.length > 1
+                      ? 'Na pewno chcesz usunąć pytanie? Aby potwierdzić kliknij ponownie na krzyżyk.'
+                      : 'Test musi zawierać przynajmniej jedno pytanie!'
+                  }
+                >
+                  <label>Pytanie {index + 1}: </label>
+                  <h3>{questionPreview(question)}</h3>
+                </MessageOverlay>
+              </div>
 
-                <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
-                <input
-                  value={question.maxScore}
-                  min={0}
-                  max={10}
-                  step={0.5}
-                  onChange={(e) => {
-                    const val = +e.target.value;
-                    if (val <= 10 && val >= 0.5) {
-                      setSingleQuestion({ ...question, maxScore: +e.target.value }, index);
-                    }
-                  }}
+              <AddIcon id="AddIcon" className="ico" onClick={addPoint} />
+              <input
+                value={question.maxScore}
+                min={0}
+                max={10}
+                step={0.5}
+                onChange={(e) => {
+                  const val = +e.target.value;
+                  if (val <= 10 && val >= 0.5) {
+                    setActiveQuestion({ ...question, maxScore: +e.target.value }, index);
+                  }
+                }}
+              />
+
+              <RemoveIcon id="RemoveIcon" className="ico" onClick={removePoint} />
+              <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
+            </GeneralQuestion>
+
+            <Collapse in={question.isOpen} timeout={500}>
+              <Grow in={questionErrorAnimation} timeout={500}>
+                <ErrorText>{question.error}</ErrorText>
+              </Grow>
+
+              <RichTextEditor
+                toolbarConfig={toolbarConfig}
+                className="text-editor"
+                value={question.value}
+                onChange={(value) => setActiveQuestion({ ...question, value }, index)}
+              />
+
+              {question.answers!.map((item, index) => (
+                <AnswerEditor
+                  key={item.id}
+                  answer={item}
+                  setAnswerState={(state) => replaceAnswer(index, state)}
+                  onDelete={() => removeAnswer(index)}
+                  answersCount={question.answers!.length}
+                  number={index + 1}
                 />
-
-                <RemoveIcon id="RemoveIcon" className="ico" onClick={removePoint} />
-                <ClearIcon id="ClearIcon" className="ico" onClick={onDelete} />
-              </GeneralQuestion>
-
-              <Collapse in={open} timeout={500}>
-                <Grow in={grow} timeout={500}>
-                  <ErrorText>{question.error}</ErrorText>
-                </Grow>
-
-                <RichTextEditor
-                  toolbarConfig={toolbarConfig}
-                  className="text-editor"
-                  value={question.value}
-                  onChange={(value) => setSingleQuestion({ ...question, value }, index)}
-                />
-
-                {question.answers!.map((item, index) => (
-                  <AnswerEditor
-                    key={item.id}
-                    answer={item}
-                    setAnswerState={(state) => replaceAnswer(index, state)}
-                    onDelete={() => removeAnswer(index)}
-                    answersCount={question.answers!.length}
-                    number={index + 1}
-                  />
-                ))}
-                <Collapse in={buttonDisabled}>
-                  <p>Każde pytanie może mieć tylko 10 odpowiedzi.</p>
-                </Collapse>
-
-                <Button onClick={addAnswer} disabled={buttonDisabled}>
-                  Dodaj odpowiedź
-                </Button>
+              ))}
+              <Collapse in={buttonDisabled}>
+                <p>Każde pytanie może mieć tylko 10 odpowiedzi.</p>
               </Collapse>
-            </QuestionContainer>
-          )}
-        </Draggable>
-      </Container>
-    </CSSTransition>
+
+              <Button onClick={addAnswer} disabled={buttonDisabled}>
+                Dodaj odpowiedź
+              </Button>
+            </Collapse>
+          </QuestionContainer>
+        )}
+      </Draggable>
+    </Container>
   );
 };
 

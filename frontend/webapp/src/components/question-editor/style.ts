@@ -71,6 +71,11 @@ export const GeneralQuestion = styled.div<{ open: boolean }>`
       font-size: 11px;
       opacity: 0.7;
       margin: 0;
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      white-space: nowrap;
     }
   }
 

@@ -1,13 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useContext } from 'react';
 import RichTextEditor from 'react-rte';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import { CSSTransition } from 'react-transition-group';
 
 import { QuestionContainer, Container, GeneralQuestion, AnswerBlock, AnswerContainer, PreviewText } from './style';
 
 import { Draggable } from 'react-beautiful-dnd';
-import { EditorQuestion, EditorAnswer } from 'context';
+import { EditorQuestion, EditorAnswer, TestEditorContext } from 'context';
 import { CustomCheckbox } from 'components';
 import { toolbarConfig } from 'const';
 import { Collapse, Grid } from '@material-ui/core';
@@ -20,41 +18,46 @@ type QuestionViewerProps = {
 };
 
 export const QuestionViewer: FC<QuestionViewerProps> = ({ index, question }) => {
-  const [open, setOpen] = useState(false);
+  const { questions, setHintedQuestion } = useContext(TestEditorContext);
 
-  const showQuestionDetails = () => setOpen((open) => !open);
+  const toggleDetails = () => {
+    const updated = {
+      ...questions.hinted[index],
+      isOpen: !questions.hinted[index].isOpen,
+    };
+
+    setHintedQuestion(updated, index);
+  };
 
   return (
-    <CSSTransition key={question.id} timeout={200} classNames="move">
-      <Container>
-        <Draggable draggableId={question.id} index={index}>
-          {(provided, snapshot) => (
-            <QuestionContainer
-              isDragging={snapshot.isDragging}
-              error={false}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              ref={provided.innerRef}
-            >
-              <GeneralQuestion open={open}>
-                <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={showQuestionDetails} />
-                <PreviewText>{questionPreview(question, 300)}</PreviewText>
+    <Container>
+      <Draggable draggableId={question.id} index={index}>
+        {(provided, snapshot) => (
+          <QuestionContainer
+            isDragging={snapshot.isDragging}
+            error={false}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <GeneralQuestion open={question.isOpen}>
+              <ExpandMoreIcon id="ExpandMoreIcon" className="ico" onClick={toggleDetails} />
+              <PreviewText>{questionPreview(question)}</PreviewText>
 
-                <input value={question.maxScore} min={0} max={10} disabled />
-              </GeneralQuestion>
+              <input value={question.maxScore} min={0} max={10} disabled />
+            </GeneralQuestion>
 
-              <Collapse in={open} timeout={500}>
-                <RichTextEditor toolbarConfig={toolbarConfig} className="text-editor" value={question.value} readOnly />
+            <Collapse in={question.isOpen} timeout={500}>
+              <RichTextEditor toolbarConfig={toolbarConfig} className="text-editor" value={question.value} readOnly />
 
-                {question.answers!.map((item) => (
-                  <AnswerViewer key={item.id} answer={item} />
-                ))}
-              </Collapse>
-            </QuestionContainer>
-          )}
-        </Draggable>
-      </Container>
-    </CSSTransition>
+              {question.answers!.map((item) => (
+                <AnswerViewer key={item.id} answer={item} />
+              ))}
+            </Collapse>
+          </QuestionContainer>
+        )}
+      </Draggable>
+    </Container>
   );
 };
 
