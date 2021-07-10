@@ -54,7 +54,7 @@ async def generate_test_link(test_id, user_id):
 
 @app.post('/t/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def join_test(test_id, user_id):
-    user_id = int(user_id)
+    user_id = user_id
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
         # if not test.users:
@@ -135,7 +135,7 @@ async def whitelist_test(test_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     request = await request.json()
     for user in request['users']:
-        test.users[user] = TestUser(attempt_count=0, finished=False)
+        test.users[str(user)] = TestUser(attempt_count=0, finished=False)
     await engine.save(test)
     return {'message': 'whitelist updated'}
 
@@ -179,7 +179,7 @@ async def submit_test(test_id, user_id, modified_test: Test):
 @app.get('/t/result/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def result_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    user_id = int(user_id)
+    user_id = user_id
 
     if user_id not in test.users and test.creator != user_id:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)

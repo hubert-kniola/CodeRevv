@@ -36,7 +36,7 @@ class Test(Model):
     name: str
     pub_test: Optional[str]
     creator: int
-    users: Optional[Dict[int, TestUser]]
+    users: Optional[Dict[str, TestUser]]
     questions: List[Question]
     creator_contact: Optional[str]  # always optional
     description: Optional[str]

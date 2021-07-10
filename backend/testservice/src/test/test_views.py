@@ -12,9 +12,7 @@ test_data = {
     "name": "string",
     "pub_test": "string",
     "creator": 55,
-    "users": [
-        0
-    ],
+    "users": {},
     "questions": [
         {
             "index": 0,
