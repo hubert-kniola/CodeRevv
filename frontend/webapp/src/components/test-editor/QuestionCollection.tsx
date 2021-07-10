@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext } from 'react';
 
 import { Container, Header, QuestionList } from './styles';
 import './styles.css';
@@ -14,13 +14,13 @@ type Props = {
 
 export const QuestionCollection: FC<Props> = ({ title }) => {
   const { previousQuestions } = useContext(TestEditorContext);
-  
+
   return (
     <Container>
       <Header>{title}</Header>
       <hr />
 
-      <Droppable droppableId={title}>
+      <Droppable droppableId={title} isDropDisabled>
         {(provided) => (
           <QuestionList ref={provided.innerRef} {...provided.droppableProps}>
             <TransitionGroup>

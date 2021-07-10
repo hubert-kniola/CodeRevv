@@ -38,9 +38,9 @@ const TestEditorIn: FC = () => {
     testName,
     questions,
     setSingleQuestion,
-    addQuestionInPosition,
+    moveQuestionToActive,
     swapQuestions,
-    popPreviousQuestionAtPosition,
+    previousQuestions
   } = useContext(TestEditorContext);
   const errorRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
@@ -145,15 +145,16 @@ const TestEditorIn: FC = () => {
   const collectionTitle = 'Moje poprzednie pytania';
 
   const onDragEnd = ({ source, destination }: DropResult) => {
-    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) return;
+    if (!destination) return;
 
-    if (destination.droppableId === source.droppableId && source.droppableId === editorTitle) {
+    if (destination.droppableId === source.droppableId) {
       swapQuestions(source.index, destination.index);
-    } else if (destination.droppableId === editorTitle && source.droppableId === collectionTitle) {
-      const collectionQuestion = popPreviousQuestionAtPosition(source.index);
-      addQuestionInPosition(collectionQuestion, destination.index);
+
+    } else {
+      moveQuestionToActive(source.index, destination.index);
     }
 
+    console.log({questions, previousQuestions})
     //TODO drag editors only by the bar !
     //TODO make previous questions disappear!
   };

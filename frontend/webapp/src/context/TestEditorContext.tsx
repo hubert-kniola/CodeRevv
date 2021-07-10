@@ -27,9 +27,8 @@ export interface ITestEditorContext {
   previousQuestions: EditorQuestion[];
   setTestName: (t: string | SetTestNameDispatch) => void;
   addEmptyQuestion: () => void;
-  addQuestionInPosition: (q: EditorQuestion, p: number) => void;
   setSingleQuestion: (q: EditorQuestion, i: number) => void;
-  popPreviousQuestionAtPosition: (p: number) => EditorQuestion;
+  moveQuestionToActive: (f: number, t: number) => void;
   removeSingleQuestion: (i: number) => void;
   swapQuestions: (f: number, s: number) => void;
 }
@@ -97,17 +96,15 @@ export const TestEditorContextProvider: FC = ({ children }) => {
     );
   };
 
-  const addQuestionInPosition = (q: EditorQuestion, pos: number) => {
-    setQuestions((qs) => [...qs.slice(0, pos), q, ...qs.slice(pos)]);
-  };
+  const moveQuestionToActive = (from: number, to: number) => {
+    const sourceClone = [...previousQuestions];
+    const destClone = [...questions];
+    const [removed] = sourceClone.splice(from, 1);
 
-  const popPreviousQuestionAtPosition = (pos: number) => {
-    const question = previousQuestions.find((_, ix) => ix === pos)!;
+    destClone.splice(to, 0, removed);
 
-    setPreviousQuestions(previousQuestions.filter((_, ix) => ix !== pos));
-    console.log({previousQuestions})
-
-    return question;
+    setQuestions(destClone);
+    setPreviousQuestions(sourceClone);
   };
 
   return (
@@ -118,10 +115,9 @@ export const TestEditorContextProvider: FC = ({ children }) => {
         testName,
         setTestName,
         addEmptyQuestion,
-        addQuestionInPosition,
         setSingleQuestion,
         removeSingleQuestion,
-        popPreviousQuestionAtPosition,
+        moveQuestionToActive,
         swapQuestions,
       }}
     >

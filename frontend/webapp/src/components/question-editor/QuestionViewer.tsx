@@ -31,7 +31,7 @@ export const QuestionViewer: FC<QuestionViewerProps> = ({ index, question }) => 
           {(provided, snapshot) => (
             <QuestionContainer
               isDragging={snapshot.isDragging}
-              error={question.error != null}
+              error={false}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               ref={provided.innerRef}
