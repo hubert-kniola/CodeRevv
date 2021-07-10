@@ -132,7 +132,7 @@ export const GeneralQuestion = styled.div<{ open: boolean }>`
 export const ErrorText = styled.div`
   transition: 0.5s;
   white-space: pre-wrap;
-  margin: 0 0 1rem 0;
+  margin: 1rem 0 1rem 0;
 `;
 
 export const Button = styled.button`

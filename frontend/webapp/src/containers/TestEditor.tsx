@@ -15,9 +15,7 @@ import { apiAxios } from 'utility';
 import { useHistory } from 'react-router-dom';
 import { DropResult, DragDropContext } from 'react-beautiful-dnd';
 import { Grid } from '@material-ui/core';
-
-const MIN_QUESTION_BODY = 5;
-const MIN_ANSWER_BODY = 1;
+import { MIN_ANSWER_BODY, MIN_QUESTION_BODY, testEditorErrors } from 'const';
 
 const isEditorValueInvalid = (e: EditorValue, min: number) => {
   const body = e.toString('markdown').replace(/[^\x20-\x7E]/g, '');
@@ -59,19 +57,19 @@ const TestEditorIn: FC = () => {
       let errorMessage = '';
 
       if (isEditorValueInvalid(q.value, MIN_QUESTION_BODY)) {
-        errorMessage += `Zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_QUESTION_BODY}.\n`;
+        errorMessage += testEditorErrors.shortQuestion;
       }
 
       let tempQuestion: EditorQuestion | null = null;
 
       if (q.answers !== undefined) {
         if (q.answers.filter((a) => a.isCorrect).length < 1) {
-          errorMessage += `Pytanie musi zawierać co najmniej jedną odpowiedź prawidłową.\n`;
+          errorMessage += testEditorErrors.atLeastOneCorrectAnswer;
         }
 
         q.answers.forEach((a, iAnswer) => {
           if (isEditorValueInvalid(a.value, MIN_ANSWER_BODY)) {
-            const error = `Odpowiedź ma zbyt krótkie polecenie, minimalna ilość znaków to ${MIN_ANSWER_BODY}.\n`;
+            const error = testEditorErrors.shortAnswer;
 
             if (tempQuestion === null) {
               tempQuestion = { ...q };
@@ -102,7 +100,7 @@ const TestEditorIn: FC = () => {
       } else if (tempQuestion != null) {
         hadErrors = true;
 
-        setActiveQuestion({ ...(tempQuestion as EditorQuestion), error: null }, iQuestion);
+        setActiveQuestion({ ...(tempQuestion as EditorQuestion), error: testEditorErrors.errorInAnswer }, iQuestion);
       }
     });
 
