@@ -147,6 +147,15 @@ async def delete_test(test_id):
     return {'message': 'test deleted'}
 
 
+@app.get('/t/questions/{creator_id}', response_model=List[Question], status_code=200)
+async def questions_test(creator_id):
+    tests = await engine.find(Test, Test.creator == int(creator_id))
+    questions = []
+    for test in tests:
+        questions.append(test.questions)
+    return questions
+
+
 @app.post('/t/save/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def submit_test(test_id, user_id, modified_test: Test):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))

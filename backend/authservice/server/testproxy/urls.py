@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/v1/t/list', test_list, name='test_list'),
     path('api/v1/t/list/creator', creator_tests, name='creator_tests'),
     path('api/v1/t/delete', test_delete, name='test_delete'),
+    path('api/v1/t/questions', test_questions, name='test_questions'),
     path('api/v1/t/user', test_user, name='test_user'),
     path('api/v1/t/question', test_question, name='test_question'),
     path('api/v1/t/link', test_link_generate, name='test_link_generate'),

@@ -93,6 +93,15 @@ def test_delete(request):
     response = requests.delete(f"{proxy}/t/delete/{request.data['test_id']}")
     return make_response_with_cookies(request, response, response.status_code)
 
+
+@api_view(['GET'])
+@session_authentication
+def test_questions(request):
+    creator_id = get_user_id(request)
+    response = requests.get(f"{proxy}/t/questions/{creator_id}")
+    return make_response_with_cookies(request, response, response.status_code)
+
+
 # ===================================================================
 
 @api_view(['POST'])
