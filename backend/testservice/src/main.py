@@ -152,7 +152,9 @@ async def questions_test(creator_id):
     tests = await engine.find(Test, Test.creator == int(creator_id))
     questions = []
     for test in tests:
-        questions.append(test.questions)
+        for quest in test.questions:
+            quest.user_answers = None
+            questions.append(test.questions)
     return questions
 
 
