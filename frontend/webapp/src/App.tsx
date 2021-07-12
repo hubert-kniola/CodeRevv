@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Home, NotFound, Loading } from 'pages';
-import { ProtectedRoute, CodeEditor } from 'components';
+import { ProtectedRoute, CodeEditor, RichTextEditor } from 'components';
 import { TestEditor, TestList, TestCodeAnswer } from 'containers';
 
 const Login = lazy(() => import('pages/Login'));
@@ -26,7 +26,7 @@ const App = () => (
         <Route exact path="/dashboardTestList" component={TestList} />
         <Route exact path="/editor" component={TestCodeAnswer} />
         <Route exact path="/creator" component={TestEditor} />
-        <Route exact path="/dashboardTest" component={Dashboard} />
+        <Route exact path="/rich" component={RichTextEditor} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
