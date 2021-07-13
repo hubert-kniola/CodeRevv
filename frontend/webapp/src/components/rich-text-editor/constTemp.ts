@@ -1,29 +1,25 @@
 
 export type InlineStyle = {
     label: string;
-    value: string;
-    type: "style" | "block";
+    style: string;
 }
 
 export const inlineStyles: InlineStyle[] =[
-    {
-        label: "Bold",
-        value: "BOLD",
-        type: "style"
-    },
-    {
-        label: "Italic",
-        value: "ITALIC",
-        type: "style"
-    },
-    {
-        label: "Underline",
-        value: "UNDERLINE",
-        type: "style"
-    },
-    {
-        label: "Code",
-        value: "CODE",
-        type: "style"
-    }
+    { label: "Bold", style: "BOLD" },
+    { label: "Italic", style: "ITALIC" },
+    { label: "Underline", style: "UNDERLINE" },
+    { label: "Monospace", style: "CODE" }
 ]
+
+export const BLOCK_TYPES:  InlineStyle[] = [
+    { label: "H1", style: "header-one" },
+    { label: "H2", style: "header-two" },
+    { label: "H3", style: "header-three" },
+    { label: "H4", style: "header-four" },
+    { label: "H5", style: "header-five" },
+    { label: "H6", style: "header-six" },
+    { label: "Blockquote", style: "blockquote" },
+    { label: "UL", style: "unordered-list-item" },
+    { label: "OL", style: "ordered-list-item" },
+    { label: "Code Block", style: "code-block" }
+  ];
