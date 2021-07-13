@@ -3,49 +3,6 @@ import { EditorState } from "draft-js";
 import { FC, MouseEvent, ReactElement } from "react";
 import {Container, Button} from './style'
 
-type StyleControlsProps = {
-    editorState: EditorState;
-    onToggle: (inlineStyle: string) => void;
-  };
-  
-  const InlineStyleControls: FC<StyleControlsProps> = ({ editorState, onToggle }) => {
-    const currentStyle = editorState.getCurrentInlineStyle();
-  
-  
-    return (
-      <div>
-        {INLINE_STYLE.map((type) => (
-          <StyleButton
-            key={type.label}
-            active={currentStyle.has(type.style)}
-            icon={type.icon ? type.icon : type.label}
-            onToggle={onToggle}
-            style={type.style}
-          />
-        ))}
-      </div>
-    );
-  };
-  
-  const BlockStyleControls: FC<StyleControlsProps> = ({ editorState, onToggle }) => {
-    const selection = editorState.getSelection();
-    const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
-  
-    return (
-      <div>
-        {BLOCK_TYPES.map((type) => (
-          <StyleButton
-            key={type.label}
-            active={type.style === blockType}
-            icon={type.icon ? type.icon : type.label}
-            onToggle={onToggle}
-            style={type.style}
-          />
-        ))}
-      </div>
-    );
-  };
-  
   type ButtonProps = {
     onToggle: (inlineStyle: string) => void;
     icon: ReactElement | string;
@@ -72,10 +29,36 @@ type ToolbarProp = {
   };
 
 const Toolbar:FC<ToolbarProp> = ({ editorState, lineToggle, blockToggle }) => {
+    //inline
+    const currentStyle = editorState.getCurrentInlineStyle();
+    
+    //block
+    const selection = editorState.getSelection();
+    const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+
+    
     return(
         <Container>
-          <InlineStyleControls editorState={editorState} onToggle={lineToggle} />
-          <BlockStyleControls editorState={editorState} onToggle={blockToggle}/>
+            {INLINE_STYLE.map((type) => (
+              <StyleButton
+                key={type.label}
+                active={currentStyle.has(type.style)}
+                icon={type.icon ? type.icon : type.label}
+                onToggle={lineToggle}
+                style={type.style}
+              />
+          ))}
+          
+          {BLOCK_TYPES.map((type) => (
+          <StyleButton
+            key={type.label}
+            active={type.style === blockType}
+            icon={type.icon ? type.icon : type.label}
+            onToggle={blockToggle}
+            style={type.style}
+          />))}
+
+
         </Container>
     )
 }

@@ -1,5 +1,5 @@
-import { Editor, EditorState, RichUtils } from 'draft-js';
 import { FC, useState, useRef } from 'react';
+import { Editor, EditorState, RichUtils, ContentBlock } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
 
@@ -28,6 +28,13 @@ export const RichTextEditor: FC = () => {
     setEditorState((state) => RichUtils.toggleBlockType(state, blockType));
   };
 
+  const myBlockStyleFn = (contentBlock: ContentBlock): string => {
+    const type = contentBlock.getType();
+    if (type === 'blockquote') return 'custom-blockquote';
+    else if (type === 'code-block') return 'custome-code';
+    return '';
+  };
+
   const editor = useRef(null);
 
   return (
@@ -36,11 +43,12 @@ export const RichTextEditor: FC = () => {
         <Toolbar editorState={editorState} lineToggle={toggleInlineStyle} blockToggle={toggleBlockType} />
         <Space>
           <Editor
-            placeholder="Twoja ostatnia myśl?"
+            placeholder="Co tam ?"
             ref={editor}
             editorState={editorState}
             handleKeyCommand={handleKeyCommand}
             onChange={change}
+            blockStyleFn={myBlockStyleFn}
           />
         </Space>
       </Container>

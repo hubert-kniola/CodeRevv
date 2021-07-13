@@ -1,28 +1,25 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
   margin: 0;
   height: 50px;
-  background-color: ${({theme}) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   display: fixed;
   padding: 0.5rem;
   justify-content: center;
   border-radius: 15px 15px 0px 0px;
-  border: 2px solid ${({ theme }) => theme.colors.lighterBackground};
+  border: 0px solid ${({ theme }) => theme.colors.lighterBackground};
 `;
-
 
 export const Button = styled.div`
   color: #999;
   cursor: pointer;
-  margin-right: 16px;
-  display: inline-block;
-  background: red;
-  justify-items: center;
-  
+  margin: auto;
+  display: flex;
+  align-items: center;
 
   &.active {
-    color: ${({theme}) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
