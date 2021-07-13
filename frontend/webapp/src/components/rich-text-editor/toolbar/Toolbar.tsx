@@ -1,6 +1,6 @@
 import { BLOCK_TYPES, INLINE_STYLE } from "const";
 import { EditorState } from "draft-js";
-import { FC, MouseEvent } from "react";
+import { FC, MouseEvent, ReactElement } from "react";
 import {Container, Button} from './style'
 
 type StyleControlsProps = {
@@ -18,7 +18,7 @@ type StyleControlsProps = {
           <StyleButton
             key={type.label}
             active={currentStyle.has(type.style)}
-            label={type.label}
+            icon={type.icon ? type.icon : type.label}
             onToggle={onToggle}
             style={type.style}
           />
@@ -37,7 +37,7 @@ type StyleControlsProps = {
           <StyleButton
             key={type.label}
             active={type.style === blockType}
-            label={type.label}
+            icon={type.icon ? type.icon : type.label}
             onToggle={onToggle}
             style={type.style}
           />
@@ -48,11 +48,11 @@ type StyleControlsProps = {
   
   type ButtonProps = {
     onToggle: (inlineStyle: string) => void;
-    label: string;
+    icon: ReactElement | string;
     active: boolean;
     style: string;
   };
-  const StyleButton: FC<ButtonProps> = ({ onToggle, label, active, style }) => {
+  const StyleButton: FC<ButtonProps> = ({ onToggle, icon, active, style }) => {
     const toggleHandler = (e: MouseEvent<HTMLSpanElement>) => {
       e.preventDefault();
       onToggle(style);
@@ -60,7 +60,7 @@ type StyleControlsProps = {
   
     return (
       <Button className={active ? 'active' : ''} onMouseDown={toggleHandler}>
-        {label}
+        {icon}
       </Button>
     );
   };

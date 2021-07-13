@@ -1,6 +1,6 @@
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import { FC, useState, useRef } from 'react';
-import { Wrapper, Container } from './style';
+import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
 
 export const RichTextEditor: FC = () => {
@@ -33,21 +33,17 @@ export const RichTextEditor: FC = () => {
   return (
     <Wrapper>
       <Container>
-        <Toolbar
-         editorState = {editorState}
-         lineToggle={toggleInlineStyle}
-         blockToggle={toggleBlockType}
-         />
-        <Editor
-          placeholder="Twoja ostatnia myśl?"
-          ref={editor}
-          editorState={editorState}
-          handleKeyCommand={handleKeyCommand}
-          onChange={change}
-        />
+        <Toolbar editorState={editorState} lineToggle={toggleInlineStyle} blockToggle={toggleBlockType} />
+        <Space>
+          <Editor
+            placeholder="Twoja ostatnia myśl?"
+            ref={editor}
+            editorState={editorState}
+            handleKeyCommand={handleKeyCommand}
+            onChange={change}
+          />
+        </Space>
       </Container>
     </Wrapper>
   );
 };
-
-
