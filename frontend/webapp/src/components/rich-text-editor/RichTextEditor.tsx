@@ -5,7 +5,6 @@ import Toolbar from './toolbar/Toolbar';
 
 //https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/draft-js/index.d.ts
 type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
-const { hasCommandModifier } = KeyBindingUtil;
 
 export const RichTextEditor: FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -39,21 +38,28 @@ export const RichTextEditor: FC = () => {
   };
 
   const tabHandler = (e: SyntheticKeyboardEvent) => {
-    e.preventDefault() ;
     const newState = RichUtils.onTab(e, editorState, 4);
 
+
     if (newState) {
-      setEditorState(newState);
+      console.log("status");
+      e.preventDefault();
+      let newContentState = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        '    '
+      );
+      setEditorState(state => EditorState.push(state, newContentState, 'insert-characters'));
+      //setEditorState(newState);
       return 'handled';
     } else {
+      console.log("jestem");
       return 'not-handled';
     }
   };
 
   const keyBinding = (e: SyntheticKeyboardEvent): string | null => {
-    console.log(e.code);
     if (e.code === 'TAB'/* `TAB` key */ ) {
-      setEditorState(RichUtils.onTab(e, editorState, 4));
       return 'myeditor-tab';
     }
     return getDefaultKeyBinding(e);
@@ -75,9 +81,6 @@ export const RichTextEditor: FC = () => {
     return '';
   };
 
-
-  const editor = useRef(null);
-
   return (
     <Wrapper>
       <Container>
@@ -85,14 +88,12 @@ export const RichTextEditor: FC = () => {
         <Space>
           <Editor
             placeholder="Co tam ?"
-            ref={editor}
             editorState={editorState}
             handleKeyCommand={handleKeyCommand}
             onChange={change}
             blockStyleFn={myBlockStyleFn}
             keyBindingFn={keyBinding}
             onTab={tabHandler}
-            spellCheck={true}
           />
         </Space>
       </Container>
