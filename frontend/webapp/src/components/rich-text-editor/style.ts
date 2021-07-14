@@ -23,6 +23,7 @@ export const Space = styled.div`
   background-color: ${({ theme }) => theme.colors.lighterBackground};
   height: 85%;
   border-radius: 5px;
+  box-shadow: inset 0px 1px 8px 0px ${({ theme }) => theme.colors.background};;
 
   .custom-blockquote {
     color: #999;
