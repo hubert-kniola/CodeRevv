@@ -36,10 +36,11 @@ export const Space = styled.div`
   }
 
   .custome-code {
-    background: ${({ theme }) => theme.colors.setting};
+    background-color: ${({ theme }) => theme.colors.background};
+    opacity: 0.7;
     word-wrap: break-word;
     box-decoration-break: clone;
-    padding: 0.1rem 0.3rem 0.2rem;
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
     margin: 0;
   }
 `;

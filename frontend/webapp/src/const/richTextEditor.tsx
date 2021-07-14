@@ -5,6 +5,7 @@ import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 import CodeIcon from '@material-ui/icons/Code';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 
 export type InlineStyle = {
     label: string;
@@ -26,7 +27,7 @@ export const BLOCK_TYPES:  InlineStyle[] = [
     // { label: "H4", style: "header-four" },
     // { label: "H5", style: "header-five" },
     // { label: "H6", style: "header-six" },
-    { label: "Blockquote", style: "blockquote" },
+    { label: "Blockquote", style: "blockquote", icon: <FormatQuoteIcon />},
     { label: "UL", style: "unordered-list-item", icon: <FormatListBulletedIcon/>},
     { label: "OL", style: "ordered-list-item", icon: <FormatListNumberedIcon/> },
     { label: "Code Block", style: "code-block", icon: <CodeIcon /> }
