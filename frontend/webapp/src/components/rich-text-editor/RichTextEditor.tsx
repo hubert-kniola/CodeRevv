@@ -1,7 +1,11 @@
 import { FC, useState, useRef } from 'react';
-import { Editor, EditorState, RichUtils, ContentBlock } from 'draft-js';
+import { Editor, EditorState, RichUtils, ContentBlock, getDefaultKeyBinding, KeyBindingUtil, DraftHandleValue, Modifier } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
+
+//https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/draft-js/index.d.ts
+type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
+const { hasCommandModifier } = KeyBindingUtil;
 
 export const RichTextEditor: FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -10,15 +14,51 @@ export const RichTextEditor: FC = () => {
     setEditorState(() => state);
   };
 
-  const handleKeyCommand = (command: string, state: EditorState) => {
-    const newState = RichUtils.handleKeyCommand(state, command);
+  const handleKeyCommand = ( command: string, state: EditorState) => {
+    
+    if (command === 'myeditor-tab') {
+      let newContentState = Modifier.replaceText(
+        state.getCurrentContent(),
+        state.getSelection(),
+        '    '
+      );
+        setEditorState(state => EditorState.push(state, newContentState, 'insert-characters'));
+        return 'handled';
+
+    }
+    else
+    {
+      const newState = RichUtils.handleKeyCommand(state, command);
+  
+      if (newState) {
+        setEditorState(newState);
+        return 'handled';
+      }
+    }
+    return 'not-handled';
+  };
+
+  const tabHandler = (e: SyntheticKeyboardEvent) => {
+    e.preventDefault() ;
+    const newState = RichUtils.onTab(e, editorState, 4);
 
     if (newState) {
       setEditorState(newState);
       return 'handled';
+    } else {
+      return 'not-handled';
     }
-    return 'not-handled';
   };
+
+  const keyBinding = (e: SyntheticKeyboardEvent): string | null => {
+    console.log(e.code);
+    if (e.code === 'TAB'/* `TAB` key */ ) {
+      setEditorState(RichUtils.onTab(e, editorState, 4));
+      return 'myeditor-tab';
+    }
+    return getDefaultKeyBinding(e);
+  }
+
 
   const toggleInlineStyle = (inlineStyle: string) => {
     setEditorState((state) => RichUtils.toggleInlineStyle(state, inlineStyle));
@@ -35,6 +75,7 @@ export const RichTextEditor: FC = () => {
     return '';
   };
 
+
   const editor = useRef(null);
 
   return (
@@ -49,6 +90,9 @@ export const RichTextEditor: FC = () => {
             handleKeyCommand={handleKeyCommand}
             onChange={change}
             blockStyleFn={myBlockStyleFn}
+            keyBindingFn={keyBinding}
+            onTab={tabHandler}
+            spellCheck={true}
           />
         </Space>
       </Container>
