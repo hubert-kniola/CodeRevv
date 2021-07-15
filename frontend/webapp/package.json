@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.13.8",
-    "@draft-js-plugins/alignment": "^5.0.1",
     "@draft-js-plugins/drag-n-drop": "^4.2.1",
     "@draft-js-plugins/drag-n-drop-upload": "^4.1.1",
     "@draft-js-plugins/editor": "^4.1.0",

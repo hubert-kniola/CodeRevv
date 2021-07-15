@@ -1,115 +1,18 @@
-import React, { FC, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import {
-  convertFromRaw,
   EditorState,
   RichUtils,
   ContentBlock,
   getDefaultKeyBinding,
   Modifier,
-  RawDraftContentState,
 } from 'draft-js';
-
-import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
-import 'draft-js/dist/Draft.css';
-
-import Editor, { composeDecorators } from '@draft-js-plugins/editor';
-import createImagePlugin from '@draft-js-plugins/image';
-import createAlignmentPlugin from '@draft-js-plugins/alignment';
-import createFocusPlugin from '@draft-js-plugins/focus';
-import createResizeablePlugin from '@draft-js-plugins/resizeable';
-import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
-import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
-import mockUpload from './mock';
-
-const focusPlugin = createFocusPlugin();
-const resizeablePlugin = createResizeablePlugin();
-const blockDndPlugin = createBlockDndPlugin();
-const alignmentPlugin = createAlignmentPlugin();
-const { AlignmentTool } = alignmentPlugin;
-
-const decorator = composeDecorators(
-  resizeablePlugin.decorator,
-  alignmentPlugin.decorator,
-  focusPlugin.decorator,
-  blockDndPlugin.decorator
-);
-const imagePlugin = createImagePlugin({ decorator });
-
-const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
-  handleUpload: mockUpload,
-  addImage: imagePlugin.addImage,
-});
-
-const plugins = [
-  dragNDropFileUploadPlugin,
-  blockDndPlugin,
-  focusPlugin,
-  alignmentPlugin,
-  resizeablePlugin,
-  imagePlugin,
-];
-
-/* eslint-disable */
-const initialState = {
-  entityMap: {
-    0: {
-      type: 'IMAGE',
-      mutability: 'IMMUTABLE',
-      data: {
-        src: '/components/rich-text-editor/canada-landscape-small.jpg',
-      },
-    },
-  },
-  blocks: [
-    {
-      key: '9gm3s',
-      text:
-        'You can have images in your text field. This is a very rudimentary example, but you can enhance the image plugin with resizing, focus or alignment plugins.',
-      type: 'unstyled',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {},
-    },
-    {
-      key: 'ov7r',
-      text: ' ',
-      type: 'atomic',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [
-        {
-          offset: 0,
-          length: 1,
-          key: 0,
-        },
-      ],
-      data: {},
-    },
-    {
-      key: 'e23a8',
-      text: 'See advanced examples further down …',
-      type: 'unstyled',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {},
-    },
-  ],
-};
-/* eslint-enable */
-/* eslint-enable */
-
-
-
-
-
-//https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/draft-js/index.d.ts
-type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
+import Editor from '@draft-js-plugins/editor';
+import { Wrapper, Container, Space } from './style';
+import { plugins, SyntheticKeyboardEvent } from 'const';
 
 export const RichTextEditor: FC = () => {
-  const [editorState, setEditorState] = useState(EditorState.createWithContent(convertFromRaw(initialState as RawDraftContentState)));
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   const change = (state: EditorState) => {
     setEditorState(() => state);
@@ -135,7 +38,6 @@ export const RichTextEditor: FC = () => {
       //setEditorState(state => EditorState.push(state, newContentState, 'insert-characters'));
       return 'handled';
     } else {
-      console.log('jestem');
       return 'not-handled';
     }
   };
@@ -147,13 +49,7 @@ export const RichTextEditor: FC = () => {
     return getDefaultKeyBinding(e);
   };
 
-  const toggleInlineStyle = (inlineStyle: string) => {
-    setEditorState((state) => RichUtils.toggleInlineStyle(state, inlineStyle));
-  };
-
-  const toggleBlockType = (blockType: string) => {
-    setEditorState((state) => RichUtils.toggleBlockType(state, blockType));
-  };
+ 
 
   const myBlockStyleFn = (contentBlock: ContentBlock): string => {
     const type = contentBlock.getType();
@@ -167,7 +63,7 @@ export const RichTextEditor: FC = () => {
   return (
     <Wrapper>
       <Container>
-        <Toolbar editorState={editorState} lineToggle={toggleInlineStyle} blockToggle={toggleBlockType} />
+        <Toolbar editorState={editorState} setEditorState={setEditorState} />
         <Space>
           <Editor
             placeholder="Co tam ?"
@@ -180,7 +76,6 @@ export const RichTextEditor: FC = () => {
             ref={editorRef.current}
             plugins={plugins}
           />
-          <AlignmentTool />
         </Space>
       </Container>
     </Wrapper>
