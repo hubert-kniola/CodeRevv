@@ -13,20 +13,51 @@ import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
 import 'draft-js/dist/Draft.css';
 
-import Editor from '@draft-js-plugins/editor';
+import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import createImagePlugin from '@draft-js-plugins/image';
+import createAlignmentPlugin from '@draft-js-plugins/alignment';
+import createFocusPlugin from '@draft-js-plugins/focus';
+import createResizeablePlugin from '@draft-js-plugins/resizeable';
+import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
+import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
+import mockUpload from './mock';
 
+const focusPlugin = createFocusPlugin();
+const resizeablePlugin = createResizeablePlugin();
+const blockDndPlugin = createBlockDndPlugin();
+const alignmentPlugin = createAlignmentPlugin();
+const { AlignmentTool } = alignmentPlugin;
 
-const imagePlugin = createImagePlugin();
-const plugins = [imagePlugin];
+const decorator = composeDecorators(
+  resizeablePlugin.decorator,
+  alignmentPlugin.decorator,
+  focusPlugin.decorator,
+  blockDndPlugin.decorator
+);
+const imagePlugin = createImagePlugin({ decorator });
 
+const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
+  handleUpload: mockUpload,
+  addImage: imagePlugin.addImage,
+});
+
+const plugins = [
+  dragNDropFileUploadPlugin,
+  blockDndPlugin,
+  focusPlugin,
+  alignmentPlugin,
+  resizeablePlugin,
+  imagePlugin,
+];
+
+/* eslint-disable */
 const initialState = {
   entityMap: {
     0: {
       type: 'IMAGE',
       mutability: 'IMMUTABLE',
       data: {
-        src: 'components/rich-text-editor/canada-landscape-small.jpg',
+        src: '/components/rich-text-editor/canada-landscape-small.jpg',
       },
     },
   },
@@ -67,6 +98,7 @@ const initialState = {
     },
   ],
 };
+/* eslint-enable */
 /* eslint-enable */
 
 
@@ -148,6 +180,7 @@ export const RichTextEditor: FC = () => {
             ref={editorRef.current}
             plugins={plugins}
           />
+          <AlignmentTool />
         </Space>
       </Container>
     </Wrapper>
