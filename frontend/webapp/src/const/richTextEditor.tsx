@@ -17,6 +17,7 @@ import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
 import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
 import createDragNDropUploadPlugin, { readFile } from '@draft-js-plugins/drag-n-drop-upload';
+import { EditorState } from 'draft-js';
 //#endregion
 
 //#region PLUGINS_CONSTRUCTOR
@@ -50,21 +51,26 @@ export type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
 //ukręcony mały wałek. Ale kto nie ryzykuje ten w Rawiczu nie siedzi 
 //<<dla niewtajemniczonych w rawiczu jest więzienie>> 
 
-export type InlineStyle = {
+export type Style = {
     label: string;
     style: string;
     icon?: ReactElement;
 }
 
-//#region TOOLBAR_FUNCTION
-export const INLINE_STYLE: InlineStyle[] =[
+export type ToolbarProp = {
+    editorState: EditorState;
+    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
+  };
+  
+//#region TOOLBAR_OPTION
+export const INLINE_STYLE: Style[] =[
     { label: "Bold", style: "BOLD", icon: <FormatBoldIcon />},
     { label: "Italic", style: "ITALIC", icon: <FormatItalicIcon /> },
     { label: "Underline", style: "UNDERLINE", icon: <FormatUnderlinedIcon />},
     { label: "Monospace", style: "CODE", icon: <CodeIcon /> }
 ]
 
-export const BLOCK_TYPES:  InlineStyle[] = [
+export const BLOCK_TYPES:  Style[] = [
     { label: "H1", style: "header-one" },
     { label: "H2", style: "header-two" },
     { label: "H3", style: "header-three" },
@@ -76,6 +82,18 @@ export const BLOCK_TYPES:  InlineStyle[] = [
     { label: "OL", style: "ordered-list-item", icon: <FormatListNumberedIcon/> },
     { label: "Code Block", style: "code-block", icon: <CodeIcon /> }
   ];
+
+export const COLOR: Style[] = [
+    {label: "red", style: "rgba(255, 0, 0, 1.0)"},
+    {label: "salomon", style: "rgba(250, 128, 114, 1.0)"},
+    {label: "orange", style: "rgba(255, 127, 0, 1.0)"},
+    {label: "orange", style: "rgba(255, 236, 0, 1.0)"},
+    {label: "olive", style: "#8b8b01"},
+    {label: "green", style: "rgba(0, 180, 0, 1.0)"},
+    {label: "blue", style: "rgba(0, 0, 255, 1.0)"},
+    {label: "indigo", style: "rgba(75, 0, 130, 1.0)"},
+    {label: "violet", style: "rgba(127, 0, 255, 1.0)"},
+]
 
   //#endregion
 

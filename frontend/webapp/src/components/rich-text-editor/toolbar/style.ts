@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.div<{ height?: string }>`
   width: 100%;
   margin: 0;
-  height: 50px;
+  height: ${({ height }) => (height ? height : '50px')};
   background-color: ${({ theme }) => theme.colors.background};
   display: fixed;
   padding: 0.5rem;
@@ -18,8 +18,37 @@ export const Button = styled.div`
   margin: auto;
   display: flex;
   align-items: center;
+  padding: 0;
 
   &.active {
     color: ${({ theme }) => theme.colors.primary};
   }
 `;
+
+export const Color = styled.div<{ color: string }>`
+  background-color: ${({ color }) => color};
+  border: 2px solid ${({ color }) => color};
+  width: 15px;
+  min-height: 15px;
+  cursor: pointer;
+  margin: auto;
+  display: flex;
+  align-items: center;
+
+  &.active {
+    border-color: ${({ theme }) => theme.colors.text};
+  }
+
+  :hover {
+    border-color: ${({ theme }) => theme.colors.text};
+  }
+`;
+
+export const Span = styled.span<{color: string}>`
+:hover{
+  color: ${({color}) => color};
+}
+.active{
+    color: ${({color}) => color};
+  }
+`

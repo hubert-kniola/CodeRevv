@@ -1,4 +1,4 @@
-import { BLOCK_TYPES, INLINE_STYLE } from 'const';
+import { BLOCK_TYPES, INLINE_STYLE, ToolbarProp } from 'const';
 import { EditorState, RichUtils } from 'draft-js';
 import { FC, MouseEvent, ReactElement } from 'react';
 import { Container, Button } from './style';
@@ -23,10 +23,6 @@ const StyleButton: FC<ButtonProps> = ({ onToggle, icon, active, style }) => {
   );
 };
 
-type ToolbarProp = {
-  editorState: EditorState;
-  setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
-};
 
 const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState}) => {
   //inline

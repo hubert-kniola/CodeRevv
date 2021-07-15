@@ -1,19 +1,15 @@
 import { FC, useRef, useState } from 'react';
-import {
-  EditorState,
-  RichUtils,
-  ContentBlock,
-  getDefaultKeyBinding,
-  Modifier,
-} from 'draft-js';
+import { EditorState, RichUtils, ContentBlock, getDefaultKeyBinding, Modifier } from 'draft-js';
 import Toolbar from './toolbar/Toolbar';
 import Editor from '@draft-js-plugins/editor';
 import { Wrapper, Container, Space } from './style';
 import { plugins, SyntheticKeyboardEvent } from 'const';
+import { ColorControls } from './toolbar/ToolbarColor';
+// import ColorControls from './test'
 
 export const RichTextEditor: FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
+  const [placeholder, setPlaceholder] = useState('Co tam ?');
   const change = (state: EditorState) => {
     setEditorState(() => state);
   };
@@ -49,13 +45,21 @@ export const RichTextEditor: FC = () => {
     return getDefaultKeyBinding(e);
   };
 
- 
-
   const myBlockStyleFn = (contentBlock: ContentBlock): string => {
     const type = contentBlock.getType();
     if (type === 'blockquote') return 'custom-blockquote';
     else if (type === 'code-block') return 'custome-code';
     return '';
+  };
+
+  const focusHandler = () => {
+    setPlaceholder('');
+  };
+
+  const styleMap = {
+    STRIKETHROUGH: {
+      textDecoration: 'line-through',
+    },
   };
 
   const editorRef = useRef();
@@ -64,9 +68,11 @@ export const RichTextEditor: FC = () => {
     <Wrapper>
       <Container>
         <Toolbar editorState={editorState} setEditorState={setEditorState} />
+        <ColorControls editorState = {editorState} setEditorState={setEditorState}/>
         <Space>
           <Editor
-            placeholder="Co tam ?"
+            customStyleMap={styleMap}
+            placeholder={placeholder}
             editorState={editorState}
             handleKeyCommand={handleKeyCommand}
             onChange={change}
@@ -75,6 +81,7 @@ export const RichTextEditor: FC = () => {
             onTab={tabHandler}
             ref={editorRef.current}
             plugins={plugins}
+            onFocus={focusHandler}
           />
         </Space>
       </Container>
