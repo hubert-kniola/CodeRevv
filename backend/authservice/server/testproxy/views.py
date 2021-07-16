@@ -47,6 +47,13 @@ def test_create(request):
 
 @api_view(['PATCH'])
 @session_authentication
+def test_edit(request):
+    response = requests.patch(f"{proxy}/t/edit/{get_user_id(request)}", json=request.data)
+    return make_response_with_cookies(request, response, response.status_code)
+
+
+@api_view(['PATCH'])
+@session_authentication
 def test_whitelist(request, test_id):
     users_id = []
     for user_email in request.data['users']:
@@ -55,14 +62,6 @@ def test_whitelist(request, test_id):
     request.data['users'] = users_id
     response = requests.patch(f'{proxy}/t/whitelist/{test_id}', json=request.data)
     return make_response_with_cookies(request, response, response.status_code)
-
-
-@api_view(['GET'])
-@session_authentication
-def test_list(request):
-    user_id = get_user_id(request)
-    response = requests.get(f"{proxy}/t/list/{user_id}")
-    return make_response_with_cookies(request, {'tests': response.json()}, response.status_code)
 
 
 @api_view(['GET'])
@@ -103,42 +102,6 @@ def test_questions(request):
 
 
 # ===================================================================
-
-@api_view(['POST'])
-@session_authentication
-def test_user(request):
-    response = requests.post(f"{proxy}/t/user", json=request.data)
-    return make_response_with_cookies(request, response, response.status_code)
-
-
-@api_view(['DELETE'])
-@session_authentication
-def test_user(request):
-    response = requests.delete(
-        f"{proxy}/t/user/{request.data['test_id']}/{request.data['user_id']}")
-    return make_response_with_cookies(request, response, response.status_code)
-
-
-@api_view(['POST'])
-@session_authentication
-def test_question(request):
-    response = requests.post(f"{proxy}/t/question/{request.data['test_id']}", json=request.data['data'])
-    return make_response_with_cookies(request, response, response.status_code)
-
-
-@api_view(['DELETE'])
-@session_authentication
-def test_question(request):
-    response = requests.delete(f"{proxy}/t/question/{request.data['test_id']}/{request.data['question_id']}")
-    return make_response_with_cookies(request, response, response.status_code)
-
-
-@api_view(['PATCH'])
-@session_authentication
-def test_question(request):
-    response = requests.patch(f"{proxy}/t/question/{request.data['test_id']}/{request.data['question_id']}", json=request.data['data'])
-    return make_response_with_cookies(request, response, response.status_code)
-
 
 @api_view(['POST'])
 @session_authentication

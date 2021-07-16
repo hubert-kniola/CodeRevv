@@ -130,6 +130,12 @@ async def create_test(test: Test):
     return created_test
 
 
+@app.patch('/t/edit', status_code=201)
+async def edit_test(test: Test):
+    await engine.save(test)
+    return {'message': 'test modified'}
+
+
 @app.patch('/t/whitelist/{test_id}', status_code=201)
 async def whitelist_test(test_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
@@ -216,44 +222,6 @@ async def result_test(test_id, user_id):
 #         return {'status': 'the test is already finished'}
 
 
-# @app.post('/t/user/{test_id}/{user_id}', status_code=200)
-# async def add_user(test_id, user_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.users.append(int(user_id))
-#     await engine.save(test)
-#     return {'message': 'user added'}
-#
-#
-# @app.delete('/t/user/{test_id}/{user_id}', status_code=204)
-# async def delete_user(test_id, user_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.users.remove(int(user_id))
-#     await engine.save(test)
-#     return {'message': 'user deleted'}
-#
-#
-# @app.post('/t/question/{test_id}', status_code=200)
-# async def add_question(test_id, question: Question):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions.append(question)
-#     await engine.save(test)
-#     return {'message': 'question added'}
-#
-#
-# @app.delete('/t/question/{test_id}/{question_id}', status_code=204)
-# async def delete_question(test_id, question_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions.pop(int(question_id))
-#     await engine.save(test)
-#     return {'message': 'question deleted'}
-#
-#
-# @app.patch('/t/question/{test_id}/{question_id}', status_code=200)
-# async def modify_question(test_id, question_id, question: Question):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions[int(question_id)] = question
-#     await engine.save(test)
-#     return {'message': 'question modified'}
 
 
 if __name__ == '__main__':
