@@ -1,11 +1,10 @@
 import { FC, useRef, useState } from 'react';
-import { EditorState, RichUtils, ContentBlock, getDefaultKeyBinding, Modifier } from 'draft-js';
+import { EditorState, RichUtils, ContentBlock, getDefaultKeyBinding, Modifier, CompositeDecorator } from 'draft-js';
 import Toolbar from './toolbar/Toolbar';
 import Editor from '@draft-js-plugins/editor';
-import { Wrapper, Container, Space } from './style';
+import { Wrapper, Container, Space, Span } from './style';
 import { plugins, SyntheticKeyboardEvent } from 'const';
-import { ColorControls } from './toolbar/ToolbarColor';
-// import ColorControls from './test'
+
 
 export const RichTextEditor: FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -26,12 +25,18 @@ export const RichTextEditor: FC = () => {
 
   const tabHandler = (e: SyntheticKeyboardEvent) => {
     const newState = RichUtils.onTab(e, editorState, 4);
-
+    
+    const selection = editorState.getSelection();
+    const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+    
     if (newState) {
       e.preventDefault();
-      let newContentState = Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(), '    ');
-      setEditorState(newState);
-      //setEditorState(state => EditorState.push(state, newContentState, 'insert-characters'));
+      if(blockType === 'code-block'){
+        let newContentState = Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(), '    ');
+        setEditorState(state => EditorState.push(state, newContentState, 'insert-characters'));
+      }else{
+        setEditorState(newState);
+      }
       return 'handled';
     } else {
       return 'not-handled';
@@ -68,7 +73,6 @@ export const RichTextEditor: FC = () => {
     <Wrapper>
       <Container>
         <Toolbar editorState={editorState} setEditorState={setEditorState} />
-        <ColorControls editorState = {editorState} setEditorState={setEditorState}/>
         <Space>
           <Editor
             customStyleMap={styleMap}

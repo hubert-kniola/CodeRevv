@@ -10,6 +10,12 @@ export const Container = styled.div<{ height?: string }>`
   justify-content: center;
   border-radius: 15px 15px 0px 0px;
   border: 0px solid ${({ theme }) => theme.colors.lighterBackground};
+
+  .additional-function {
+    :hover {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+  }
 `;
 
 export const Button = styled.div`
@@ -23,6 +29,7 @@ export const Button = styled.div`
   &.active {
     color: ${({ theme }) => theme.colors.primary};
   }
+
 `;
 
 export const Color = styled.div<{ color: string }>`
@@ -44,11 +51,11 @@ export const Color = styled.div<{ color: string }>`
   }
 `;
 
-export const Span = styled.span<{color: string}>`
-:hover{
-  color: ${({color}) => color};
-}
-.active{
-    color: ${({color}) => color};
+export const Span = styled.span<{ color: string }>`
+  :hover {
+    color: ${({ color }) => color};
   }
-`
+  .active {
+    color: ${({ color }) => color};
+  }
+`;

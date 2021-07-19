@@ -26,3 +26,4 @@ export * from './code-editor/CodeCell';
 export * from './test-editor/QuestionCollection';
 export * from './question-editor/QuestionViewer';
 export * from './rich-text-editor/RichTextEditor'
+export * from './rich-text-editor/TEST'

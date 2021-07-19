@@ -7,7 +7,8 @@ import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 import CodeIcon from '@material-ui/icons/Code';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
-import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
 //#endregion 
 
 //#region EDITOR_PLUGINS
@@ -57,45 +58,49 @@ export type Style = {
     icon?: ReactElement;
 }
 
+export type Additional = {
+  label: string;
+  onClick: (contentState: React.Dispatch<React.SetStateAction<EditorState>>) => void 
+  icon?: ReactElement;
+  style: string;
+}
+
+//#region FUNCTION
+
+const Undo = (setEditorState: React.Dispatch<React.SetStateAction<EditorState>> ) => {
+  setEditorState(state => EditorState.undo(state));
+}
+
+const Redo = (setEditorState: React.Dispatch<React.SetStateAction<EditorState>>) => {
+  setEditorState(state => EditorState.redo(state));
+}
+//#endregion
+
 export type ToolbarProp = {
     editorState: EditorState;
     setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
   };
-  
+
 //#region TOOLBAR_OPTION
 export const INLINE_STYLE: Style[] =[
     { label: "Bold", style: "BOLD", icon: <FormatBoldIcon />},
     { label: "Italic", style: "ITALIC", icon: <FormatItalicIcon /> },
     { label: "Underline", style: "UNDERLINE", icon: <FormatUnderlinedIcon />},
-    { label: "Monospace", style: "CODE", icon: <CodeIcon /> }
+    //{ label: "Monospace", style: "CODE", icon: <CodeIcon /> }
 ]
 
 export const BLOCK_TYPES:  Style[] = [
-    { label: "H1", style: "header-one" },
-    { label: "H2", style: "header-two" },
-    { label: "H3", style: "header-three" },
-    // { label: "H4", style: "header-four" },
-    // { label: "H5", style: "header-five" },
-    // { label: "H6", style: "header-six" },
-    { label: "Blockquote", style: "blockquote", icon: <FormatQuoteIcon />},
     { label: "UL", style: "unordered-list-item", icon: <FormatListBulletedIcon/>},
     { label: "OL", style: "ordered-list-item", icon: <FormatListNumberedIcon/> },
-    { label: "Code Block", style: "code-block", icon: <CodeIcon /> }
+    { label: "Code Block", style: "code-block", icon: <CodeIcon /> },
   ];
 
-export const COLOR: Style[] = [
-    {label: "red", style: "rgba(255, 0, 0, 1.0)"},
-    {label: "salomon", style: "rgba(250, 128, 114, 1.0)"},
-    {label: "orange", style: "rgba(255, 127, 0, 1.0)"},
-    {label: "orange", style: "rgba(255, 236, 0, 1.0)"},
-    {label: "olive", style: "#8b8b01"},
-    {label: "green", style: "rgba(0, 180, 0, 1.0)"},
-    {label: "blue", style: "rgba(0, 0, 255, 1.0)"},
-    {label: "indigo", style: "rgba(75, 0, 130, 1.0)"},
-    {label: "violet", style: "rgba(127, 0, 255, 1.0)"},
+export const ADDITIONAL_FUNCTIONS: Additional[] =[
+  {label: "Undo", onClick: Undo, icon: <UndoIcon/>, style: "additional-function"},
+  {label: "Redo", onClick: Redo, icon: <RedoIcon/>, style: "additional-function"},
 ]
-
   //#endregion
+
 
 //#region ADDITIONAL_FUNCTIONS
 export default function mockUpload(data?: any, success?: any, progress?: any) {
@@ -113,4 +118,6 @@ export default function mockUpload(data?: any, success?: any, progress?: any) {
 
   doProgress();
 }
+
+
 //#endregion

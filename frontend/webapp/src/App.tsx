@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Home, NotFound, Loading } from 'pages';
-import { ProtectedRoute, CodeEditor, RichTextEditor } from 'components';
+import { ProtectedRoute, RichTextEditor } from 'components';
 import { TestEditor, TestList, TestCodeAnswer } from 'containers';
 
 const Login = lazy(() => import('pages/Login'));

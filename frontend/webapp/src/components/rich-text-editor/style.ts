@@ -25,23 +25,21 @@ export const Space = styled.div`
   border-radius: 5px;
   box-shadow: inset 0px 1px 8px 0px ${({ theme }) => theme.colors.background};;
 
-  .custom-blockquote {
-    color: #999;
-    font-family: 'Hoefler Text', Georgia, serif;
-    font-style: italic;
-    text-align: center;
-    border-left: 2px solid ${({ theme }) => theme.colors.primary};
-    padding: 0.25rem;
-    padding-left: 1rem;
-    margin: 0 0 0 0.5rem;
-  }
-
   .custome-code {
     background-color: ${({ theme }) => theme.colors.background};
+    border-left: 2px solid ${({ theme }) => theme.colors.primary};
     opacity: 0.7;
     word-wrap: break-word;
     box-decoration-break: clone;
-    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    padding: 0.1rem 0.3rem 0.1rem 1rem;
     margin: 0;
   }
 `;
+
+export const Span = styled.span`
+  color: green;
+
+  :hover{
+    color: red;
+  }
+`

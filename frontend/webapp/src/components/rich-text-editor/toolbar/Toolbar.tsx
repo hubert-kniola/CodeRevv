@@ -1,30 +1,36 @@
-import { BLOCK_TYPES, INLINE_STYLE, ToolbarProp } from 'const';
+import { ADDITIONAL_FUNCTIONS, BLOCK_TYPES, INLINE_STYLE, ToolbarProp } from 'const';
 import { EditorState, RichUtils } from 'draft-js';
 import { FC, MouseEvent, ReactElement } from 'react';
 import { Container, Button } from './style';
 
 type ButtonProps = {
-  onToggle: (inlineStyle: string) => void;
+  onToggle?: (inlineStyle: string) => void;
+  onClick?: () => void;
   icon: ReactElement | string;
   active: boolean;
   style: string;
 };
 
-const StyleButton: FC<ButtonProps> = ({ onToggle, icon, active, style }) => {
+const StyleButton: FC<ButtonProps> = ({ onToggle, onClick, icon, active, style }) => {
   const toggleHandler = (e: MouseEvent<HTMLSpanElement>) => {
+
     e.preventDefault();
-    onToggle(style);
+    if (onToggle != null) {
+      onToggle(style);
+    } else if (onClick != null) {
+      onClick();
+    }
   };
 
+
   return (
-    <Button className={active ? 'active' : ''} onMouseDown={toggleHandler}>
+    <Button className={onToggle != null ? (active ? 'active' : '') : style} onMouseDown={toggleHandler}>
       {icon}
     </Button>
   );
 };
 
-
-const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState}) => {
+const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
   //inline
   const currentStyle = editorState.getCurrentInlineStyle();
 
@@ -33,11 +39,11 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState}) => {
   const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
 
   const toggleInlineStyle = (inlineStyle: string) => {
-    setEditorState((state) => RichUtils.toggleInlineStyle(state, inlineStyle));
+    setEditorState((state) => RichUtils.toggleInlineStyle(state, inlineStyle!));
   };
 
   const toggleBlockType = (blockType: string) => {
-    setEditorState((state) => RichUtils.toggleBlockType(state, blockType));
+    setEditorState((state) => RichUtils.toggleBlockType(state, blockType!));
   };
 
   return (
@@ -58,6 +64,16 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState}) => {
           active={type.style === blockType}
           icon={type.icon ? type.icon : type.label}
           onToggle={toggleBlockType}
+          style={type.style}
+        />
+      ))}
+
+      {ADDITIONAL_FUNCTIONS.map((type) => (
+        <StyleButton
+          key={type.label}
+          active={false}
+          icon={type.icon ? type.icon : type.label}
+          onClick={() => type.onClick(setEditorState)}
           style={type.style}
         />
       ))}
