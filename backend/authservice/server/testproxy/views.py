@@ -60,7 +60,7 @@ def test_whitelist(request, test_id):
         user = AuthUser.objects.get(email=user_email)
         users_id.append(user.id)
     request.data['users'] = users_id
-    response = requests.patch(f'{proxy}/t/whitelist/{test_id}', json=request.data)
+    response = requests.patch(f'{proxy}/t/whitelist/{test_id}/{get_user_id(request)}', json=request.data)
     return make_response_with_cookies(request, response, response.status_code)
 
 
@@ -89,7 +89,7 @@ def creator_tests(request):
 @api_view(['DELETE'])
 @session_authentication
 def test_delete(request):
-    response = requests.delete(f"{proxy}/t/delete/{request.data['test_id']}")
+    response = requests.delete(f"{proxy}/t/delete/{request.data['test_id']}/{get_user_id(request)}")
     return make_response_with_cookies(request, response, response.status_code)
 
 

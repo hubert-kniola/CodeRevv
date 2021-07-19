@@ -130,27 +130,36 @@ async def create_test(test: Test):
     return created_test
 
 
-@app.patch('/t/edit', status_code=201)
-async def edit_test(test: Test):
-    await engine.save(test)
-    return {'message': 'test modified'}
+@app.patch('/t/edit/{user_id}', status_code=201)
+async def edit_test(test: Test, user_id):
+    if test.creator is user_id:
+        await engine.save(test)
+        return {'message': 'test modified'}
+    else:
+        return {'message': 'request send not by creator'}
 
 
-@app.patch('/t/whitelist/{test_id}', status_code=201)
-async def whitelist_test(test_id, request: Request):
+@app.patch('/t/whitelist/{test_id}/{user_id}', status_code=201)
+async def whitelist_test(test_id, user_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    request = await request.json()
-    for user in request['users']:
-        test.users[str(user)] = TestUser(attempt_count=0, finished=False)
-    await engine.save(test)
-    return {'message': 'whitelist updated'}
+    if test.creator is user_id:
+        request = await request.json()
+        for user in request['users']:
+            test.users[str(user)] = TestUser(attempt_count=0, finished=False)
+        await engine.save(test)
+        return {'message': 'whitelist updated'}
+    else:
+        return {'message': 'request send not by creator'}
 
 
-@app.delete('/t/delete/{test_id}', status_code=204)
-async def delete_test(test_id):
+@app.delete('/t/delete/{test_id}/{user_id}', status_code=204)
+async def delete_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    await engine.delete(test)
-    return {'message': 'test deleted'}
+    if test.creator is user_id:
+        await engine.delete(test)
+        return {'message': 'test deleted'}
+    else:
+        return {'message': 'request send not by creator'}
 
 
 @app.get('/t/questions/{creator_id}', response_model=List[Question], status_code=200)
@@ -220,8 +229,6 @@ async def result_test(test_id, user_id):
 #         return {'status': 'the test has just finished'}
 #     else:
 #         return {'status': 'the test is already finished'}
-
-
 
 
 if __name__ == '__main__':
