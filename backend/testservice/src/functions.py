@@ -1,16 +1,4 @@
-from typing import List
-
-from bson import ObjectId
-from fastapi import FastAPI, Response, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
-from motor.motor_asyncio import AsyncIOMotorClient
-from datetime import datetime
-from collections import defaultdict
-
-from .models import Test, Question, UserAnswer
-from ...codeservice.src import driver
-
+from .models import Test, UserAnswer
 
 
 def check_answers(test: Test):
