@@ -8,6 +8,7 @@ class UserAnswer(EmbeddedModel):
     user: int
     comment: Optional[str]
     score: float
+    result_statistics: Optional[str]
 
 
 class TestAnswer(EmbeddedModel):
@@ -24,6 +25,10 @@ class Question(EmbeddedModel):
     answers: List[TestAnswer]
     max_score: Optional[float]
     user_answers: Optional[List[UserAnswer]]
+    # ======= Judge0 ========
+    creator_code: Optional[str]
+    example_input: Optional[str]
+    input_type: [Optional]
 
 
 class TestUser(EmbeddedModel):
