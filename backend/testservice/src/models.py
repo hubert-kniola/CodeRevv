@@ -28,7 +28,7 @@ class Question(EmbeddedModel):
     # ======= Judge0 ========
     creator_code: Optional[str]
     example_input: Optional[str]
-    input_type: [Optional]
+    input_type: Optional[str]
 
 
 class TestUser(EmbeddedModel):

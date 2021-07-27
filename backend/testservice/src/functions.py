@@ -53,48 +53,49 @@ def run_code(frame: str):
 def validate_codes(input_type: str, c_code: str, u_code: str):
     creator_fname = findall(r'\s([a-zA-Z]*_*[a-zA-Z])', c_code)
     user_fname = findall(r'\s([a-zA-Z]*_*[a-zA-Z])', u_code)
-    matcher = {
-        'str': ''.join(choices(
-                string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
-                k=10)),
-        'list': sample(range(0, 100), 10),
-        'int': randint(0, 100),
-        'float': uniform(0, 100)
-    }
-    frame = f"""
-    from random import choices, sample, randint, random, uniform
-    import string
+    # matcher = {
+    #     'str': ''.join(choices(
+    #             string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
+    #             k=10)),
+    #     'list': sample(range(0, 100), 10),
+    #     'int': randint(0, 100),
+    #     'float': uniform(0, 100)
+    # }
+    frame = '''from random import choices, sample, randint, random, uniform
+import string
+import sys, os    
+
+def matcher(typ):
+    if typ == 'str':
+        return ''.join(choices(
+            string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
+            k=10))
+    elif typ == 'list':
+        return sample(range(0, 100), 10)
+    elif typ == 'int':
+        return randint(0, 100)
+    else:
+        return round(uniform(0, 100), 5)
     
-    matcher = {
-        'str': ''.join(choices(
-                string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
-                k=10)),
-        'list': sample(range(0, 100), 10),
-        'int': randint(0, 100),
-        'float': uniform(0, 100)
-    }
+''' + str(u_code) + '''
     
-    print = lambda args*: pass
-    pprint = lambda args*: pass
+''' + str(c_code) + '''
     
-    {u_code}
-    
-    {c_code}
-    
-    from random import randint, sample
-    is_correct = True
-    for i in range(5):
-        case = matcher.get({input_type})
-        creator_result = {creator_fname}(case)
-        user_result = {user_fname}(case)
-        if creator_result is user_result:
-            print(i,case,creator_result,user_result,'True')
-        else
-            is_correct = False
-            print(i,case,creator_result,user_result,'False')
-    print(is_correct)
-    """
-    total_result = run_code(frame)
+is_correct = True
+for i in range(5):
+    sys.stdout = open(os.devnull, 'w')
+    case = matcher(\'''' + input_type + '''\')
+    creator_result = ''' + str(creator_fname[0]) + '''(case)
+    user_result = ''' + str(user_fname[0]) + '''(case)
+    sys.stdout = sys.__stdout__
+    if creator_result == user_result:
+        print(i,case,creator_result,user_result,'True')
+    else:
+        is_correct = False
+        print(i,case,creator_result,user_result,'False')
+print(is_correct)
+    '''
+    total_result = run_code(str(frame))
 
     return total_result
 
@@ -120,24 +121,25 @@ def check_answers(test: Test):
                     elif user in answer.users_voted and not answer.is_correct:
                         score -= points_for_answer
 
+                score = 0 if score <= 0 else score
+
+                ua = UserAnswer(user=user, score=score)
+
+                if not question.user_answers:
+                    question.user_answers = [ua]
+                elif ua not in question.user_answers:
+                    question.user_answers.append(ua)
+
             if question.question_type == 'open':
                 for user_answer in question.user_answers:
-                    question_result = validate_codes(question.creator_code, user_answer.content)
-                    find_is_correct = question_result['output'].split(" ")[-1]
-                    if find_is_correct is 'True':
+                    question_result = validate_codes(question.input_type, question.creator_code, user_answer.content)
+                    find_is_correct = question_result['output'].split()[-1]
+                    user_answer.result_statistics = question_result['output']
+                    if find_is_correct == 'True':
                         score = question.max_score
                     else:
                         score = 0
-
-
-            score = 0 if score <= 0 else score
-
-            ua = UserAnswer(user=user, score=score)
-
-            if not question.user_answers:
-                question.user_answers = [ua]
-            elif ua not in question.user_answers:
-                question.user_answers.append(ua)
+                    user_answer.score = score
 
     test.users = users
     test.questions = questions
