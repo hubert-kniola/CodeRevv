@@ -132,7 +132,7 @@ async def create_test(test: Test):
 
 @app.patch('/t/edit/{user_id}', status_code=201)
 async def edit_test(test: Test, user_id):
-    if test.creator is user_id:
+    if test.creator is int(user_id):
         await engine.save(test)
         return {'message': 'test modified'}
     else:
@@ -142,7 +142,7 @@ async def edit_test(test: Test, user_id):
 @app.patch('/t/whitelist/{test_id}/{user_id}', status_code=201)
 async def whitelist_test(test_id, user_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    if test.creator is user_id:
+    if test.creator is int(user_id):
         request = await request.json()
         for user in request['users']:
             test.users[str(user)] = TestUser(attempt_count=0, finished=False)
@@ -155,7 +155,7 @@ async def whitelist_test(test_id, user_id, request: Request):
 @app.delete('/t/delete/{test_id}/{user_id}', status_code=204)
 async def delete_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    if test.creator is user_id:
+    if test.creator is int(user_id):
         await engine.delete(test)
         return {'message': 'test deleted'}
     else:

@@ -87,7 +87,7 @@ def test_create_test():
 
 
 def test_whitelist_test():
-    response = client.patch(f'/t/whitelist/{test_id}', json=id_list)
+    response = client.patch(f'/t/whitelist/{test_id}/55', json=id_list)
     assert response.status_code == 201
     assert response.json() == {'message': 'whitelist updated'}
 
@@ -126,6 +126,6 @@ def test_result_test():
 
 
 def test_delete_test():
-    response = client.delete(f'/t/delete/{test_id}')
+    response = client.delete(f'/t/delete/{test_id}/55')
     assert response.status_code == 204
     assert response.json() == {'message': 'test deleted'}
