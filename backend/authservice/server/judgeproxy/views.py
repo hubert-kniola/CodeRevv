@@ -4,10 +4,12 @@ from rest_framework.response import Response
 
 from time import sleep
 from typing import Callable, Dict
+from re import findall
 
 from ..utility import make_response_with_cookies, session_authentication
 
 proxy = r'http://3.18.215.227:2358'
+testservice = r'http://127.0.0.1:8080'
 
 
 def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict[str, str]], bool], interval=0.5, retries=120) -> Response:
@@ -45,11 +47,37 @@ def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict
     return response
 
 
+def validate_codes(case_code: str, u_code: str):
+    user_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', u_code)
+    case_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', case_code)
+    frame = '''from random import choices, sample, randint, random, uniform
+import string
+import sys, os    
+
+''' + str(case_code) + '''
+
+''' + str(u_code) + '''
+
+is_correct = True
+for i in range(5):
+    sys.stdout = open(os.devnull, 'w')
+    case = ''' + str(case_fname[0]) + '''()
+    user_result = ''' + str(user_fname[0]) + '''(case)
+    sys.stdout = sys.__stdout__
+    print(i,case,user_result)
+    '''
+
+    return frame
+
+
 @api_view(['POST'])
 @session_authentication
 def run_python(request):
+    response = requests.post(f"{testservice}/t/case_code/{request.data['test_id']}", json=request.data['content'])
+    frame = validate_codes(response.json()['case_code'], request.data['code'])
+
     payload = {
-        'source_code': request.data['code'],
+        'source_code': frame,
         'language_id': 71,
     }
 

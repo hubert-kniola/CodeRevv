@@ -7,97 +7,9 @@ from re import findall
 import requests
 from time import sleep
 from typing import Callable, Dict
-import string
+from .code.driver_python import validate_codes
 
 proxy = r'http://3.18.215.227:2358'
-
-
-def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict[str, str]], bool], interval=0.5, retries=120) -> Response:
-    response = callable()
-
-    while not predicate(response.json()):
-        response = callable()
-        sleep(interval)
-
-        retries -= 1
-        if retries < 0:
-            raise TimeoutError('execution took too long')
-
-    return response
-
-
-def run_code(frame: str):
-    payload = {
-        'source_code': frame,
-        'language_id': 71,
-    }
-
-    response = requests.post(f"{proxy}/submissions", json=payload)
-    token = response.json()['token']
-
-    response = force_await_response(
-        callable=lambda: requests.get(f"{proxy}/submissions/{token}"),
-        predicate=lambda resp: resp['status']['id'] != 1
-    )
-    data = response.json()
-    result = {
-        'success': data['status']['id'] == 3,
-        'time': data['time'],
-        'status': data['status']['description']
-    }
-
-    result['output'] = data['stdout'] if result['success'] else data['stderr']
-    return result
-
-
-def validate_codes(input_type: str, c_code: str, u_code: str):
-    creator_fname = findall(r'\s([a-zA-Z]*_*[a-zA-Z])', c_code)
-    user_fname = findall(r'\s([a-zA-Z]*_*[a-zA-Z])', u_code)
-    # matcher = {
-    #     'str': ''.join(choices(
-    #             string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
-    #             k=10)),
-    #     'list': sample(range(0, 100), 10),
-    #     'int': randint(0, 100),
-    #     'float': uniform(0, 100)
-    # }
-    frame = '''from random import choices, sample, randint, random, uniform
-import string
-import sys, os    
-
-def matcher(typ):
-    if typ == 'str':
-        return ''.join(choices(
-            string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
-            k=10))
-    elif typ == 'list':
-        return sample(range(0, 100), 10)
-    elif typ == 'int':
-        return randint(0, 100)
-    else:
-        return round(uniform(0, 100), 5)
-    
-''' + str(u_code) + '''
-    
-''' + str(c_code) + '''
-    
-is_correct = True
-for i in range(5):
-    sys.stdout = open(os.devnull, 'w')
-    case = matcher(\'''' + input_type + '''\')
-    creator_result = ''' + str(creator_fname[0]) + '''(case)
-    user_result = ''' + str(user_fname[0]) + '''(case)
-    sys.stdout = sys.__stdout__
-    if creator_result == user_result:
-        print(i,case,creator_result,user_result,'True')
-    else:
-        is_correct = False
-        print(i,case,creator_result,user_result,'False')
-print(is_correct)
-    '''
-    total_result = run_code(str(frame))
-
-    return total_result
 
 
 def check_answers(test: Test):
@@ -132,7 +44,7 @@ def check_answers(test: Test):
 
             if question.question_type == 'open':
                 for user_answer in question.user_answers:
-                    question_result = validate_codes(question.input_type, question.creator_code, user_answer.content)
+                    question_result = validate_codes(question.case_amount, question.creator_code, question.generate_case, user_answer.content)
                     find_is_correct = question_result['output'].split()[-1]
                     user_answer.result_statistics = question_result['output']
                     if find_is_correct == 'True':

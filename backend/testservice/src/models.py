@@ -27,8 +27,8 @@ class Question(EmbeddedModel):
     user_answers: Optional[List[UserAnswer]]
     # ======= Judge0 ========
     creator_code: Optional[str]
-    example_input: Optional[str]
-    input_type: Optional[str]
+    generate_case: Optional[str]
+    case_amount: Optional[int]
 
 
 class TestUser(EmbeddedModel):

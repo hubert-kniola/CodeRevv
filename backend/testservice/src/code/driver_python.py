@@ -1,37 +1,81 @@
-# from random import randrange, randint, sample, choices
-# import string
-# import re
-# from io import StringIO
-# from contextlib import redirect_stdout
-#
-#
-# def convert_to_code(code, input):
-#     function_name = re.findall(r'\s([a-zA-Z]*_*[a-zA-Z])', code)
-#     code = 'case = ' + input + '\n' + code + f'\nprint({function_name[0]}(case))'
-#     return exec(code)
-#
-#
-# def python_driver(creator_code, user_code, result_type, case_amount, min, max, element_amount):
-#     if result_type is 'list':
-#         for i in range(case_amount):
-#             case = sample(range(min, max), element_amount)
-#             correct = convert_to_code(creator_code, case)
-#             user = convert_to_code(user_code, case)
-#             return 'The results are identical' if correct == user else 'The results are not identical'
-#
-#     elif result_type is 'int':
-#         for i in range(case_amount):
-#             case = randint(min, max)
-#             correct = convert_to_code(creator_code, case)
-#             user = convert_to_code(user_code, case)
-#             return 'The results are identical' if correct == user else 'The results are not identical'
-#
-#     elif result_type is 'string':
-#         for i in range(case_amount):
-#             case = ''.join(choices(
-#                 string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation + string.whitespace,
-#                 k=element_amount))
-#             correct = convert_to_code(creator_code, case)
-#             user = convert_to_code(user_code, case)
-#             return 'The results are identical' if correct == user else 'The results are not identical'
-#
+from random import choices, sample, randint, random, uniform
+from requests import Response
+from ..models import Test, UserAnswer
+from re import findall
+import requests
+from time import sleep
+from typing import Callable, Dict
+
+proxy = r'http://3.18.215.227:2358'
+
+
+def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict[str, str]], bool], interval=0.5,
+                         retries=120) -> Response:
+    response = callable()
+
+    while not predicate(response.json()):
+        response = callable()
+        sleep(interval)
+
+        retries -= 1
+        if retries < 0:
+            raise TimeoutError('execution took too long')
+
+    return response
+
+
+def run_code(frame: str):
+    payload = {
+        'source_code': frame,
+        'language_id': 71,
+    }
+
+    response = requests.post(f"{proxy}/submissions", json=payload)
+    token = response.json()['token']
+
+    response = force_await_response(
+        callable=lambda: requests.get(f"{proxy}/submissions/{token}"),
+        predicate=lambda resp: resp['status']['id'] != 1
+    )
+    data = response.json()
+    result = {
+        'success': data['status']['id'] == 3,
+        'time': data['time'],
+        'status': data['status']['description']
+    }
+
+    result['output'] = data['stdout'] if result['success'] else data['stderr']
+    return result
+
+
+def validate_codes(case_amount: int, c_code: str, case_code: str, u_code: str):
+    creator_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', c_code)
+    user_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', u_code)
+    case_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', case_code)
+    frame = '''from random import choices, sample, randint, random, uniform
+import string
+import sys, os    
+
+''' + str(case_code) + '''
+
+''' + str(u_code) + '''
+
+''' + str(c_code) + '''
+
+is_correct = True
+for i in range(\'''' + str(case_amount) + '''\'):
+    sys.stdout = open(os.devnull, 'w')
+    case = ''' + str(case_fname[0]) + '''()
+    creator_result = ''' + str(creator_fname[0]) + '''(case)
+    user_result = ''' + str(user_fname[0]) + '''(case)
+    sys.stdout = sys.__stdout__
+    if creator_result == user_result:
+        print(i,case,creator_result,user_result,'True')
+    else:
+        is_correct = False
+        print(i,case,creator_result,user_result,'False')
+print(is_correct)
+    '''
+    total_result = run_code(str(frame))
+
+    return total_result

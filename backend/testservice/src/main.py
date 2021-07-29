@@ -216,6 +216,17 @@ async def result_test(test_id, user_id):
     return get_test_with_user_answers_for_user(test, user_id)
 
 
+# ==== Judge0 =====
+
+@app.get('/t/case_code/{test_id}', status_code=200)
+async def case_code(test_id, request: Request):
+    request = await request.json()
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    questions = test.questions
+    question = next((x for x in questions if x.content == request['content']), None)
+    return {'case_code': question.generate_case}
+
+
 # @app.patch('/t/finish/{test_id}', status_code=200)
 # async def finish_test(test_id):
 #     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
