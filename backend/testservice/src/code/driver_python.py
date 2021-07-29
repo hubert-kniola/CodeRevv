@@ -5,8 +5,7 @@ from re import findall
 import requests
 from time import sleep
 from typing import Callable, Dict
-
-proxy = r'http://3.18.215.227:2358'
+from ..configure import judgeproxy
 
 
 def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict[str, str]], bool], interval=0.5,
@@ -30,11 +29,11 @@ def run_code(frame: str):
         'language_id': 71,
     }
 
-    response = requests.post(f"{proxy}/submissions", json=payload)
+    response = requests.post(f"{judgeproxy}/submissions", json=payload)
     token = response.json()['token']
 
     response = force_await_response(
-        callable=lambda: requests.get(f"{proxy}/submissions/{token}"),
+        callable=lambda: requests.get(f"{judgeproxy}/submissions/{token}"),
         predicate=lambda resp: resp['status']['id'] != 1
     )
     data = response.json()

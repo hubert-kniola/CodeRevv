@@ -1,15 +1,13 @@
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from ..configure import testservice, judgeproxy
 
 from time import sleep
 from typing import Callable, Dict
 from re import findall
 
 from ..utility import make_response_with_cookies, session_authentication
-
-proxy = r'http://3.18.215.227:2358'
-testservice = r'http://127.0.0.1:8080'
 
 
 def force_await_response(callable: Callable[[], None], predicate: Callable[[Dict[str, str]], bool], interval=0.5, retries=120) -> Response:
@@ -81,11 +79,11 @@ def run_python(request):
         'language_id': 71,
     }
 
-    response = requests.post(f"{proxy}/submissions", json=payload)
+    response = requests.post(f"{judgeproxy}/submissions", json=payload)
     token = response.json()['token']
 
     response = force_await_response(
-        callable=lambda: requests.get(f"{proxy}/submissions/{token}"),
+        callable=lambda: requests.get(f"{judgeproxy}/submissions/{token}"),
         predicate=lambda resp: resp['status']['id'] != 1
     )
 
