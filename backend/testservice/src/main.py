@@ -218,12 +218,12 @@ async def result_test(test_id, user_id):
 
 # ==== Judge0 =====
 
-@app.get('/t/case_code/{test_id}', status_code=200)
+@app.post('/r/case_code/{test_id}', status_code=200)
 async def case_code(test_id, request: Request):
     request = await request.json()
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     questions = test.questions
-    question = next((x for x in questions if x.content == request['content']), None)
+    question = next(item for item in questions if item.content == request)
     return {'case_code': question.generate_case}
 
 

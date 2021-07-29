@@ -73,7 +73,7 @@ for i in range(5):
 @api_view(['POST'])
 @session_authentication
 def run_python(request):
-    response = requests.post(f"{testservice}/t/case_code/{request.data['test_id']}", json=request.data['content'])
+    response = requests.post(f"{testservice}/r/case_code/{request.data['test_id']}", json=request.data['content'])
     frame = validate_codes(response.json()['case_code'], request.data['code'])
 
     payload = {

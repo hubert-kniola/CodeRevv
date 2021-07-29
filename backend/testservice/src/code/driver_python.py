@@ -63,7 +63,7 @@ import sys, os
 ''' + str(c_code) + '''
 
 is_correct = True
-for i in range(\'''' + str(case_amount) + '''\'):
+for i in range(''' + str(case_amount) + '''):
     sys.stdout = open(os.devnull, 'w')
     case = ''' + str(case_fname[0]) + '''()
     creator_result = ''' + str(creator_fname[0]) + '''(case)
