@@ -13,6 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from .models import Test, Question, TestUser
 from datetime import datetime
+from .code.driver_python import run_code, validate_live_codes
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
@@ -218,28 +219,16 @@ async def result_test(test_id, user_id):
 
 # ==== Judge0 =====
 
-@app.post('/r/case_code/{test_id}', status_code=200)
-async def case_code(test_id, request: Request):
+
+@app.post('/r/python', status_code=200)
+async def live_python(request: Request):
     request = await request.json()
-    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    test = await engine.find_one(Test, Test.id == ObjectId(request['test_id']))
     questions = test.questions
-    question = next(item for item in questions if item.content == request)
-    return {'case_code': question.generate_case}
-
-
-# @app.patch('/t/finish/{test_id}', status_code=200)
-# async def finish_test(test_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     if not test.is_finished:
-#         test.is_finished = True
-#
-#         if test.users:
-#             test = check_answers(test)
-#
-#         await engine.save(test)
-#         return {'status': 'the test has just finished'}
-#     else:
-#         return {'status': 'the test is already finished'}
+    question = next(item for item in questions if item.index == request['index'])
+    frame = validate_live_codes(question.generate_case, request['code'])
+    output = run_code(frame)
+    return output
 
 
 if __name__ == '__main__':

@@ -47,7 +47,10 @@ def run_code(frame: str):
     return result
 
 
-def validate_codes(case_amount: int, c_code: str, case_code: str, u_code: str):
+# ============ Judge0 ==============
+
+
+def validate_final_codes(case_amount: int, c_code: str, case_code: str, u_code: str):
     creator_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', c_code)
     user_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', u_code)
     case_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', case_code)
@@ -65,8 +68,10 @@ is_correct = True
 for i in range(''' + str(case_amount) + '''):
     sys.stdout = open(os.devnull, 'w')
     case = ''' + str(case_fname[0]) + '''()
-    creator_result = ''' + str(creator_fname[0]) + '''(case)
-    user_result = ''' + str(user_fname[0]) + '''(case)
+    if type(case) != type(list):
+        case = [case] 
+    creator_result = ''' + str(creator_fname[0]) + '''(*case)
+    user_result = ''' + str(user_fname[0]) + '''(*case)
     sys.stdout = sys.__stdout__
     if creator_result == user_result:
         print(i,case,creator_result,user_result,'True')
@@ -78,3 +83,28 @@ print(is_correct)
     total_result = run_code(str(frame))
 
     return total_result
+
+
+def validate_live_codes(case_code: str, u_code: str):
+    user_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', u_code)
+    case_fname = findall(r'def\s([a-zA-Z]*_*[a-zA-Z])', case_code)
+    frame = '''from random import choices, sample, randint, random, uniform
+import string
+import sys, os    
+
+''' + str(case_code) + '''
+
+''' + str(u_code) + '''
+
+is_correct = True
+for i in range(5):
+    sys.stdout = open(os.devnull, 'w')
+    case = ''' + str(case_fname[0]) + '''()
+    if type(case) != type(list):
+        case = [case] 
+    user_result = ''' + str(user_fname[0]) + '''(*case)
+    sys.stdout = sys.__stdout__
+    print(i,case,user_result)
+    '''
+
+    return frame
