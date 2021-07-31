@@ -7,7 +7,7 @@ from re import findall
 import requests
 from time import sleep
 from typing import Callable, Dict
-from .code.driver_python import validate_codes
+from .code.driver_python import validate_final_codes
 
 proxy = r'http://3.18.215.227:2358'
 
@@ -44,7 +44,7 @@ def check_answers(test: Test):
 
             if question.question_type == 'open':
                 for user_answer in question.user_answers:
-                    question_result = validate_codes(question.case_amount, question.creator_code, question.generate_case, user_answer.content)
+                    question_result = validate_final_codes(question.case_amount, question.creator_code, question.generate_case, user_answer.content)
                     find_is_correct = question_result['output'].split()[-1]
                     user_answer.result_statistics = question_result['output']
                     if find_is_correct == 'True':
