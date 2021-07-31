@@ -13,8 +13,6 @@ const findWithRegex = (regex: RegExp, contentBlock: ContentBlock, callback: (sta
   }
 };
 
-
-
 const hashtagStrategy = (contentBlock: ContentBlock, callback: (start: number, end: number) => void) => {
   findWithRegex(HASHTAG_REGEX, contentBlock, callback);
 };

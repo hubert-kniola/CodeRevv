@@ -1,13 +1,14 @@
-import { useState } from 'react';
-import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
+import { FC, useState } from 'react';
+import { Editor, EditorState, RichUtils, Modifier, DraftEditorCommand, ContentBlock } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
 import {  mediaBlockRenderer, compositeDecorator } from './plugins';
+import { SyntheticKeyboardEvent } from 'const';
 
-export const RichTextEditor = () => {
+export const RichTextEditor:FC = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty(compositeDecorator));
 
-  const handleKeyCommand = (command, editorState) => {
+  const handleKeyCommand = (command: DraftEditorCommand, editorState: EditorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
 
     if (newState) {
@@ -17,14 +18,14 @@ export const RichTextEditor = () => {
     return 'not-handled';
   };
 
-  const myBlockStyleFn = (contentBlock) => {
+  const myBlockStyleFn = (contentBlock: ContentBlock) => {
     const type = contentBlock.getType();
     if (type === 'blockquote') return 'custom-blockquote';
     else if (type === 'code-block') return 'custome-code';
     return '';
   };
 
-  const tabHandler = (e) => {
+  const tabHandler = (e: SyntheticKeyboardEvent) => {
     const newState = RichUtils.onTab(e, editorState, 4);
 
     const selection = editorState.getSelection();
@@ -43,8 +44,6 @@ export const RichTextEditor = () => {
       return 'not-handled';
     }
   };
-
-
 
   return (
     <Wrapper>

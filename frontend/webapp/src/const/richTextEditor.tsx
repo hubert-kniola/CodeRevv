@@ -20,6 +20,8 @@ export const BLOCK_STYLE_TYPE = "block-style";
 export const ADDITIONAL_FUNCTION_STYLE = "additional-function";
 //#endregion
 
+export type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
+
 export type Style = {
   label: string;
   style: string;
