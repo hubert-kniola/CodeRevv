@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Wrapper = styled.div<{ width?: string; height?: string }>`
-  width: ${({ width }) => width ? width: '50%'};
+  width: ${({ width }) => (width ? width : '50%')};
   min-width: 400px;
   height: 300px;
   background-color: ${({ theme }) => theme.colors.background};
@@ -39,15 +39,15 @@ export const Space = styled.div<{ width?: string; autoHeight?: boolean }>`
   }
 
   ::-webkit-scrollbar {
-    width: 0.15rem;
+    width: 0.1rem;
   }
 
   ::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.background}
+    background: ${({ theme }) => theme.colors.background};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.primary}
+    background: ${({ theme }) => theme.colors.primary};
   }
 `;
 
