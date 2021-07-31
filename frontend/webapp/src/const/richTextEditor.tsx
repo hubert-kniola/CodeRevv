@@ -18,6 +18,7 @@ export const INSERT_PHOTO_ICO = <InsertPhotoIcon/>;
 export const INLINE_STYLE_TYPE =  "inline-style";
 export const BLOCK_STYLE_TYPE = "block-style";
 export const ADDITIONAL_FUNCTION_STYLE = "additional-function";
+export const DEFAULT_PLACEHOLDER = "Byle nie za trudne! :)"
 //#endregion
 
 export type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;

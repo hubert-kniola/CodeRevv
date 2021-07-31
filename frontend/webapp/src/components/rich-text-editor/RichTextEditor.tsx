@@ -2,10 +2,17 @@ import { FC, useState } from 'react';
 import { Editor, EditorState, RichUtils, Modifier, DraftEditorCommand, ContentBlock } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
-import {  mediaBlockRenderer, compositeDecorator } from './plugins';
-import { SyntheticKeyboardEvent } from 'const';
+import { mediaBlockRenderer, compositeDecorator } from './plugins';
+import { DEFAULT_PLACEHOLDER, SyntheticKeyboardEvent } from 'const';
 
-export const RichTextEditor:FC = () => {
+type RichTextEditorType = {
+  readOnly: boolean;
+  widht?: string;
+  height?: string;
+  placeholder?: string
+};
+
+export const RichTextEditor: FC<RichTextEditorType> = ({ readOnly = false, widht, height, placeholder, }) => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty(compositeDecorator));
 
   const handleKeyCommand = (command: DraftEditorCommand, editorState: EditorState) => {
@@ -46,21 +53,35 @@ export const RichTextEditor:FC = () => {
   };
 
   return (
-    <Wrapper>
-      <Container>
-        <Toolbar editorState={editorState} setEditorState={setEditorState} />
-        <Space>
-          <Editor
-            editorState={editorState}
-            onChange={setEditorState}
-            handleKeyCommand={handleKeyCommand}
-            blockStyleFn={myBlockStyleFn}
-            placeholder="Daj szanse! :)"
-            onTab={tabHandler}
-            blockRendererFn={mediaBlockRenderer}
-          />
-        </Space>
-      </Container>
-    </Wrapper>
+    <>
+      {!readOnly ? (
+        <Wrapper>
+          <Container>
+            <Toolbar editorState={editorState} setEditorState={setEditorState} />
+            <Space>
+              <Editor
+                editorState={editorState}
+                onChange={setEditorState}
+                handleKeyCommand={handleKeyCommand}
+                blockStyleFn={myBlockStyleFn}
+                placeholder={ placeholder ?  placeholder : DEFAULT_PLACEHOLDER }
+                onTab={tabHandler}
+                blockRendererFn={mediaBlockRenderer}
+              />
+            </Space>
+          </Container>
+        </Wrapper>
+      ) : (
+          <Space >
+            <Editor
+              editorState={editorState}
+              readOnly={true}
+              onChange={setEditorState}
+              blockStyleFn={myBlockStyleFn}
+              blockRendererFn={mediaBlockRenderer}
+            />
+          </Space>
+      )}
+    </>
   );
 };

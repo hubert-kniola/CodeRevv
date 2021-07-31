@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`
-  width: 50%;
+export const Wrapper = styled.div<{ width?: string; height?: string }>`
+  width: ${({ width }) => width ? width: '50%'};
   min-width: 400px;
-
+  height: 300px;
   background-color: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
   margin: 1rem auto;
@@ -18,13 +18,14 @@ export const Container = styled.div`
   height: 100%;
 `;
 
-export const Space = styled.div`
+export const Space = styled.div<{ width?: string; autoHeight?: boolean }>`
   padding: 0.5rem;
   background-color: ${({ theme }) => theme.colors.lighterBackground};
-  height: 75%;
+  height: ${({ autoHeight }) => (autoHeight ? 'auto' : '80%')};
+  width: ${({ width }) => width && width};
   overflow: auto;
   border-radius: 5px;
-  box-shadow: inset 0px 1px 8px 0px ${({ theme }) => theme.colors.background};;
+  box-shadow: inset 0px 1px 8px 0px ${({ theme }) => theme.colors.background};
 
   .custome-code {
     background-color: ${({ theme }) => theme.colors.background};
@@ -36,12 +37,24 @@ export const Space = styled.div`
     box-shadow: inset 0px 1px 20px 20px ${({ theme }) => theme.colors.background};
     margin: 0;
   }
+
+  ::-webkit-scrollbar {
+    width: 0.15rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.background}
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.primary}
+  }
 `;
 
 export const Span = styled.span`
   color: green;
 
-  :hover{
+  :hover {
     color: red;
   }
-`
+`;
