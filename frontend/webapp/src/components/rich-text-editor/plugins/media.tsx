@@ -1,9 +1,10 @@
-import { AtomicBlockUtils, Entity } from 'draft-js';
-import { Image } from '../special-block'
+import { AtomicBlockUtils, Entity, ContentBlock, EditorState, ContentState } from 'draft-js';
+import { Image } from '../special-block';
 
-const Media = (props) => {
+
+const media = (props: any) => {
   const { block, contentState } = props;
-  const entity = contentState.getEntity(block.getEntityAt(0))
+  const entity = contentState.getEntity(block.getEntityAt(0));
   const { src } = entity.getData();
   const type = entity.getType();
 
@@ -15,17 +16,17 @@ const Media = (props) => {
   return media;
 };
 
-export const MediaBlockRenderer = (block) => {
+export const mediaBlockRenderer = (block: ContentBlock) => {
   if (block.getType() === 'atomic') {
     return {
-      component: Media,
+      component: media,
       editable: false,
     };
   }
   return null;
 };
 
-export const addMedia = (type, editorState) => {
+export const addMedia = (type: string, editorState: EditorState) => {
   const src = window.prompt('Enter a URL');
   if (!src) {
     return editorState;
@@ -40,5 +41,3 @@ export const addMedia = (type, editorState) => {
   // );
   return newState;
 };
-
-

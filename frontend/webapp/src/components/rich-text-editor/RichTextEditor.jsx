@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
-import {  MediaBlockRenderer, compositeDecorator } from './plugins';
+import {  mediaBlockRenderer, compositeDecorator } from './plugins';
 
 export const RichTextEditor = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty(compositeDecorator));
@@ -58,7 +58,7 @@ export const RichTextEditor = () => {
             blockStyleFn={myBlockStyleFn}
             placeholder="Daj szanse! :)"
             onTab={tabHandler}
-            blockRendererFn={MediaBlockRenderer}
+            blockRendererFn={mediaBlockRenderer}
           />
         </Space>
       </Container>
