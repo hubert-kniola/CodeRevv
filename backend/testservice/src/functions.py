@@ -1,15 +1,15 @@
-from typing import List
+from random import choices, sample, randint, random, uniform
 
-from bson import ObjectId
-from fastapi import FastAPI, Response, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
-from motor.motor_asyncio import AsyncIOMotorClient
+from requests import Response
 
-from collections import defaultdict
+from .models import Test, UserAnswer
+from re import findall
+import requests
+from time import sleep
+from typing import Callable, Dict
+from .code.driver_python import validate_final_codes
 
-from .models import Test, Question, UserAnswer
-from datetime import datetime
+proxy = r'http://3.18.215.227:2358'
 
 
 def check_answers(test: Test):
@@ -22,7 +22,7 @@ def check_answers(test: Test):
 
             if question.question_type == 'closed':
                 points_for_answer = question.max_score / \
-                    len(list(filter(lambda a: a.is_correct, question.answers)))
+                                    len(list(filter(lambda a: a.is_correct, question.answers)))
 
                 for answer in question.answers:
                     if not answer.users_voted:
@@ -33,14 +33,25 @@ def check_answers(test: Test):
                     elif user in answer.users_voted and not answer.is_correct:
                         score -= points_for_answer
 
-            score = 0 if score <= 0 else score
+                score = 0 if score <= 0 else score
 
-            ua = UserAnswer(user=user, score=score)
+                ua = UserAnswer(user=user, score=score)
 
-            if not question.user_answers:
-                question.user_answers = [ua]
-            elif ua not in question.user_answers:
-                question.user_answers.append(ua)
+                if not question.user_answers:
+                    question.user_answers = [ua]
+                elif ua not in question.user_answers:
+                    question.user_answers.append(ua)
+
+            if question.question_type == 'open':
+                for user_answer in question.user_answers:
+                    question_result = validate_final_codes(question.case_amount, question.creator_code, question.generate_case, user_answer.content)
+                    find_is_correct = question_result['output'].split()[-1]
+                    user_answer.result_statistics = question_result['output']
+                    if find_is_correct == 'True':
+                        score = question.max_score
+                    else:
+                        score = 0
+                    user_answer.score = score
 
     test.users = users
     test.questions = questions

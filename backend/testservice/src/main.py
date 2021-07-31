@@ -11,8 +11,9 @@ from fastapi_utils.tasks import repeat_every
 from odmantic import AIOEngine
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .models import Test, Question
+from .models import Test, Question, TestUser
 from datetime import datetime
+from .code.driver_python import run_code, validate_live_codes
 
 MONGODB_URL = 'mongodb+srv://admin:admin@cluster0.k1eh0.mongodb.net/testdb?retryWrites=true&w=majority'
 
@@ -54,7 +55,7 @@ async def generate_test_link(test_id, user_id):
 
 @app.post('/t/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def join_test(test_id, user_id):
-    user_id = int(user_id)
+    user_id = user_id
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
     if test.creator == user_id:
         # if not test.users:
@@ -66,11 +67,18 @@ async def join_test(test_id, user_id):
 
     elif test.is_link_generated:
         if not test.users:
-            test.users = [user_id]
+            test.users[user_id] = TestUser(attempt_count=1, finished=False)
             return await engine.save(test)
 
         if user_id not in test.users:
-            test.users.append(user_id)
+            test.users[user_id] = TestUser(attempt_count=1, finished=False)
+            return await engine.save(test)
+
+        elif test.users[user_id].finished is True:
+            return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+        elif test.users[user_id].finished is False:
+            test.users[user_id].attempt_count += 1
             return await engine.save(test)
 
         else:
@@ -79,7 +87,12 @@ async def join_test(test_id, user_id):
     elif not test.is_link_generated:
         if test.users:
             if user_id in test.users:
-                return test
+                if test.users[user_id].finished is True:
+                    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
+
+                elif test.users[user_id].finished is False:
+                    test.users[user_id].attempt_count += 1
+                    return await engine.save(test)
 
     return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
 
@@ -111,28 +124,54 @@ async def create_test(test: Test):
     test.pub_test = str(datetime.now())
 
     if not test.users:
-        test.users = []
+        test.users = {}
 
     new_test = await engine.save(test)
     created_test = await engine.find_one(Test, Test.id == new_test.id)
     return created_test
 
 
-@app.patch('/t/whitelist/{test_id}', status_code=201)
-async def whitelist_test(test_id, request: Request):
-    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    request = await request.json()
-    test.users = request['users']
-    print(test)
-    await engine.save(test)
-    return {'message': 'whitelist updated'}
+@app.patch('/t/edit/{user_id}', status_code=201)
+async def edit_test(test: Test, user_id):
+    if test.creator is int(user_id):
+        await engine.save(test)
+        return {'message': 'test modified'}
+    else:
+        return {'message': 'request send not by creator'}
 
 
-@app.delete('/t/delete/{test_id}', status_code=204)
-async def delete_test(test_id):
+@app.patch('/t/whitelist/{test_id}/{user_id}', status_code=201)
+async def whitelist_test(test_id, user_id, request: Request):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    await engine.delete(test)
-    return {'message': 'test deleted'}
+    if test.creator is int(user_id):
+        request = await request.json()
+        for user in request['users']:
+            test.users[str(user)] = TestUser(attempt_count=0, finished=False)
+        await engine.save(test)
+        return {'message': 'whitelist updated'}
+    else:
+        return {'message': 'request send not by creator'}
+
+
+@app.delete('/t/delete/{test_id}/{user_id}', status_code=204)
+async def delete_test(test_id, user_id):
+    test = await engine.find_one(Test, Test.id == ObjectId(test_id))
+    if test.creator is int(user_id):
+        await engine.delete(test)
+        return {'message': 'test deleted'}
+    else:
+        return {'message': 'request send not by creator'}
+
+
+@app.get('/t/questions/{creator_id}', response_model=List[Question], status_code=200)
+async def questions_test(creator_id):
+    tests = await engine.find(Test, Test.creator == int(creator_id))
+    questions = []
+    for test in tests:
+        for quest in test.questions:
+            quest.user_answers = None
+            questions.append(test.questions)
+    return questions
 
 
 @app.post('/t/save/{test_id}/{user_id}', response_model=Test, status_code=200)
@@ -167,12 +206,10 @@ async def submit_test(test_id, user_id, modified_test: Test):
 @app.get('/t/result/{test_id}/{user_id}', response_model=Test, status_code=200)
 async def result_test(test_id, user_id):
     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-    user_id = int(user_id)
+    user_id = user_id
 
     if user_id not in test.users and test.creator != user_id:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN)
-
-
 
     if test.creator == user_id:
         return test
@@ -180,59 +217,18 @@ async def result_test(test_id, user_id):
     return get_test_with_user_answers_for_user(test, user_id)
 
 
-# @app.patch('/t/finish/{test_id}', status_code=200)
-# async def finish_test(test_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     if not test.is_finished:
-#         test.is_finished = True
-#
-#         if test.users:
-#             test = check_answers(test)
-#
-#         await engine.save(test)
-#         return {'status': 'the test has just finished'}
-#     else:
-#         return {'status': 'the test is already finished'}
+# ==== Judge0 =====
 
 
-# @app.post('/t/user/{test_id}/{user_id}', status_code=200)
-# async def add_user(test_id, user_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.users.append(int(user_id))
-#     await engine.save(test)
-#     return {'message': 'user added'}
-#
-#
-# @app.delete('/t/user/{test_id}/{user_id}', status_code=204)
-# async def delete_user(test_id, user_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.users.remove(int(user_id))
-#     await engine.save(test)
-#     return {'message': 'user deleted'}
-#
-#
-# @app.post('/t/question/{test_id}', status_code=200)
-# async def add_question(test_id, question: Question):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions.append(question)
-#     await engine.save(test)
-#     return {'message': 'question added'}
-#
-#
-# @app.delete('/t/question/{test_id}/{question_id}', status_code=204)
-# async def delete_question(test_id, question_id):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions.pop(int(question_id))
-#     await engine.save(test)
-#     return {'message': 'question deleted'}
-#
-#
-# @app.patch('/t/question/{test_id}/{question_id}', status_code=200)
-# async def modify_question(test_id, question_id, question: Question):
-#     test = await engine.find_one(Test, Test.id == ObjectId(test_id))
-#     test.questions[int(question_id)] = question
-#     await engine.save(test)
-#     return {'message': 'question modified'}
+@app.post('/r/python', status_code=200)
+async def live_python(request: Request):
+    request = await request.json()
+    test = await engine.find_one(Test, Test.id == ObjectId(request['test_id']))
+    questions = test.questions
+    question = next(item for item in questions if item.index == request['index'])
+    frame = validate_live_codes(question.generate_case, request['code'])
+    output = run_code(frame)
+    return output
 
 
 if __name__ == '__main__':

@@ -23,27 +23,27 @@ class TestViews(TestCase):
                                     {'refresh': 'invalid refresh token'})
         self.assertNotEquals(response.status_code, 200)
 
-    def test_user_login_no_POST(self):
+    # def test_user_register_POST(self):
+    #     response = self.client.post(reverse('register'),
+    #                                 {'email': 'kniola9@gmail.com', 'password': 'asdfasdf',
+    #                                  'first_name': 'Hubert', 'last_name': 'Kniola'})
+    #     self.assertEquals(response.status_code, 201)
+    #
+    # def test_user_register_no_POST(self):
+    #     response = self.client.post(reverse('register'),
+    #                                 {'email': 'kniola9@gmail.com', 'password': 'asdfasdf',
+    #                                  'first_name': 'Hubert', 'last_name': 'Kniola'})
+    #     self.assertNotEquals(response.status_code, 201)
+
+    def test_user_login_POST(self):
         response = self.client.post(reverse('login'),
-                                    {'email': 'kniola10@gmail.com', 'password': 'asdfasdf'})
+                                    {'email': 'kniola9@gmail.com', 'password': 'asdfasdf'})
         self.assertEquals(response.status_code, 404)
 
     # def test_user_google_login_POST(self):
     #     response = self.client.post(reverse('google_login'),
     #                                 {'email': 'kniola10@gmail.com', 'googleId': 'asdfasdf'})
     #     self.assertEquals(response.status_code, 409)
-
-    # def test_user_register_no_POST(self):
-    #     response = self.client.post(reverse('register'),
-    #                                 {'email': 'kniola9@gmail.com', 'password': 'asdfasdf',
-    #                                  'first_name': 'Hubert', 'last_name': 'Kniola'})
-    #     self.assertEquals(response.status_code, 201)
-    #
-    # def test_user_register_POST(self):
-    #     response = self.client.post(reverse('register'),
-    #                                 {'email': 'jordankondracki1999@gmail.com', 'password': 'asdfasdf',
-    #                                  'first_name': 'Jordan', 'last_name': 'Kondracki'})
-    #     self.assertNotEquals(response.status_code, 201)
 
     def test_activate_POST(self):
         response = self.client.post(reverse('activate'),
@@ -63,5 +63,5 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 409)
 
     def test_user_logout_POST(self):
-        response = self.client.post(reverse('logout'),)
+        response = self.client.post(reverse('logout'), )
         self.assertEquals(response.status_code, 200)

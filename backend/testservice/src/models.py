@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from odmantic import Model, EmbeddedModel
 
@@ -8,6 +8,7 @@ class UserAnswer(EmbeddedModel):
     user: int
     comment: Optional[str]
     score: float
+    result_statistics: Optional[str]
 
 
 class TestAnswer(EmbeddedModel):
@@ -24,6 +25,15 @@ class Question(EmbeddedModel):
     answers: List[TestAnswer]
     max_score: Optional[float]
     user_answers: Optional[List[UserAnswer]]
+    # ======= Judge0 ========
+    creator_code: Optional[str]
+    generate_case: Optional[str]
+    case_amount: Optional[int]
+
+
+class TestUser(EmbeddedModel):
+    attempt_count: int
+    finished: bool
 
 
 class Test(Model):
@@ -31,7 +41,7 @@ class Test(Model):
     name: str
     pub_test: Optional[str]
     creator: int
-    users: Optional[List[int]]
+    users: Optional[Dict[str, TestUser]]
     questions: List[Question]
     creator_contact: Optional[str]  # always optional
     description: Optional[str]

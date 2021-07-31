@@ -17,17 +17,19 @@ from rest_framework_simplejwt.exceptions import TokenError
 from datetime import datetime
 import requests
 
+
 def without_cookies(response):
     response.delete_cookie('access')
     response.delete_cookie('refresh')
 
     return response
 
+
 def check_token(request):
     try:
         token1 = request.COOKIES['access']
         payload = jwt.decode(token1, settings.SECRET_KEY,
-                         settings.SIMPLE_JWT['ALGORITHM'])
+                             settings.SIMPLE_JWT['ALGORITHM'])
         user = AuthUser.objects.get(pk=payload['user_id'])
     except UserWarning:
         raise AuthenticationFailed
@@ -101,9 +103,12 @@ def user_login(request):
                         }
                     }
                     response = Response(ret, status=status.HTTP_200_OK)
-                    response.set_cookie('access', tokens['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+                    response.set_cookie('access', tokens['access'],
+                                        max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),
+                                        httponly=True)
                     response.set_cookie(
-                        'refresh', tokens['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+                        'refresh', tokens['refresh'],
+                        max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
                     return response
                 if (datetime.now() - user.date_joined).total_seconds() > 86400:
                     user.delete()
@@ -124,7 +129,8 @@ def user_google_login(request):
         username=google_data['email'], password=google_data['googleId'])
     if not user:
         print(google_data)
-        user_data = {'email': google_data['email'], 'first_name': google_data['givenName'], 'last_name': google_data['familyName'], 'password': google_data['googleId']}
+        user_data = {'email': google_data['email'], 'first_name': google_data['givenName'],
+                     'last_name': google_data['familyName'], 'password': google_data['googleId']}
         serializer = UserGoogleRegisterSerializer(data=user_data)
         if serializer.is_valid():
             serializer.is_active = True
@@ -155,9 +161,11 @@ def user_google_login(request):
         }
     }
     response = Response(ret, status=status.HTTP_200_OK)
-    response.set_cookie('access', tokens['access'], max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+    response.set_cookie('access', tokens['access'],
+                        max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), httponly=True)
     response.set_cookie(
-        'refresh', tokens['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(), httponly=True)
+        'refresh', tokens['refresh'], max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(),
+        httponly=True)
     return response
 
 
@@ -222,7 +230,7 @@ def password_reset(request):
                 return Response({'success': False}, status=status.HTTP_403_FORBIDDEN)
         except:
             return Response({'success': False}, status=status.HTTP_409_CONFLICT)
-            
+
         user_email = user.email
         user_active = user.is_active
         if user_active:
