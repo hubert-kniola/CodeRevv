@@ -22,6 +22,7 @@ export const Space = styled.div`
   padding: 0.5rem;
   background-color: ${({ theme }) => theme.colors.lighterBackground};
   height: 75%;
+  overflow: auto;
   border-radius: 5px;
   box-shadow: inset 0px 1px 8px 0px ${({ theme }) => theme.colors.background};;
 
@@ -32,6 +33,7 @@ export const Space = styled.div`
     word-wrap: break-word;
     box-decoration-break: clone;
     padding: 0.1rem 0.3rem 0.1rem 1rem;
+    box-shadow: inset 0px 1px 20px 20px ${({ theme }) => theme.colors.background};
     margin: 0;
   }
 `;

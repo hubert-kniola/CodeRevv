@@ -1,5 +1,5 @@
 import { ADDITIONAL_FUNCTIONS, BLOCK_TYPES, INLINE_STYLE, ToolbarProp } from 'const';
-import { EditorState, RichUtils } from 'draft-js';
+import { RichUtils } from 'draft-js';
 import { FC, MouseEvent, ReactElement } from 'react';
 import { Container, Button } from './style';
 
@@ -13,7 +13,6 @@ type ButtonProps = {
 
 const StyleButton: FC<ButtonProps> = ({ onToggle, onClick, icon, active, style }) => {
   const toggleHandler = (e: MouseEvent<HTMLSpanElement>) => {
-
     e.preventDefault();
     if (onToggle != null) {
       onToggle(style);
@@ -21,7 +20,6 @@ const StyleButton: FC<ButtonProps> = ({ onToggle, onClick, icon, active, style }
       onClick();
     }
   };
-
 
   return (
     <Button className={onToggle != null ? (active ? 'active' : '') : style} onMouseDown={toggleHandler}>
@@ -45,6 +43,8 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
   const toggleBlockType = (blockType: string) => {
     setEditorState((state) => RichUtils.toggleBlockType(state, blockType!));
   };
+
+
 
   return (
     <Container>
@@ -74,7 +74,7 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
           active={false}
           icon={type.icon ? type.icon : type.label}
           onClick={() => type.onClick(setEditorState)}
-          style={type.style}
+          style={type.active(editorState) ? type.style : ''}
         />
       ))}
     </Container>

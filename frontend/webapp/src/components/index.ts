@@ -25,5 +25,4 @@ export * from './small-popup/SmallPopup';
 export * from './code-editor/CodeCell';
 export * from './test-editor/QuestionCollection';
 export * from './question-editor/QuestionViewer';
-export * from './rich-text-editor/RichTextEditor'
-export * from './rich-text-editor/TEST'
+export * from './rich-text-editor/RichTextEditor';
