@@ -1,6 +1,7 @@
-import { ADDITIONAL_FUNCTIONS, BLOCK_TYPES, INLINE_STYLE, ToolbarProp } from 'const';
-import { RichUtils } from 'draft-js';
+import { ADDITIONAL_FUNCTIONS, TOOLBAR_STYLE, INLINE_STYLE_TYPE, INSERT_PHOTO_ICO, ToolbarProp, ADDITIONAL_FUNCTION_STYLE } from 'const';
+import { EditorState, RichUtils } from 'draft-js';
 import { FC, MouseEvent, ReactElement } from 'react';
+import { addMedia } from '../plugins';
 import { Container, Button } from './style';
 
 type ButtonProps = {
@@ -43,27 +44,19 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
   const toggleBlockType = (blockType: string) => {
     setEditorState((state) => RichUtils.toggleBlockType(state, blockType!));
   };
-
-
+  
+  const addImage = () => {
+    setEditorState(addMedia('image', editorState) as EditorState );
+  };
 
   return (
     <Container>
-      {INLINE_STYLE.map((type) => (
+      {TOOLBAR_STYLE.map((type) => (
         <StyleButton
           key={type.label}
-          active={currentStyle.has(type.style)}
+          active={type.type === INLINE_STYLE_TYPE ? currentStyle.has(type.style) : type.style === blockType}
           icon={type.icon ? type.icon : type.label}
-          onToggle={toggleInlineStyle}
-          style={type.style}
-        />
-      ))}
-
-      {BLOCK_TYPES.map((type) => (
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          icon={type.icon ? type.icon : type.label}
-          onToggle={toggleBlockType}
+          onToggle={type.type === INLINE_STYLE_TYPE ? toggleInlineStyle : toggleBlockType}
           style={type.style}
         />
       ))}
@@ -77,6 +70,13 @@ const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
           style={type.active(editorState) ? type.style : ''}
         />
       ))}
+        <StyleButton
+          key='insert a photo'
+          active={false}
+          icon={INSERT_PHOTO_ICO}
+          onClick={() => addImage()}
+          style={ADDITIONAL_FUNCTION_STYLE}
+        />
     </Container>
   );
 };

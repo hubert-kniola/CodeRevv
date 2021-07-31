@@ -1,11 +1,7 @@
 import { CompositeDecorator } from 'draft-js';
-import { Span } from './style';
+import { HashtagSpan } from '../special-block'
 
-const HashtagSpan = (props) => {
-  return <Span {...props}>{props.children}</Span>;
-};
-
-const HASHTAG_REGEX = /\#[\w\u0590-\u05ff]+/g;
+const HASHTAG_REGEX = new RegExp('(#+[a-zA-Z0-9(_)]{1,})');
 
 const findWithRegex = (regex, contentBlock, callback) => {
   const text = contentBlock.getText();

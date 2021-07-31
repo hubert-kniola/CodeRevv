@@ -1,9 +1,8 @@
-import { Editor, EditorState, RichUtils, Modifier, AtomicBlockUtils, Entity, convertToRaw } from 'draft-js';
 import { useState } from 'react';
-import { compositeDecorator } from './decorators/CompositeDecorator';
+import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
 import { Wrapper, Container, Space } from './style';
 import Toolbar from './toolbar/Toolbar';
-import {  MediaBlockRenderer } from './plugins/media';
+import {  MediaBlockRenderer, compositeDecorator } from './plugins';
 
 export const RichTextEditor = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty(compositeDecorator));
@@ -45,32 +44,12 @@ export const RichTextEditor = () => {
     }
   };
 
-  const addMedia = (type) => {
-    const src = window.prompt('Enter a URL');
-    if (!src) {
-      return;
-    }
 
-    const entityKey = Entity.create(type, 'IMMUTABLE', { src });
-    const newState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
-    console.log(
-      convertToRaw(editorState.getCurrentContent()),
-      convertToRaw(newState.getCurrentContent()),
-      Entity.get(entityKey)
-    );
-
-    return newState;
-  };
-
-  const addImage = () => {
-    setEditorState(addMedia('image'));
-  };
 
   return (
     <Wrapper>
       <Container>
         <Toolbar editorState={editorState} setEditorState={setEditorState} />
-        <button onClick={() => addImage()}>DODAJ</button>
         <Space>
           <Editor
             editorState={editorState}
