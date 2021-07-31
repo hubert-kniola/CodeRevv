@@ -1,7 +1,8 @@
 import { CompositeDecorator } from 'draft-js';
 import { HashtagSpan } from '../special-block'
 
-const HASHTAG_REGEX = new RegExp('(#+[a-zA-Z0-9(_)]{1,})');
+const HASHTAG_REGEX = /\#[\w\u0590-\u05ff]+/g;
+const QUOTE_REGEX = /\"[\w\u0590-\u05ff]+"/g;
 
 const findWithRegex = (regex, contentBlock, callback) => {
   const text = contentBlock.getText();
@@ -12,8 +13,12 @@ const findWithRegex = (regex, contentBlock, callback) => {
   }
 };
 
-const hashtagStrategy = (contentBlock, callback, contentState) => {
+const hashtagStrategy = (contentBlock, callback) => {
   findWithRegex(HASHTAG_REGEX, contentBlock, callback);
+};
+
+const quoteStrategy = (contentBlock, callback) => {
+  findWithRegex(QUOTE_REGEX, contentBlock, callback);
 };
 
 export const compositeDecorator = new CompositeDecorator([
@@ -21,4 +26,9 @@ export const compositeDecorator = new CompositeDecorator([
     strategy: hashtagStrategy,
     component: HashtagSpan,
   },
+  {
+    strategy: quoteStrategy,
+    component: HashtagSpan,
+  },
 ]);
+

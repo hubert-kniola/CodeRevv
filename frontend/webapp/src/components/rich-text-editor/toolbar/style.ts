@@ -51,11 +51,4 @@ export const Color = styled.div<{ color: string }>`
   }
 `;
 
-export const Span = styled.span<{ color: string }>`
-  :hover {
-    color: ${({ color }) => color};
-  }
-  .active {
-    color: ${({ color }) => color};
-  }
-`;
+

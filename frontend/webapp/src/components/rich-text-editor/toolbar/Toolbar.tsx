@@ -4,6 +4,7 @@ import { FC, MouseEvent, ReactElement } from 'react';
 import { addMedia } from '../plugins';
 import { Container, Button } from './style';
 
+//#region BUTTON  
 type ButtonProps = {
   onToggle?: (inlineStyle: string) => void;
   onClick?: () => void;
@@ -28,6 +29,7 @@ const StyleButton: FC<ButtonProps> = ({ onToggle, onClick, icon, active, style }
     </Button>
   );
 };
+//#endregion
 
 const Toolbar: FC<ToolbarProp> = ({ editorState, setEditorState }) => {
   //inline
