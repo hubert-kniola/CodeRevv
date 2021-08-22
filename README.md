@@ -29,3 +29,9 @@
 * `uvicorn`
 * `virtualenv`
 * Postman do API
+
+### Wygląd aplikacji
+
+<p align="center">
+  <img src="src/images/Main.PNG" width="400" title="Main">
+</p>
