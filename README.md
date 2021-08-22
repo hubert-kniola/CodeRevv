@@ -32,6 +32,37 @@
 
 ### Wygląd aplikacji
 
+#### Strona główna
+
 <p align="center">
-  <img src="src/images/Main.PNG" title="Main">
+  <img src="docs/images/Main.PNG" title="Main">
 </p>
+
+#### Rejestracja
+
+<p align="center">
+  <img src="docs/images/SignOut.PNG" title="Registraton">
+</p>
+
+#### Logowanie
+
+<p align="center">
+  <img src="docs/images/SignIn.PNG" title="Login">
+</p>
+
+#### Tworzenie testu
+
+<p align="center">
+  <img src="docs/images/MakeTest1.PNG" title="MakeTest1">
+</p>
+
+<p align="center">
+  <img src="docs/images/MakeTest2.PNG" title="MakeTest2">
+</p>
+
+#### Moje testy
+
+<p align="center">
+  <img src="docs/images/ListTest.PNG" title="ListTest">
+</p>
+
