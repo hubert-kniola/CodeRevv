@@ -33,5 +33,5 @@
 ### Wygląd aplikacji
 
 <p align="center">
-  <img src="src/images/Main.PNG" width="600" title="Main">
+  <img src="src/images/Main.PNG" title="Main">
 </p>
